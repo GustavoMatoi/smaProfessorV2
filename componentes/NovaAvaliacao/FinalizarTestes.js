@@ -45,6 +45,7 @@ export default ({navigation, route}) => {
     const mes = data.getMonth() + 1
     const dia = data.getDate()
     const ano = data.getFullYear()
+
     const avaliacao = {
         DCCoxaMedida1: novaAvalicao.getDCcoxaMedida1(),
         DCCoxaMedida2: novaAvalicao.getDCcoxaMedida2(),

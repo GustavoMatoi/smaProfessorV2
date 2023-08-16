@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react"
 import {Text, View, SafeAreaView, ScrollView, StyleSheet } from 'react-native'
 import estilo from "../../estilo"
 import RadioBotao from "../../RadioBotao"
-import {VictoryChart, VictoryLine, VictoryTheme, VictoryVoronoiContainer, VictoryLabel} from "victory-native"
+import {VictoryChart, VictoryLine, VictoryTheme, VictoryVoronoiContainer, VictoryLabel, VictoryAxis} from "victory-native"
 import {useFonts} from 'expo-font'
 import { doc, setDoc, collection,getDocs, query,where ,addDoc, getFirestore } from "firebase/firestore"; 
 import { Entypo } from '@expo/vector-icons'; 
@@ -75,17 +75,17 @@ export default ({navigation, route}) => {
     
                 newArrayMassaCorporal.push(data.massaCorporal);
                 newArrayEstatura.push(data.estatura);
-                newArrayBracoRelaxadoMedida3.push(data.bracoRelaxadoMedida3);
-                newArrayBracoContraidoMedida3.push(data.bracoContraidoMedida3);
-                newArrayCinturaMedida3.push(data.cinturaMedida3);
-                newArrayAbdomenMedida3.push(data.abdomenMedida3);
-                newArrayQuadrilMedida3.push(data.quadrilMedida3);
-                newArrayCoxaMedida3.push(data.coxaMedida3);
-                newArrayPernaMedida3.push(data.pernaMedida3);
-                newArrayDCPeitoralMedida3.push(data.DCPeitoralMedida3);
-                newArrayDCAbomenMedida3.push(data.DCabdomenMedida3);
-                newArrayDCCoxaMedida3.push(data.DCCoxaMedida3);
-                newArrayDCCristaIliacaMedida3.push(data.DCCristaIliacaMedida3);
+                newArrayBracoRelaxadoMedida3.push(data.bracoRelaxadoMedida1);
+                newArrayBracoContraidoMedida3.push(data.bracoContraidoMedida1);
+                newArrayCinturaMedida3.push(data.cinturaMedida1);
+                newArrayAbdomenMedida3.push(data.abdomenMedida1);
+                newArrayQuadrilMedida3.push(data.quadrilMedida1);
+                newArrayCoxaMedida3.push(data.coxaMedida1);
+                newArrayPernaMedida3.push(data.pernaMedida1);
+                newArrayDCPeitoralMedida3.push(data.DCPeitoralMedida1);
+                newArrayDCAbomenMedida3.push(data.DCabdomenMedida1);
+                newArrayDCCoxaMedida3.push(data.DCCoxaMedida1);
+                newArrayDCCristaIliacaMedida3.push(data.DCCristaIliacaMedida1);
               });
           
               setArrayMassaCorporal(newArrayMassaCorporal);
@@ -217,7 +217,27 @@ export default ({navigation, route}) => {
                 <Text style={[estilo.tituloH619px, estilo.textoCorSecundaria, estilo.centralizado, { marginTop: '3%' }]}>
                   {titulo || 'Massa corporal'}
                 </Text>
+                <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginLeft: 10}]}>Resultados:</Text>
+                {arrayMassaCorporal.map((index, value) => <Text style ={[estilo.textoCorSecundaria, estilo.textoSmall12px, {marginLeft: 10}]}>Avaliação {value + 1}: {index}</Text>)}
                 <VictoryChart theme={VictoryTheme.material}>
+                <VictoryAxis
+    style={{
+      axisLabel: { fontSize: 12 }, // Adjust the font size of the axis label
+      tickLabels: { fontSize: 10 }, // Adjust the font size of the tick labels
+    }}
+  />
+                <VictoryAxis dependentAxis
+                    domain={opcao == 0? [0, 150] : 
+                      opcao == 1 ? [0, 2.5] : 
+                      opcao == 2 ? [0, 60] : 
+                      opcao == 3 ? [0, 60] : 
+                      opcao == 4 ? [0, 150] :
+                      opcao == 5 ? [0, 100] : []
+                    }
+                    
+                    tickCount={5}
+
+                    />
                   <VictoryLine
                     containerComponent={<VictoryVoronoiContainer />}
                     animate={{
@@ -246,6 +266,7 @@ export default ({navigation, route}) => {
                       arrayMassaCorporalNoGrafico
                     }
                   />
+
                 </VictoryChart>
                 <View style={{ marginLeft: '5%', marginBottom: '10%' }}>
                   <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.Montserrat]}>Selecione o parâmetro que deseja visualizar sua evolução:</Text>
