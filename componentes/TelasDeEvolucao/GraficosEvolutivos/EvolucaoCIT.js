@@ -226,6 +226,8 @@ const diasPorOrdem = arrayPseSemanal.map((item) => {
     return `D.${item.dia}/${item.mes}`
   }
 })
+
+
 const vetorContadorSemanas = []
 
 for(let i = 0; i < citSemanal.length; i++){
@@ -235,22 +237,14 @@ for(let i = 0; i < citSemanal.length; i++){
 const citSemanalMapeado = vetorContadorSemanas.map(i => `Sem. ${i}`)
 
 
-for(i in citObjetos){
-  if(citObjetos[i].data == arrayMeses[i]){
-    console.log("É igual", citObjetos[i], arrayMeses[i])
-  }
-}
-
 useEffect (() => {
   for (let i = 0; i < citObjetos.length; i++) {
-    console.log(citObjetos[i].data)
     if(citObjetos[i].data == mesSelecionado){
       setMesInicial(i)
       break;
     }
   }
 
-  console.log('mesInicial', mesInicial)
 }, [mesSelecionado])
 
 const handleSelectChange = (value) => {
@@ -287,7 +281,6 @@ const aggregateData = (filteredData, interval, mesInicial) => {
   if (currentGroup.length > 0) {
     aggregatedData.push(currentGroup);
   }
-console.log('aggregatedData', aggregatedData)
   return aggregatedData;
 };
 
@@ -303,7 +296,6 @@ const arrayPseNoGrafico =  arrayPse.map((element, i)=> {
 const filtraArray = () => {
   let arrAux = []
   const aggregatedData30Days = aggregateData(citObjetos, 30, mesInicial);
-  console.log('aggregatedData30Days', aggregatedData30Days)
   const arrayPseNoGrafico2 =  aggregatedData30Days[0].map((i, element)=> {
     return {x: element+1, y: i.cit}
   })  
