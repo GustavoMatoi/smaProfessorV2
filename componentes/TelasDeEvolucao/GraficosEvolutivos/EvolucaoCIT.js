@@ -27,6 +27,8 @@ export default ({route, navigation}) => {
     const [arrayMeses, setArrayMeses] = useState([])
     const [citObjetos, setCitObjetos] = useState([])
     const [mesSelecionado, setMesSelecionado] = useState('')
+    const [mesInicial, setMesInicial] = useState(0)
+    const [arrayFiltrado, setArrayFiltrado] = useState([{x: 0, y: 0}])
     useEffect (() => {
       const unsubscribe = NetInfo.addEventListener(state => {
         setConexao(state.type === 'wifi' || state.type === 'cellular')
@@ -71,17 +73,14 @@ export default ({route, navigation}) => {
         setArrayPse(newArrayPse)
         setCarregandoDados(false)
         setCitObjetos(newArrayCitObj)
-        console.log(citObjetos)
+        console.log('citObjetos', citObjetos)
     };
 
     useEffect(() => {
         getPse();
     }, []);
 
-    const arrayPseNoGrafico =  arrayPse.map((element, i)=> {
-        return {x: +i+1, y: element}
-        
-    })
+
 
 
     const getPseSemanal = async () => {
@@ -131,7 +130,7 @@ export default ({route, navigation}) => {
         setArrayPseSemanal(newArrayPse);
         setCarregandoDados(false);
         setArrayMeses([...new Set(arrayMesesAux)])
-
+        
 
       };
     
@@ -235,7 +234,6 @@ for(let i = 0; i < citSemanal.length; i++){
 
 const citSemanalMapeado = vetorContadorSemanas.map(i => `Sem. ${i}`)
 
-console.log(arrayMeses)
 
 for(i in citObjetos){
   if(citObjetos[i].data == arrayMeses[i]){
@@ -243,23 +241,40 @@ for(i in citObjetos){
   }
 }
 
-const handleSelectChange = (value) => {
-  setMesSelecionado(value)
+useEffect (() => {
   for (let i = 0; i < citObjetos.length; i++) {
     console.log(citObjetos[i].data)
-    if(citObjetos[i].data == value) console.log(i) //Posição inicial do array de meses
+    if(citObjetos[i].data == mesSelecionado){
+      setMesInicial(i)
+      break;
+    }
   }
-}
+
+  console.log('mesInicial', mesInicial)
+}, [mesSelecionado])
+
+const handleSelectChange = (value) => {
+  setMesSelecionado(value);
+};
+
+
+useEffect(() => {
+  if (mesSelecionado) {
+    filtraArray();
+  }
+}, [mesSelecionado]);
+
+
 
 const dadosFiltrados = citObjetos.filter((item) => {
   return item.data === mesSelecionado;
 });
 
-const aggregateData = (filteredData, interval) => {
+const aggregateData = (filteredData, interval, mesInicial) => {
   const aggregatedData = [];
   let currentGroup = [];
 
-  for (let i = 0; i < filteredData.length; i++) {
+  for (let i = mesInicial; i < filteredData.length; i++) {
     if (currentGroup.length < interval) {
       currentGroup.push(filteredData[i]);
     } else {
@@ -272,15 +287,29 @@ const aggregateData = (filteredData, interval) => {
   if (currentGroup.length > 0) {
     aggregatedData.push(currentGroup);
   }
-
+console.log('aggregatedData', aggregatedData)
   return aggregatedData;
 };
-// Uso das funções para os intervalos desejados
-const aggregatedData30Days = aggregateData(dadosFiltrados, 30);
+
 const aggregatedData60Days = aggregateData(dadosFiltrados, 60);
 const aggregatedData90Days = aggregateData(dadosFiltrados, 90);
 
-console.log('aggregatedData30Days', aggregatedData30Days)
+const arrayPseNoGrafico =  arrayPse.map((element, i)=> {
+  return {x: +i+1, y: element}
+  
+})
+
+
+const filtraArray = () => {
+  let arrAux = []
+  const aggregatedData30Days = aggregateData(citObjetos, 30, mesInicial);
+  console.log('aggregatedData30Days', aggregatedData30Days)
+  const arrayPseNoGrafico2 =  aggregatedData30Days[0].map((i, element)=> {
+    return {x: element+1, y: i.cit}
+  })  
+  arrAux = arrayPseNoGrafico2
+  setArrayFiltrado(arrAux)
+}
 
 return (
         <ScrollView style={[estilo.corLightMenos1, style.container]}>
@@ -300,7 +329,7 @@ return (
                                     <Text style={[estilo.tituloH619px, estilo.textoCorSecundaria, estilo.centralizado, {marginTop: '3%'}]}>Evolução CIT {opcao == 0? "Diária" : opcao == 1 ? "Semanal" : "Mensal"}</Text>
 
                                   <View style={[estilo.centralizado, {width: '90%', marginTop: 10}]}>
-                                  <BotaoSelect     selecionado={true}  onChange={(value, index) => handleSelectChange(value, index)} titulo='Selecione um mês' max={1} options={arrayMeses}>
+                                  <BotaoSelect     selecionado={true}  onChange={(value, index) => {handleSelectChange(value, index)}} titulo='Selecione um mês' max={1} options={arrayMeses}>
                       </BotaoSelect>
                                   </View>
                         <VictoryChart theme={VictoryTheme.material}>
@@ -338,7 +367,7 @@ return (
                                 }}
                                 categories={opcao === 0? { x: diasPorOrdem } : opcao === 1? {x: citSemanalMapeado} : {x : arrayMeses}}
 
-                            data={opcao == 0 ? arrayPseNoGrafico : opcao == 1 ?  arrayCitSemanalNoGrafico: arrayCitMensalNoGrafico} />            
+                            data={opcao == 0 ? arrayFiltrado : opcao == 1 ?  arrayCitSemanalNoGrafico: arrayCitMensalNoGrafico} />            
                     </VictoryChart>
                     <View style={{marginLeft: '5%', marginBottom: '10%'}}>
                     <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.Montserrat]}>Selecione o parâmetro que deseja visualizar a evolução:</Text>
