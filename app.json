@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "smaProfessorv2",
-    "slug": "smaProfessorv2",
-    "version": "1.0.0",
+    "name": "SMA Professor",
+    "slug": "SMA Professor",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

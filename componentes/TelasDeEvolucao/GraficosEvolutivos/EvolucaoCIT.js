@@ -130,7 +130,7 @@ export default ({route, navigation}) => {
         setCarregandoDados(false);
         setArrayMeses(arrayMesesAux)
         
-
+        console.log(arrayMeses)
       };
     
       useEffect(() => {
@@ -142,7 +142,7 @@ export default ({route, navigation}) => {
     const calcularCITSemanal = () => {
       const semanasObj = {};
       const mesesObj = {};
-
+      const apenasSemanas = []
       arrayPseSemanal.forEach((item) => {
         const data = moment(`${item.ano}-${item.mes}-${item.dia}`, 'YYYY-MM-DD');
         const semanaAno = `${data.week()}-${data.year()}`;
@@ -150,6 +150,7 @@ export default ({route, navigation}) => {
 
         if (semanasObj[semanaAno]) {
           semanasObj[semanaAno].push(item.cit);
+          apenasSemanas.push(semanaAno)
         } else {
           semanasObj[semanaAno] = [item.cit];
         }
@@ -174,12 +175,43 @@ export default ({route, navigation}) => {
       });
       setCitSemanal(arraySemanalTemporario);
       setCitMensal(arrayMensalTemporario);
+      const apenasSemanasAux = []
+      const teste = apenasSemanas.forEach((item) => {
+        const aux = item.split("-")
+        apenasSemanasAux.push(parseInt(aux[0]))
+      })
+      console.log(apenasSemanasAux)
+      const semanasUnicas = [...new Set(apenasSemanasAux)];
 
+      const verificaMesmoMes =(week1, week2) => {
+        const startOfWeek1 = moment().isoWeek(week1).startOf('isoWeek');
+        const startOfWeek2 = moment().isoWeek(week2).startOf('isoWeek');
+        
+        return startOfWeek1.month() === startOfWeek2.month();
+      }
+      console.log(semanasUnicas)
+      // Percorre o array e verifica se as semanas estão no mesmo mês
+      for (let i = 0; i < semanasUnicas.length - 1; i++) {
+        const week1 = semanasUnicas[i];
+        const week2 = semanasUnicas[i + 1];
+        
+        if (verificaMesmoMes(week1, week2)) {
+          console.log(`As semanas ${week1} e ${week2} estão no mesmo mês.`);
+        } else {
+          console.log(`As semanas ${week1} e ${week2} não estão no mesmo mês.`);
+        }
+      }
+      console.log('citSemanal', citSemanal)
     };
 
     if (arrayPseSemanal.length > 0) {
       calcularCITSemanal();
     }
+
+
+
+
+    console.log(citSemanal)
     arrayCit = [...arrayPseSemanal]
   }, [arrayPseSemanal]);
 
@@ -230,7 +262,6 @@ for(let i = 0; i < citSemanal.length; i++){
   vetorContadorSemanas[i] = i+ 1
 }
 
-const citSemanalMapeado = vetorContadorSemanas.map(i => `Sem. ${i}`)
 
 
 
@@ -249,6 +280,7 @@ const filtraArray = useCallback(() => {
   });
   let arrayPseNoGrafico2 = []
   if(opcaoPeriodo == 0){
+
     const arrayMesesEmNumeros = aggregatedData30Days[0].map((i, element) => {
       return i.data;
     });
@@ -270,6 +302,7 @@ const filtraArray = useCallback(() => {
     });
  }
   if(opcaoPeriodo == 2){
+
     const arrayMesesEmNumeros = aggregatedData90Days[0].map((i, element) => {
       return i.data;
     });
@@ -286,7 +319,7 @@ const filtraArray = useCallback(() => {
 
   setArrayParametroX(arrayDatasMeses);
   setArrayFiltrado(arrayPseNoGrafico2);
-}, [arrayMeses, mesInicial]);
+}, [arrayMeses, mesInicial, opcaoPeriodo]);
 
 
 useEffect(() => {
@@ -315,8 +348,6 @@ const mapearMesParaNumero = (mes) => {
     default: return -1; // Mês não reconhecido
   }
 }
-
-
 const dadosFiltrados = citObjetos.filter((item) => {
   return item.data === mesSelecionado;
 });
@@ -355,6 +386,8 @@ const arrayBotaoSelect = arrayMeses.map(i => {return i.data})
 const arrayBotaoSelectSemRepeticoes = [...new Set(arrayBotaoSelect)]
 
 
+const citEixoX = citSemanal.map((i, element) => {return(`Sem. ${element+1}`)})
+
 return (
         <ScrollView style={[estilo.corLightMenos1, style.container]}>
             <SafeAreaView>
@@ -390,7 +423,7 @@ return (
       tickLabels: {
         fontSize: 
           opcao == 0
-            ? arrayPse.length < 30 ? 10 : arrayPse.length > 30 && arrayPse.length < 60 ? 8 : 6
+            ? arrayPse.length < 10 ? 10 : arrayPse.length > 10 && arrayPse.length < 20 ? 8  : arrayPse.length > 20 && arrayPse.length < 30? 7 : 5
             : opcao == 1
             ? citSemanal.length < 30 ? 10 : citSemanal.length > 30 && citSemanal.length < 60 ? 8 : 6
             : opcao == 2
@@ -416,7 +449,7 @@ return (
                                     data: { stroke: "#0066FF" },
                                     parent: { border: "1px solid #182128"},
                                 }}
-                                categories={{x: arrayParametroX}}
+                                categories={opcao == 0? {x: arrayParametroX} : {x: citEixoX}}
 
                             data={opcao == 0 ? arrayFiltrado : opcao == 1 ?  arrayCitSemanalNoGrafico: arrayCitMensalNoGrafico} />            
                     </VictoryChart>}
@@ -434,7 +467,7 @@ return (
                         <RadioBotao
                             options={['30 dias', '60 dias', '90 dias']}
                             selected={opcaoPeriodo}
-                            onChangeSelect={(opt, i) => { setOpcaoPeriodo(i); console.log(i)}}
+                            onChangeSelect={(opt, i) => { setOpcaoPeriodo(i);}}
                         >
                     </RadioBotao>
                     <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: 10}]}>Valores:</Text>
@@ -454,12 +487,12 @@ return (
                     : opcao === 1?                     <RadioBotao
                             options={['1 mês', '2 meses', '3 meses', '4 meses', '5 meses', '6 meses']}
                             selected={opcaoPeriodo}
-                            onChangeSelect={(opt, i) => { setOpcaoPeriodo(i); console.log(i)}}
+                            onChangeSelect={(opt, i) => { setOpcaoPeriodo(i); }}
                         >
                     </RadioBotao> :                     <RadioBotao
                             options={['24 barras']}
                             selected={opcaoPeriodo}
-                            onChangeSelect={(opt, i) => { setOpcaoPeriodo(i); console.log(i)}}
+                            onChangeSelect={(opt, i) => { setOpcaoPeriodo(i); }}
                         >
                     </RadioBotao>}
                 </View>
