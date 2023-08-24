@@ -106,8 +106,6 @@ export default ({route}) => {
 
     return(
         <ScrollView style={[style.container, estilo.corLightMenos1]}>
-            <Button title="Modal" onPress={()=>setModalVisible(true)}/>
-
 
             <View style={style.areaTextos}>
                 <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Nome:</Text>
@@ -227,9 +225,9 @@ export default ({route}) => {
     </View>)
       }
       <View style={style.botoesCrud}>
-        <TouchableOpacity style={[estilo.botao, estilo.corPrimaria, {width: '40%', marginTop: '5%', flexDirection: 'row', justifyContent:'center'}]} onPress={()=> console.log(i)}>
+        <TouchableOpacity style={[estilo.botao, estilo.corSuccess, {width: '40%', marginTop: '5%', flexDirection: 'row', justifyContent:'center'}]} onPress={()=> console.log(i)}>
           <AntDesign name="edit" size={16} color="white" />
-          <Text style={[estilo.textoP16px, estilo.textoCorLight, style.Montserrat, {marginHorizontal: '10%'}]}>EDITAR</Text>
+          <Text style={[estilo.textoP16px, estilo.textoCorLight, style.Montserrat, {marginHorizontal: '10%'}]}>SALVAR</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[estilo.botao, estilo.corDanger, {width: '40%', marginTop: '5%', flexDirection: 'row', justifyContent:'center'}]} onPress={()=> deleteExercicio(i)}>
           <AntDesign name="delete" size={16} color="white" />

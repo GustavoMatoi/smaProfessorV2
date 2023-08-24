@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback } from "react"
-import {Text, View, SafeAreaView, ScrollView, StyleSheet, FlatList } from 'react-native'
+import {Text, View, SafeAreaView, ScrollView, StyleSheet, Button} from 'react-native'
 import estilo from "../../estilo"
 import RadioBotao from "../../RadioBotao"
 import {VictoryChart, VictoryLine, VictoryTheme, VictoryVoronoiContainer, VictoryLabel, VictoryAxis} from "victory-native"
@@ -30,6 +30,11 @@ export default ({route, navigation}) => {
     const [mesInicial, setMesInicial] = useState(0)
     const [arrayFiltrado, setArrayFiltrado] = useState([{x: 0, y: 0}])
     const [arrayParametroX, setArrayParametroX] = useState([])
+    const [semanasUnicas, setSemanasUnicas] = useState([])
+    const [gruposSemanais, setGruposSemanais] = useState({})
+    const [opcaoSemanal, setOpcaoSemanal] = useState(0)
+    const [citSemanalFiltradaMeses, setCitSemanalFiltradaMeses] = useState([])
+    const [citEixoX, setCitEixoX] = useState([])
     useEffect (() => {
       const unsubscribe = NetInfo.addEventListener(state => {
         setConexao(state.type === 'wifi' || state.type === 'cellular')
@@ -130,7 +135,6 @@ export default ({route, navigation}) => {
         setCarregandoDados(false);
         setArrayMeses(arrayMesesAux)
         
-        console.log(arrayMeses)
       };
     
       useEffect(() => {
@@ -150,10 +154,11 @@ export default ({route, navigation}) => {
 
         if (semanasObj[semanaAno]) {
           semanasObj[semanaAno].push(item.cit);
-          apenasSemanas.push(semanaAno)
         } else {
           semanasObj[semanaAno] = [item.cit];
+
         }
+        apenasSemanas.push(semanaAno)
 
         if (mesesObj[mesAno]) {
           mesesObj[mesAno].push(item.cit);
@@ -161,13 +166,11 @@ export default ({route, navigation}) => {
           mesesObj[mesAno] = [item.cit];
         }
       });
-
       const arraySemanalTemporario = [];
       Object.keys(semanasObj).forEach((semanaAno) => {
         const citSemanal = semanasObj[semanaAno].reduce((acc, cit) => acc + cit, 0);
         arraySemanalTemporario.push(citSemanal);
       });
-
       const arrayMensalTemporario = [];
       Object.keys(mesesObj).forEach((mesAno) => {
         const citMensal = mesesObj[mesAno].reduce((acc, cit) => acc + cit, 0);
@@ -180,29 +183,10 @@ export default ({route, navigation}) => {
         const aux = item.split("-")
         apenasSemanasAux.push(parseInt(aux[0]))
       })
-      console.log(apenasSemanasAux)
-      const semanasUnicas = [...new Set(apenasSemanasAux)];
-
-      const verificaMesmoMes =(week1, week2) => {
-        const startOfWeek1 = moment().isoWeek(week1).startOf('isoWeek');
-        const startOfWeek2 = moment().isoWeek(week2).startOf('isoWeek');
-        
-        return startOfWeek1.month() === startOfWeek2.month();
-      }
-      console.log(semanasUnicas)
-      // Percorre o array e verifica se as semanas estão no mesmo mês
-      for (let i = 0; i < semanasUnicas.length - 1; i++) {
-        const week1 = semanasUnicas[i];
-        const week2 = semanasUnicas[i + 1];
-        
-        if (verificaMesmoMes(week1, week2)) {
-          console.log(`As semanas ${week1} e ${week2} estão no mesmo mês.`);
-        } else {
-          console.log(`As semanas ${week1} e ${week2} não estão no mesmo mês.`);
-        }
-      }
-      console.log('citSemanal', citSemanal)
+      setSemanasUnicas([...new Set(apenasSemanasAux)]);
     };
+
+
 
     if (arrayPseSemanal.length > 0) {
       calcularCITSemanal();
@@ -210,12 +194,124 @@ export default ({route, navigation}) => {
 
 
 
-
-    console.log(citSemanal)
-    arrayCit = [...arrayPseSemanal]
   }, [arrayPseSemanal]);
 
+
   
+  const filtraArraySemanal = useCallback(() => {
+    const mesesAgrupados = {}; // Objeto para armazenar os valores agrupados por mês
+
+    for (let i = 0; i < semanasUnicas.length; i++) {
+      const week = semanasUnicas[i];
+      const groupKey = moment().isoWeek(week).startOf('isoWeek').format('MMMM YYYY'); // Formato de mês e ano
+        
+      if (!mesesAgrupados[groupKey]) {
+        mesesAgrupados[groupKey] = [];
+      }
+  
+      mesesAgrupados[groupKey].push(week);
+    }
+    const verificaMesmoMes =(week1, week2) => {
+      const startOfWeek1 = moment().isoWeek(week1).startOf('isoWeek');
+      const startOfWeek2 = moment().isoWeek(week2).startOf('isoWeek');
+      return startOfWeek1.month() === startOfWeek2.month();
+    }
+    for (let i = 0; i < semanasUnicas.length - 1; i++) {
+      const week1 = semanasUnicas[i];
+      const week2 = semanasUnicas[i + 1];
+      
+      if (verificaMesmoMes(week1, week2)) {
+        console.log(`As semanas ${week1} e ${week2} estão no mesmo mês.`);
+      } else {
+        console.log(`As semanas ${week1} e ${week2} não estão no mesmo mês.`);
+      }
+    }
+
+    for (let i = 0; i < semanasUnicas.length; i++) {
+      const week = semanasUnicas[i];
+      const groupKey = moment().isoWeek(week).startOf('isoWeek').month();
+      
+      if (!gruposSemanais[groupKey]) {
+        gruposSemanais[groupKey] = [];
+      }
+
+      gruposSemanais[groupKey].push(week);
+    }
+    const arrays = [];
+
+    for (const key in gruposSemanais) {
+      if (Array.isArray(gruposSemanais[key])) {
+        arrays.push(gruposSemanais[key]);
+      }
+    }
+
+    const gruposPorMes = {};
+    citObjetos.forEach(objeto => {
+      const dataSplit = objeto.data.split(' '); // Divide a data em ["Mês", "Ano"]
+      const mes = dataSplit[0];
+      const ano = dataSplit[1]; // Ano é a segunda parte da divisão
+      const mesAno = `${mes} ${ano}`; // Mesmo mês e ano juntos
+      if (!gruposPorMes[mesAno]) {
+        gruposPorMes[mesAno] = 0;
+      }
+      gruposPorMes[mesAno] += objeto.cit;
+    });
+    const resultadoArray = Object.entries(gruposPorMes).map(([mesAno]) => `${mesAno}`);
+    let valor = -1; // Inicializar como -1 para indicar que não encontrou correspondência
+    
+    for (let i = 0; i < resultadoArray.length; i++) {
+      if (resultadoArray[i].startsWith(mesSelecionado)) {
+        console.log("É igual", i, resultadoArray[i]);
+        valor = i;
+        break; // Se encontrou a correspondência, pode sair do loop
+      }
+    }
+    
+    console.log(mesSelecionado);
+    console.log(resultadoArray);
+    console.log('valor', valor);
+    
+    // Função para calcular valores agregados de um mês
+    const calcularValoresAgregados = (mesesAgrupados, semanasUnicas, citSemanal, qntMeses, mesInicial) => {
+      const resultados = [];
+      if(qntMeses < mesInicial) qntMeses = mesInicial+1
+      for (let i = mesInicial; i <= qntMeses; i++) {
+        const mesChave = Object.keys(mesesAgrupados)[i];
+        const semanasDoMes = mesesAgrupados[mesChave];
+    
+        if (semanasDoMes) {
+          for (let j = 0; j < semanasDoMes.length; j++) {
+            const semana = semanasDoMes[j];
+            const indiceCitSemanal = semanasUnicas.indexOf(semana); // Encontra o índice correto
+            resultados.push(citSemanal[indiceCitSemanal]);
+          }
+        }
+      }
+    
+      return resultados
+    };
+      const result =  calcularValoresAgregados(mesesAgrupados, semanasUnicas, citSemanal, opcaoSemanal, valor)
+      const citSemanalMapeada = result.map((i, element) => {return(`Sem. ${element+1}`)})
+      setCitEixoX(citSemanalMapeada)
+      const arrayPseNoGrafico2 = result.map((i, element) => {
+        return { x: element + 1, y: i };
+      });
+      setCitSemanalFiltradaMeses(arrayPseNoGrafico2)
+
+    }, [opcaoSemanal, mesSelecionado])
+
+  useEffect( () => { 
+
+
+    filtraArraySemanal()
+
+
+  },
+  
+  [opcaoSemanal, mesSelecionado])
+
+
+
   const arrayCitSemanalNoGrafico =  citSemanal.map((element, i)=> {
     return {x: +i+1, y: element}
     
@@ -269,7 +365,6 @@ for(let i = 0; i < citSemanal.length; i++){
 const handleSelectChange = (value) => {
   setMesSelecionado(value);
 };
-
 
 const filtraArray = useCallback(() => {
   const aggregatedData30Days = aggregateData(citObjetos, 30, mesInicial);
@@ -352,6 +447,8 @@ const dadosFiltrados = citObjetos.filter((item) => {
   return item.data === mesSelecionado;
 });
 
+
+
 const aggregateData = (filteredData, interval, mesInicial) => {
   const aggregatedData = [];
   let currentGroup = [];
@@ -373,20 +470,12 @@ const aggregateData = (filteredData, interval, mesInicial) => {
 };
 
 
-const arrayPseNoGrafico =  arrayPse.map((element, i)=> {
-  return {x: +i+1, y: element}
-  
-})
-
-
 
 const arrayBotaoSelect = arrayMeses.map(i => {return i.data})
 
 
 const arrayBotaoSelectSemRepeticoes = [...new Set(arrayBotaoSelect)]
 
-
-const citEixoX = citSemanal.map((i, element) => {return(`Sem. ${element+1}`)})
 
 return (
         <ScrollView style={[estilo.corLightMenos1, style.container]}>
@@ -408,7 +497,7 @@ return (
                                   <View style={[estilo.centralizado, {width: '90%', marginTop: 10}]}>
                                   <BotaoSelect     selecionado={!arrayFiltrado[0].x == 0}  onChange={(value, index) => {handleSelectChange(value, index)}} titulo='Selecione um mês' max={1} options={arrayBotaoSelectSemRepeticoes}>
                       </BotaoSelect>
-                                  </View>
+                                                          </View>
                        {arrayFiltrado[0].x == 0? <View style={[{width: '90%', marginVertical: '5%'}, estilo.centralizado]}>
                         <Text style={[estilo.tituloH619px, estilo.textoCorDanger, {textAlign: 'center'}]}>Selecione o mês do período inicial para renderizar os dados</Text>
                           <View style={[estilo.centralizado, {marginVertical: '10'}]}>
@@ -435,9 +524,10 @@ return (
     dependentAxis
     tickCount={5}
     style={{
-      axisLabel: { fontSize: 12 }, // Adjust the font size of the axis label
-      tickLabels: { fontSize: 10 }, // Adjust the font size of the tick labels
+      axisLabel: { fontSize: 12 },
+      tickLabels: { fontSize: 10 }, 
     }}
+    tickFormat={(tickValue) => Math.round(tickValue + 1)} // Round tick values to integers
   />
                             <VictoryLine
                                 containerComponent={<VictoryVoronoiContainer/>}
@@ -451,7 +541,7 @@ return (
                                 }}
                                 categories={opcao == 0? {x: arrayParametroX} : {x: citEixoX}}
 
-                            data={opcao == 0 ? arrayFiltrado : opcao == 1 ?  arrayCitSemanalNoGrafico: arrayCitMensalNoGrafico} />            
+                            data={opcao == 0 ? arrayFiltrado : opcao == 1 ? citSemanalFiltradaMeses : arrayCitMensalNoGrafico} />            
                     </VictoryChart>}
                     <View style={{marginLeft: '5%', marginBottom: '10%'}}>
                     <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.Montserrat]}>Selecione o parâmetro que deseja visualizar a evolução:</Text>
@@ -486,8 +576,8 @@ return (
                     
                     : opcao === 1?                     <RadioBotao
                             options={['1 mês', '2 meses', '3 meses', '4 meses', '5 meses', '6 meses']}
-                            selected={opcaoPeriodo}
-                            onChangeSelect={(opt, i) => { setOpcaoPeriodo(i); }}
+                            selected={opcaoSemanal}
+                            onChangeSelect={(opt, i) => { setOpcaoSemanal(i);}}
                         >
                     </RadioBotao> :                     <RadioBotao
                             options={['24 barras']}
