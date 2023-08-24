@@ -274,8 +274,8 @@ export default ({route, navigation}) => {
     // Função para calcular valores agregados de um mês
     const calcularValoresAgregados = (mesesAgrupados, semanasUnicas, citSemanal, qntMeses, mesInicial) => {
       const resultados = [];
-      if(qntMeses < mesInicial) qntMeses = mesInicial+1
-      for (let i = mesInicial; i <= qntMeses; i++) {
+    
+      for (let i = mesInicial; i < mesInicial + qntMeses; i++) {
         const mesChave = Object.keys(mesesAgrupados)[i];
         const semanasDoMes = mesesAgrupados[mesChave];
     
@@ -288,15 +288,15 @@ export default ({route, navigation}) => {
         }
       }
     
-      return resultados
+      return resultados;
     };
-      const result =  calcularValoresAgregados(mesesAgrupados, semanasUnicas, citSemanal, opcaoSemanal, valor)
-      const citSemanalMapeada = result.map((i, element) => {return(`Sem. ${element+1}`)})
-      setCitEixoX(citSemanalMapeada)
-      const arrayPseNoGrafico2 = result.map((i, element) => {
-        return { x: element + 1, y: i };
-      });
-      setCitSemanalFiltradaMeses(arrayPseNoGrafico2)
+    
+    const result = calcularValoresAgregados(mesesAgrupados, semanasUnicas, citSemanal, opcaoSemanal + 1, valor);
+    const citSemanalMapeada = result.map((i, element) => `Sem. ${element + 1}`);
+    setCitEixoX(citSemanalMapeada);
+    const arrayPseNoGrafico2 = result.map((i, element) => ({ x: element + 1, y: i }));
+    console.log(arrayPseNoGrafico2);
+    setCitSemanalFiltradaMeses(arrayPseNoGrafico2);
 
     }, [opcaoSemanal, mesSelecionado])
 
