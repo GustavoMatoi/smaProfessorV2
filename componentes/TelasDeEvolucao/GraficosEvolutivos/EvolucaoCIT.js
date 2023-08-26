@@ -35,6 +35,9 @@ export default ({route, navigation}) => {
     const [opcaoSemanal, setOpcaoSemanal] = useState(0)
     const [citSemanalFiltradaMeses, setCitSemanalFiltradaMeses] = useState([])
     const [citEixoX, setCitEixoX] = useState([])
+    const [citMensalFiltrada, setCitMensalFiltrada] = useState([])
+    const [citMensalNoGrafico, setCitMensalNoGrafico] = useState([{x: 0, y: 0}])
+    const [citMensalEixoX, setCitMensalEixoX] = useState([])
     useEffect (() => {
       const unsubscribe = NetInfo.addEventListener(state => {
         setConexao(state.type === 'wifi' || state.type === 'cellular')
@@ -172,18 +175,23 @@ export default ({route, navigation}) => {
         arraySemanalTemporario.push(citSemanal);
       });
       const arrayMensalTemporario = [];
-      Object.keys(mesesObj).forEach((mesAno) => {
+      const arrayMensalTemporario2 = [];
+      Object.keys(mesesObj).forEach((mesAno, i) => {
         const citMensal = mesesObj[mesAno].reduce((acc, cit) => acc + cit, 0);
         arrayMensalTemporario.push(citMensal);
+        arrayMensalTemporario2.push({mes: i, cit: citMensal})
       });
       setCitSemanal(arraySemanalTemporario);
       setCitMensal(arrayMensalTemporario);
+      console.log('citMensal', arrayMensalTemporario2)
+
       const apenasSemanasAux = []
       const teste = apenasSemanas.forEach((item) => {
         const aux = item.split("-")
         apenasSemanasAux.push(parseInt(aux[0]))
       })
       setSemanasUnicas([...new Set(apenasSemanasAux)]);
+      setCitMensalFiltrada(arrayMensalTemporario)
     };
 
 
@@ -193,10 +201,56 @@ export default ({route, navigation}) => {
     }
 
 
-
   }, [arrayPseSemanal]);
 
+  const filtrarArrayMensal = useCallback(() => {
+    const gruposPorMes = {};
+    citObjetos.forEach(objeto => {
+      const dataSplit = objeto.data.split(' '); // Divide a data em ["Mês", "Ano"]
+      const mes = dataSplit[0];
+      const ano = dataSplit[1]; // Ano é a segunda parte da divisão
+      const mesAno = `${mes} ${ano}`; // Mesmo mês e ano juntos
+      if (!gruposPorMes[mesAno]) {
+        gruposPorMes[mesAno] = 0;
+      }
+      gruposPorMes[mesAno] += objeto.cit;
+    });
+    const resultadoArray = Object.entries(gruposPorMes).map(([mesAno]) => `${mesAno}`);
+    console.log(resultadoArray)
+    let valor = -1; // Inicializar como -1 para indicar que não encontrou correspondência
+    
+    for (let i = 0; i < resultadoArray.length; i++) {
+      if (resultadoArray[i].startsWith(mesSelecionado)) {
+        valor = i;
+        break; // Se encontrou a correspondência, pode sair do loop
+      }
+    }
+    const calcularValoresAgregados = (mesInicial) => {
+      const resultados = [];
+  
+      for (let i = mesInicial; i < arrayBotaoSelectSemRepeticoes.length; i++) {
+        resultados.push(citMensalFiltrada[i]);
+      }
+      
+      return resultados;
+    };
+  
 
+      const meses = calcularValoresAgregados(valor)
+      console.log(meses)    
+    
+
+      const citMensalMapeada = meses.map((i, element) => `Mes. ${element + 1}`);
+      const citMensalNoGrafico = meses.map((i, element) =>({ x: element + 1, y: i }))
+      console.log(citMensalNoGrafico)
+      setCitMensalNoGrafico(citMensalNoGrafico)
+      setCitMensalEixoX(citMensalMapeada)
+
+  }, [mesSelecionado])
+
+  useEffect(() => {
+    filtrarArrayMensal()
+  }, [mesSelecionado])
   
   const filtraArraySemanal = useCallback(() => {
     const mesesAgrupados = {}; // Objeto para armazenar os valores agrupados por mês
@@ -221,9 +275,7 @@ export default ({route, navigation}) => {
       const week2 = semanasUnicas[i + 1];
       
       if (verificaMesmoMes(week1, week2)) {
-        console.log(`As semanas ${week1} e ${week2} estão no mesmo mês.`);
       } else {
-        console.log(`As semanas ${week1} e ${week2} não estão no mesmo mês.`);
       }
     }
 
@@ -261,15 +313,12 @@ export default ({route, navigation}) => {
     
     for (let i = 0; i < resultadoArray.length; i++) {
       if (resultadoArray[i].startsWith(mesSelecionado)) {
-        console.log("É igual", i, resultadoArray[i]);
         valor = i;
         break; // Se encontrou a correspondência, pode sair do loop
       }
     }
     
-    console.log(mesSelecionado);
-    console.log(resultadoArray);
-    console.log('valor', valor);
+
     
     // Função para calcular valores agregados de um mês
     const calcularValoresAgregados = (mesesAgrupados, semanasUnicas, citSemanal, qntMeses, mesInicial) => {
@@ -295,7 +344,6 @@ export default ({route, navigation}) => {
     const citSemanalMapeada = result.map((i, element) => `Sem. ${element + 1}`);
     setCitEixoX(citSemanalMapeada);
     const arrayPseNoGrafico2 = result.map((i, element) => ({ x: element + 1, y: i }));
-    console.log(arrayPseNoGrafico2);
     setCitSemanalFiltradaMeses(arrayPseNoGrafico2);
 
     }, [opcaoSemanal, mesSelecionado])
@@ -475,7 +523,7 @@ const arrayBotaoSelect = arrayMeses.map(i => {return i.data})
 
 
 const arrayBotaoSelectSemRepeticoes = [...new Set(arrayBotaoSelect)]
-
+console.log(arrayCitMensalNoGrafico)
 
 return (
         <ScrollView style={[estilo.corLightMenos1, style.container]}>
@@ -527,7 +575,7 @@ return (
       axisLabel: { fontSize: 12 },
       tickLabels: { fontSize: 10 }, 
     }}
-    tickFormat={(tickValue) => Math.round(tickValue + 1)} // Round tick values to integers
+    
   />
                             <VictoryLine
                                 containerComponent={<VictoryVoronoiContainer/>}
@@ -539,9 +587,9 @@ return (
                                     data: { stroke: "#0066FF" },
                                     parent: { border: "1px solid #182128"},
                                 }}
-                                categories={opcao == 0? {x: arrayParametroX} : {x: citEixoX}}
+                                categories={opcao == 0? {x: arrayParametroX} : opcao == 1?  {x: citEixoX} : {x: citMensalEixoX}}
 
-                            data={opcao == 0 ? arrayFiltrado : opcao == 1 ? citSemanalFiltradaMeses : arrayCitMensalNoGrafico} />            
+                            data={opcao == 0 ? arrayFiltrado : opcao == 1 ? citSemanalFiltradaMeses : citMensalNoGrafico} />            
                     </VictoryChart>}
                     <View style={{marginLeft: '5%', marginBottom: '10%'}}>
                     <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.Montserrat]}>Selecione o parâmetro que deseja visualizar a evolução:</Text>
@@ -574,17 +622,45 @@ return (
                         </View>
 
                     
-                    : opcao === 1?                     <RadioBotao
+                    : opcao === 1?                               <View>
+                    <RadioBotao
                             options={['1 mês', '2 meses', '3 meses', '4 meses', '5 meses', '6 meses']}
                             selected={opcaoSemanal}
                             onChangeSelect={(opt, i) => { setOpcaoSemanal(i);}}
                         >
-                    </RadioBotao> :                     <RadioBotao
+                    </RadioBotao>
+                                        <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: 10}]}>Valores:</Text>
+                    <View style={{flexDirection: 'row'}}>
+                    <View>
+                    {citEixoX.map((item) => {return <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>{item}</Text>})}    
+                      </View>
+                      <View>
+                      {citSemanalFiltradaMeses.map((item) => {return <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>- CIT: {item.y}</Text>})}
+
+                      </View>
+                    </View>
+                    </View>
+                    :      
+                    <View>
+                    <RadioBotao
                             options={['24 barras']}
                             selected={opcaoPeriodo}
                             onChangeSelect={(opt, i) => { setOpcaoPeriodo(i); }}
                         >
-                    </RadioBotao>}
+                    </RadioBotao>
+
+                    <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: 10}]}>Valores:</Text>
+                    <View style={{flexDirection: 'row'}}>
+                    <View>
+                    {citMensalEixoX.map((item) => {return <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>{item}</Text>})}    
+                      </View>
+                      <View>
+                      {citMensalNoGrafico.map((item) => {return <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>- CIT: {item.y}</Text>})}
+
+                      </View>
+                    </View>
+                    </View>                    
+}
                 </View>
                     </View>
                     ) : <ModalSemConexao ondeNavegar={'Home'} navigation={navigation}/>}
