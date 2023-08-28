@@ -318,7 +318,7 @@ export default ({route, navigation}) => {
       }
     }
     
-
+console.log('citObjetos', citObjetos)
     
     // Função para calcular valores agregados de um mês
     const calcularValoresAgregados = (mesesAgrupados, semanasUnicas, citSemanal, qntMeses, mesInicial) => {
