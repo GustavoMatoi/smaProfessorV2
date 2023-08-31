@@ -13,11 +13,7 @@ export default ({route, navigation}) => {
     const [resultadoDinamometria2, setResultadoDinamometria2] = useState(0)
     const [resultadoDinamometria3, setResultadoDinamometria3] = useState(0)
     const [resultadoSentarAlcancar1Invalido, setResultadoSentarAlcancar1Invalido] = useState(false)
-    const [resultadoSentarAlcancar2Invalido, setResultadoSentarAlcancar2Invalido] = useState(false)
-    const [resultadoSentarAlcancar3Invalido, setResultadoSentarAlcancar3Invalido] = useState(false)
     const [resultadoDinamometria1Invalido, setResultadoDinamometria1Invalido] = useState(false)
-    const [resultadoDinamometria2Invalido, setResultadoDinamometria2Invalido] = useState(false)
-    const [resultadoDinamometria3Invalido, setResultadoDinamometria3Invalido] = useState(false)
     const [fontsLoaded] = useFonts({
         'Montserrat':
          require('../../../assets/Montserrat-Regular.ttf'),
@@ -26,15 +22,10 @@ export default ({route, navigation}) => {
     const {aluno} = route.params
 
     const validaCampos = () => {
-        if(resultadoDinamometria1 == 0 || resultadoSentarAlcancar1 == 0 || resultadoDinamometria2 == 0 || resultadoDinamometria3 == 0 ||
-            resultadoSentarAlcancar2 == 0 || resultadoSentarAlcancar3 == 0){
+        if(resultadoDinamometria1 == 0 || resultadoSentarAlcancar1 == 0 ){
             Alert.alert("Campos não preenchidos", "Há campos não preenchidos, preencha-os e tente novamente.")
             resultadoDinamometria1 == 0 ? setResultadoDinamometria1Invalido(true) : setResultadoDinamometria1Invalido(false)
-            resultadoDinamometria2 == 0 ? setResultadoDinamometria2Invalido(true) : setResultadoDinamometria2Invalido(false)
-            resultadoDinamometria3 == 0 ? setResultadoDinamometria3Invalido(true) : setResultadoDinamometria3Invalido(false)
             resultadoSentarAlcancar1 == 0 ? setResultadoSentarAlcancar1Invalido(true) : setResultadoSentarAlcancar1Invalido(false)
-            resultadoSentarAlcancar2 == 0 ? setResultadoSentarAlcancar2Invalido(true) : setResultadoSentarAlcancar2Invalido(false)
-            resultadoSentarAlcancar3 == 0 ? setResultadoSentarAlcancar3Invalido(true) : setResultadoSentarAlcancar3Invalido(false)
         } else {
             novaAvalicao.setTesteDinamometriaPernasMedida1(resultadoDinamometria1)
             novaAvalicao.setTesteDinamometriaPernasMedida2(resultadoDinamometria2)
@@ -70,15 +61,13 @@ export default ({route, navigation}) => {
                     />
                     <TextInput 
                     placeholder='Medida 2' 
-                    style={[estilo.sombra, style.textInput, estilo.centralizado, 
-                    resultadoSentarAlcancar2Invalido ? {borderWidth: 1, borderColor: 'red'} : {}]}
+                    style={[estilo.sombra, style.textInput, estilo.centralizado]}
                     onChangeText={(text)=> setResultadoSentarAlcancar2(parseFloat(text))}
                     keyboardType='numeric'
                     />
                     <TextInput 
                     placeholder='Medida 3' 
-                    style={[estilo.sombra, style.textInput, estilo.centralizado, 
-                    resultadoSentarAlcancar3Invalido ? {borderWidth: 1, borderColor: 'red'} : {}]}
+                    style={[estilo.sombra, style.textInput, estilo.centralizado]}
                     onChangeText={(text)=> setResultadoSentarAlcancar3(parseFloat(text))}
                     keyboardType='numeric'
                     />
@@ -97,15 +86,13 @@ export default ({route, navigation}) => {
                 />
                 <TextInput 
                 placeholder='Medida 2' 
-                style={[estilo.sombra, style.textInput, estilo.centralizado, 
-                resultadoDinamometria2Invalido ? {borderWidth: 1, borderColor: 'red'}: {}]}
+                style={[estilo.sombra, style.textInput, estilo.centralizado]}
                 onChangeText={(text)=> setResultadoDinamometria2(parseFloat(text))}
                 keyboardType='numeric'
                 />
                 <TextInput 
                 placeholder='Medida 3' 
-                style={[estilo.sombra, style.textInput, estilo.centralizado, 
-                resultadoDinamometria3Invalido ? {borderWidth: 1, borderColor: 'red'}: {}]}
+                style={[estilo.sombra, style.textInput, estilo.centralizado]}
                 onChangeText={(text)=> setResultadoDinamometria3(parseFloat(text))}
                 keyboardType='numeric'
                 />

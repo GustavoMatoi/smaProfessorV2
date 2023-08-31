@@ -10,11 +10,8 @@ export default ({navigation, route}) => {
     const [imc, setImc] = useState((novaAvalicao.getMassaCorporal()/(novaAvalicao.getEstatura()*novaAvalicao.getEstatura())).toFixed(2))
     const [pressaoSistolica, setPressaoSistolica] = useState(0)
     const [pressaoDiastolica, setPressaoDiastolica] = useState(0)
-    const [pressaoSistolicaInvalido, setPressaoSistolicaInvalido] = useState(false)
-    const [pressaoDiastolicaInvalido, setPressaoDiastolicaInvalido] = useState(false)
     const [pressaoArterial, setPressaoArterial] = useState('')
     const [frequenciaCardiacaDeRepouso, setFrequenciaCardiacaDeRepouso] = useState(0)
-    const [frequenciaCardiacaDeRepousoInvalido, setFrequenciaCardiacaDeRepousoInvalido] = useState(false)
     const [fontsLoaded] = useFonts({
         'Montserrat': require('../../../assets/Montserrat-Regular.ttf'),
     })
@@ -25,7 +22,7 @@ export default ({navigation, route}) => {
 
     useEffect(()=> {
         if(pressaoSistolica, pressaoDiastolica != 0){
-            if(pressaoSistolica < 120 && pressaoDiastolica < 80){
+            if(pressaoSistolica < 120 &&  pressaoSistolica > 10 && pressaoDiastolica < 80 && pressaoDiastolica > 10){
                 setPressaoArterial('Ótima')
             }
             if(pressaoSistolica < 130 && pressaoSistolica >= 120  && pressaoDiastolica >= 80 && pressaoDiastolica < 85){
@@ -46,24 +43,22 @@ export default ({navigation, route}) => {
             if(pressaoSistolica >= 140 && pressaoDiastolica < 90){
                 setPressaoArterial('Hipertensão sistólica isolada')
             }
+            if (pressaoSistolica === 0 && pressaoDiastolica === 0){
+                setPressaoArterial('Não informada')
+
+            }
         } else {
-            setPressaoArterial("Resultado pressão arterial")
+            setPressaoArterial("Não informada")
         }
 
     }, [pressaoSistolica, pressaoDiastolica])
 
     const handleNavigation = () => {
-        if(pressaoSistolica == 0 || pressaoDiastolica == 0){
-            Alert.alert("Campos não preenchidos", "Há campos obrigatórios que não foram preenchidos. Preencha-os e tente novamente.")
-            setPressaoDiastolicaInvalido(true)
-            setPressaoSistolicaInvalido(true)
-            setFrequenciaCardiacaDeRepousoInvalido(true)
-        } else {
             novaAvalicao.setPressaoDiastolica(pressaoDiastolica)
             novaAvalicao.setPressaoSistolica(pressaoSistolica)
             novaAvalicao.setFrequenciaCardiacaDeRepouso(frequenciaCardiacaDeRepouso)
-            navigation.navigate('Finalizar Testes', {aluno: aluno, imc: imc})
-        }
+            navigation.navigate('Finalizar Testes', {aluno: aluno, imc: imc, pressaoArterial: pressaoArterial})
+            console.log('pressaoArterial', pressaoArterial)
     }
     return (
         <ScrollView style={estilo.corLightMenos1}>
@@ -83,7 +78,7 @@ export default ({navigation, route}) => {
                     placeholder='Pressão sistólica' 
                     onChangeText={(text)=> setPressaoSistolica(parseFloat(text))} 
                     keyboardType='numeric' 
-                    style={[estilo.sombra, style.textInputPequeno, estilo.centralizado, style.formatacaoTextInput, pressaoSistolicaInvalido ? {borderWidth: 1, borderColor: 'red'}: {}]}/>
+                    style={[estilo.sombra, style.textInputPequeno, estilo.centralizado, style.formatacaoTextInput]}/>
                 </View>
                 <View style={[{marginTop: '5%', width: '100%', flexDirection: 'row', alignItems: 'center', }]}>
                     <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, style.Montserrat, estilo.centralizado, {}]}>Pressão Diastólica:</Text>
@@ -91,7 +86,7 @@ export default ({navigation, route}) => {
                     placeholder='Pressão diastólica' 
                     onChangeText={(text)=> setPressaoDiastolica(parseFloat(text))} 
                     keyboardType='numeric' 
-                    style={[estilo.sombra, style.textInputPequeno, estilo.centralizado, style.formatacaoTextInput, pressaoDiastolicaInvalido ? {borderWidth: 1, borderColor: 'red'}:{}]}/>
+                    style={[estilo.sombra, style.textInputPequeno, estilo.centralizado, style.formatacaoTextInput]}/>
                 </View>
                 <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, style.Montserrat, estilo.centralizado, {marginVertical: '5%'}]}>{pressaoArterial}</Text>
 
@@ -103,7 +98,7 @@ export default ({navigation, route}) => {
                     placeholder='Freq. cardiaca de repouso'  
                     onChangeText={(text)=> setFrequenciaCardiacaDeRepouso(parseFloat(text))} 
                     keyboardType='numeric' 
-                    style={[estilo.sombra, style.textInputPequeno, estilo.centralizado, style.formatacaoTextInput, frequenciaCardiacaDeRepousoInvalido ? {borderWidth: 1, borderColor: 'red'}: {}]}/>
+                    style={[estilo.sombra, style.textInputPequeno, estilo.centralizado, style.formatacaoTextInput]}/>
                 </View>
 
 

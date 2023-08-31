@@ -6,7 +6,7 @@ function setHora(){
 
 
 class Avaliacao {
-    constructor(dia, mes, ano, massaCorporal, estatura, bracoRelaxadoMedida1, bracoRelaxadoMedida2, bracoRelaxadoMedida3, bracoContraidoMedida1, bracoContraidoMedida2, bracoContraidoMedida3, cinturaMedida1, cinturaMedida2, cinturaMedida3, abdomenMedida1, abdomenMedida2, abdomenMedida3, quadrilMedida1, quadrilMedida2, quadrilMedida3, coxaMedida1, coxaMedida2, coxaMedida3, pernaMedida1, pernaMedida2, pernaMedida3, DCPeitoralMedida1, DCPeitoralMedida2, DCPeitoralMedida3, DCabdomenMedida1, DCabdomenMedida2, DCabdomenMedida3, DCcoxaMedida1, DCcoxaMedida2, DCcoxaMedida3, DCtricepsMedida1, DCtricepsMedida2, DCtricepsMedida3, DCcristailiacaMedida1, DCcristailiacaMedida2, DCcristailiacaMedida3, testeSentarAlcancarMedida1, testeSentarAlcancarMedida2, testeSentarAlcancarMedida3, testeDinamometriaPernasMedida1, testeDinamometriaPernasMedida2, testeDinamometriaPernasMedida3, testeResistenciaAbdominal, frequenciaCardiacaDeRepouso, pressaoSistolica, pressaoDiastolica){
+    constructor(dia, mes, ano, massaCorporal, estatura, bracoRelaxadoMedida1, bracoRelaxadoMedida2, bracoRelaxadoMedida3, bracoContraidoMedida1, bracoContraidoMedida2, bracoContraidoMedida3, cinturaMedida1, cinturaMedida2, cinturaMedida3, abdomenMedida1, abdomenMedida2, abdomenMedida3, quadrilMedida1, quadrilMedida2, quadrilMedida3, coxaMedida1, coxaMedida2, coxaMedida3, pernaMedida1, pernaMedida2, pernaMedida3, DCPeitoralMedida1, DCPeitoralMedida2, DCPeitoralMedida3, DCabdomenMedida1, DCabdomenMedida2, DCabdomenMedida3, DCcoxaMedida1, DCcoxaMedida2, DCcoxaMedida3, DCtricepsMedida1, DCtricepsMedida2, DCtricepsMedida3, DCcristailiacaMedida1, DCcristailiacaMedida2, DCcristailiacaMedida3, testeSentarAlcancarMedida1, testeSentarAlcancarMedida2, testeSentarAlcancarMedida3, testeDinamometriaPernasMedida1, testeDinamometriaPernasMedida2, testeDinamometriaPernasMedida3, testeResistenciaAbdominal, frequenciaCardiacaDeRepouso, pressaoSistolica, pressaoDiastolica, pressaoArterial){
         this.horario = setHora()
         this.dia = dia
         this.mes = mes
@@ -56,8 +56,11 @@ class Avaliacao {
         this.frequenciaCardiacaDeRepouso = frequenciaCardiacaDeRepouso
         this.pressaoDiastolica = pressaoDiastolica
         this.pressaoSistolica = pressaoSistolica
+        this.pressaoArterial = pressaoArterial
     }
 
+    getPressaoArterial = () => {return this.pressaoArterial}
+    setPressaoArterial = (pressaoArterial) => {this.pressaoArterial = pressaoArterial}
     getDia = () => {return this.dia}
     setDia = (dia) => {this.dia = dia}
 

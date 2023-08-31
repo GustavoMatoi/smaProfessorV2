@@ -12,7 +12,6 @@ import NetInfo from '@react-native-community/netinfo';
 import ModalSemConexao from "../../ModalSemConexao"
 export default ({navigation, route}) => {
     const {aluno} = route.params
-    console.log(aluno)
     const [arrayMassaCorporal, setArrayMassaCorporal] = useState([]);
     const [arrayEstatura, setArrayEstatura] = useState([]);
     const [arrayBracoRelaxadoMedida3, setArrayBracoRelaxadoMedida3] = useState([]);
@@ -28,6 +27,30 @@ export default ({navigation, route}) => {
     const [arrayDCCristaIliacaMedida3, setArrayDCCristaIliacaMedida3] = useState([])
     const [conexao, setConexao] = useState(true)
     const [carregandoDados, setCarregandoDados] = useState(true);
+
+    const valorNoGrafico = (valor1, valor2, valor3) => {
+      if (valor2 === 0 && valor3 === 0){
+        return valor1 
+      } else if (valor3 == 0){
+        return (valor1 + valor2)/2
+      } else {
+        let valores = [valor1, valor2, valor3]
+        return calculaMediana(valores)
+      }
+    }
+
+    const calculaMediana = (valores) => {
+      const sortedData = valores.slice().sort((a, b) => a - b);
+      const middleIndex = Math.floor(sortedData.length / 2);
+      if (sortedData.length % 2 === 0) {
+        const value1 = sortedData[middleIndex - 1];
+        const value2 = sortedData[middleIndex];
+        return (value1 + value2) / 2;
+      } else {
+        return sortedData[middleIndex];
+      }
+    }
+
 
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
@@ -71,21 +94,20 @@ export default ({navigation, route}) => {
           
               querySnapshot.forEach((doc) => {
                 const data = doc.data();
-                console.log(data)
     
                 newArrayMassaCorporal.push(data.massaCorporal);
                 newArrayEstatura.push(data.estatura);
-                newArrayBracoRelaxadoMedida3.push(data.bracoRelaxadoMedida1);
-                newArrayBracoContraidoMedida3.push(data.bracoContraidoMedida1);
-                newArrayCinturaMedida3.push(data.cinturaMedida1);
-                newArrayAbdomenMedida3.push(data.abdomenMedida1);
-                newArrayQuadrilMedida3.push(data.quadrilMedida1);
-                newArrayCoxaMedida3.push(data.coxaMedida1);
-                newArrayPernaMedida3.push(data.pernaMedida1);
-                newArrayDCPeitoralMedida3.push(data.DCPeitoralMedida1);
-                newArrayDCAbomenMedida3.push(data.DCabdomenMedida1);
-                newArrayDCCoxaMedida3.push(data.DCCoxaMedida1);
-                newArrayDCCristaIliacaMedida3.push(data.DCCristaIliacaMedida1);
+                newArrayBracoRelaxadoMedida3.push(valorNoGrafico(data.bracoRelaxadoMedida1, data.bracoRelaxadoMedida2, data.bracoRelaxadoMedida3));
+                newArrayBracoContraidoMedida3.push(valorNoGrafico(data.bracoContraidoMedida1, data.bracoContraidoMedida2, data.bracoContraidoMedida3));
+                newArrayCinturaMedida3.push(valorNoGrafico(data.cinturaMedida1, data.cinturaMedida2, data.cinturaMedida3));
+                newArrayAbdomenMedida3.push(valorNoGrafico(data.abdomenMedida1, data.abdomenMedida2, data.abdomenMedida3));
+                newArrayQuadrilMedida3.push(valorNoGrafico(data.quadrilMedida1, data.quadrilMedida2, data.quadrilMedida3));
+                newArrayCoxaMedida3.push(valorNoGrafico(data.coxaMedida1, data.coxaMedida2, data.coxaMedida3));
+                newArrayPernaMedida3.push(valorNoGrafico(data.pernaMedida1, data.pernaMedida2, data.pernaMedida3));
+                newArrayDCPeitoralMedida3.push(valorNoGrafico(data.DCPeitoralMedida1, data.DCPeitoralMedida2, data.DCPeitoralMedida3));
+                newArrayDCAbomenMedida3.push(valorNoGrafico(data.DCabdomenMedida1, data.DCabdomenMedida2, data.DCabdomenMedida3));
+                newArrayDCCoxaMedida3.push(valorNoGrafico(data.DCCoxaMedida1, data.DCCoxaMedida2, data.DCCoxaMedida3));
+                newArrayDCCristaIliacaMedida3.push(valorNoGrafico(data.DCCristaIliacaMedida1, data.DCCristaIliacaMedida2, data.DCCristaIliacaMedida3));
               });
           
               setArrayMassaCorporal(newArrayMassaCorporal);
@@ -183,7 +205,6 @@ export default ({navigation, route}) => {
         return `Avaliação ${i}`
     })
 
-    console.log(arrayMassaCorporal)
     return (
         <ScrollView style={[estilo.corLightMenos1, style.container]}>
         <SafeAreaView>
@@ -222,8 +243,8 @@ export default ({navigation, route}) => {
                 <VictoryChart theme={VictoryTheme.material}>
                 <VictoryAxis
     style={{
-      axisLabel: { fontSize: 12 }, // Adjust the font size of the axis label
-      tickLabels: { fontSize: 10 }, // Adjust the font size of the tick labels
+      axisLabel: { fontSize: 12 },
+      tickLabels: { fontSize: 10 }, 
     }}
   />
                 <VictoryAxis dependentAxis

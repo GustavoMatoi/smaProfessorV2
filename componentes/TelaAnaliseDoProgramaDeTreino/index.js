@@ -8,36 +8,33 @@ import Spinner from "react-native-loading-spinner-overlay";
 import ModalSemConexao from "../ModalSemConexao";
 
 
-function getPressaoArterial(pressaoDiastolica, pressaoSistolica){
-    let pressaoArterial = ''
-    if(pressaoSistolica < 120 && pressaoDiastolica < 80){
-        pressaoArterial = `Ótima`
-    } else {
-        if(pressaoSistolica < 130 && pressaoDiastolica < 85){
-            pressaoArterial =  `Normal`
-        } else {
-            if(pressaoSistolica > 130 && pressaoSistolica < 139 && pressaoDiastolica > 85 && pressaoDiastolica < 89){
-                pressaoArterial =  `Limítrofe`
-            } else {
-                if(pressaoSistolica > 140 && pressaoSistolica < 159 && pressaoDiastolica > 90 && pressaoDiastolica < 99){
-                    pressaoArterial =  `Hipertensão estágio 1`
-                } else {
-                    if(pressaoSistolica > 160 && pressaoSistolica < 179 && pressaoDiastolica > 100 && pressaoDiastolica < 109){
-                        pressaoArterial =  `Hipertensão estágio 2`
-                    } else {
-                        if(pressaoSistolica >= 140 && pressaoDiastolica <90){
-                            pressaoArterial =  `Hipertensão Sistólica isolada`
-                        } else {
-                            pressaoArterial =  'Nada'
-                        }                    
-                    }
-                }
-            }
+const getPressaoArterial = (pressaoSistolica, pressaoDiastolica) => {
+    if(pressaoSistolica, pressaoDiastolica != 0){
+        if(pressaoSistolica  < 120 && pressaoSistolica > 10 &&  pressaoDiastolica > 10 &&  pressaoDiastolica < 80){
+            return 'Ótima'
         }
-    }
-
-    return pressaoArterial;
+        if(pressaoSistolica < 130 && pressaoSistolica >= 120  && pressaoDiastolica >= 80 && pressaoDiastolica < 85){
+            return 'Normal'
+        }
+        if(pressaoSistolica >= 130 && pressaoSistolica <= 139 && pressaoDiastolica >= 85 && pressaoDiastolica <=89){
+            return 'Limítrofe'
+        }
+        if(pressaoSistolica >= 140 && pressaoSistolica <=159 && pressaoDiastolica >=90 && pressaoDiastolica <= 99){
+            return 'Hipertensão Estágio 1'
+        }
+        if(pressaoSistolica >= 160 && pressaoSistolica <= 179 && pressaoDiastolica >= 100 && pressaoDiastolica <= 109){
+            return 'Hipertensão estágio 2'
+        }
+        if(pressaoSistolica >= 180 && pressaoDiastolica >= 110){
+            return 'Hipertensão estágio 3'
+        }
+        if(pressaoSistolica >= 140 && pressaoDiastolica < 90){
+            return 'Hipertensão sistólica isolada'
+        }
+} else {
+    return "Não informada"
 }
+}   
 
 
 function comparaValores(avaliacaoAtual, avaliacaoAnterior){
@@ -60,7 +57,7 @@ export default function TelaAnaliseDoProgramaDeTreino(props) {
           unsubscribe()
         }
       }, [])
-
+      console.log('avaliacaoAnterior', avaliacaoAnterior)
     const [conexao, setConexao] = useState(true)
     const posicaoArrayFichas = props.route.params.posicaoDoArray;
     const avaliacaoAnterior = props.route.params.avaliacaoAnterior;
@@ -291,7 +288,7 @@ console.log(avaliacao)
     
                         frequenciaCardiacaRepouso={comparaValores(avaliacao.FrequenciaCardiacaDeRepouso, avaliacaoAnterior.FrequenciaCardiacaDeRepouso)}
     
-                        pressaoArterial={`Avaliação anterior: ${getPressaoArterial(avaliacaoAnterior.pressaoArterial, avaliacaoAnterior.pressaoArterial)}`}
+                        pressaoArterial={`Avaliação anterior: ${avaliacaoAnterior.pressaoArterial}`}
     
     >                   
     

@@ -115,7 +115,7 @@ export default ({navigation}) => {
               <View style={[style.iconeBotao]}>
                   <MaterialCommunityIcons name="clipboard-text-search-outline" size={120} color="white" />                
               </View>
-                  <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.textoBotao]}>ANÁLISE DO PROGRAMA DE TREINO</Text>
+                  <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.textoBotao]}>AVALIAÇÕES E FICHAS</Text>
               </TouchableOpacity>
           </View>
 

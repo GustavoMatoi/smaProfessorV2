@@ -32,6 +32,29 @@ export default ({route, navigation}) => {
         }
     }, [])
 
+    const valorNoGrafico = (valor1, valor2, valor3) => {
+      if (valor2 === 0 && valor3 === 0){
+        return valor1 
+      } else if (valor3 == 0){
+        return (valor1 + valor2)/2
+      } else {
+        let valores = [valor1, valor2, valor3]
+        return calculaMediana(valores)
+      }
+    }
+
+    const calculaMediana = (valores) => {
+      const sortedData = valores.slice().sort((a, b) => a - b);
+      const middleIndex = Math.floor(sortedData.length / 2);
+      if (sortedData.length % 2 === 0) {
+        const value1 = sortedData[middleIndex - 1];
+        const value2 = sortedData[middleIndex];
+        return (value1 + value2) / 2;
+      } else {
+        return sortedData[middleIndex];
+      }
+    }
+
     const getAvaliacoes = async () => {
         const db = getFirestore();
         const avaliacoesRef = collection(db, "Academias", `${professorLogado.getAcademia()}`,"Professores", aluno.professorResponsavel, "alunos", `Aluno ${aluno.email}`, 'Avaliações');
@@ -45,10 +68,10 @@ export default ({route, navigation}) => {
 
 
         querySnapshot.forEach((doc)=> {
-            newArrayDinamometriaPernas.push(doc.get('dinamometriaPernasMedida3'))
+            newArrayDinamometriaPernas.push(valorNoGrafico(doc.get('dinamometriaPernasMedida1'), doc.get('dinamometriaPernasMedida2'), doc.get('dinamometriaPernasMedida3')))
             newArrayResistenciaAbdominal.push(doc.get('ResistenciaAbdominal'))
-            newArraySentarAlcancar.push(doc.get('TesteSentarAlcancarMedida3'))
-            newArrayFrequenciaCardiacaDeRepouso.push(doc.get('dinamometriaPernasMedida3'))
+            newArraySentarAlcancar.push(valorNoGrafico(doc.get('TesteSentarAlcancarMedida1'), doc.get('TesteSentarAlcancarMedida2'), doc.get('TesteSentarAlcancarMedida3')))
+            newArrayFrequenciaCardiacaDeRepouso.push(valorNoGrafico(doc.get('dinamometriaPernasMedida1'), doc.get('dinamometriaPernasMedida2'), doc.get('dinamometriaPernasMedida3')))
         });  
         setTotalAvaliacoes(newArrayDinamometriaPernas.length);
         setArrayDinamometriaPernas(newArrayDinamometriaPernas);
@@ -135,6 +158,15 @@ export default ({route, navigation}) => {
           <Text style={[estilo.tituloH619px, estilo.textoCorSecundaria, estilo.centralizado, { marginTop: '3%' }]}>
             {titulo || 'Massa corporal'}
           </Text>
+          <View style={{marginLeft: '2%'}}>
+          <Text>Valores:</Text>
+          
+          {opcao == 0? arrayDinamometriaPernas.map((i)=> <Text>{i}</Text>) 
+          : opcao == 1? arrayResistenciaAbdominal.map((i)=><Text>{i}</Text>)
+          : opcao == 2? arraySentarAlcancar.map((i) => <Text>{i}</Text>)
+        : arrayFrequenciaCardiacaDeRepouso.map((i)=> <Text>{i}</Text>)}
+          </View>
+
           <VictoryChart theme={VictoryTheme.material}>
             <VictoryLine
               containerComponent={<VictoryVoronoiContainer />}

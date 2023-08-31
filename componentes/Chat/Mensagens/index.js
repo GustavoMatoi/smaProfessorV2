@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useLayoutEffect, useCallback} from 'react';
-import {View, Text, SafeAreaView, ScrollView, StyleSheet, TextInput, TouchableOpacity, Dimensions} from 'react-native'
+import {View, Text, SafeAreaView, ScrollView, StyleSheet, TextInput, TouchableOpacity, Dimensions, Keyboard} from 'react-native'
 import estilo from '../../estilo';
 import MensagemEnviada from './MensagemEnviada';
 import MensagemRecebida from './MensagemRecebida';
@@ -15,6 +15,30 @@ export default ({route}) => {
     const altura = Dimensions.get('screen').height
     const [mensagem, setMensagem] = useState('')
     const [mensagens, setMensagens] = useState([])
+    const [keyboardStatus, setKeyboardStatus] = useState('');
+    const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+    useEffect(() => {
+      const showSubscription = Keyboard.addListener('keyboardDidShow', (event) => {
+        setKeyboardStatus('Keyboard Shown');
+        console.log('Keyboard Shown');
+        setKeyboardHeight(event.endCoordinates.height);
+        console.log(keyboardHeight);
+        console.log(event.endCoordinates.height)
+      });
+      const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+        setKeyboardStatus('Keyboard Hidden');
+        console.log('Keyboard Hidden');
+        setKeyboardHeight(0);
+        console.log(keyboardHeight);
+
+      });
+    
+      return () => {
+        showSubscription.remove();
+        hideSubscription.remove();
+      };
+    }, []);
 
     const enviarMensagem = (mensagem) => {
         const mensagemRef = collection(
@@ -90,7 +114,7 @@ export default ({route}) => {
                 </View>
                 
             </ScrollView>
-            <View style={[style.blocoDeTexto, estilo.corLight]}>
+            <View style={[style.blocoDeTexto, estilo.corLight, {bottom: keyboardHeight + 50}]}>
                     <TextInput placeholder='Digite sua mensagem' style={[style.digitarMensagem, estilo.corLightMenos1, estilo.centralizado, {padding: 5}]} value={mensagem} onChangeText={(text)=> setMensagem(text)}/>
                     <TouchableOpacity style={[estilo.centralizado, estilo.corPrimaria, style.botaoEnviarMensagem]} onPress={()=> enviarMensagem(mensagem)}>
                         <View style={[estilo.centralizado, {marginTop: 10}]}>
@@ -112,7 +136,6 @@ const style = StyleSheet.create({
         height: 60,
         backgroundColor: 'white',
         position: 'absolute',
-        bottom: 50
     },
     digitarMensagem: {
         width: '80%',

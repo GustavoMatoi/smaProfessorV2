@@ -3,7 +3,6 @@ import {Text, View, StyleSheet} from 'react-native';
 import estilo from "../../estilo";
 import Foto from "../Conversas/Foto";
 export default ({aluno}) => {
-    console.log(`Aluno header: ${aluno.cpf}`)
     return (
         <View style={[estilo.corSecundaria]}>
             <View style={[style.container]}>

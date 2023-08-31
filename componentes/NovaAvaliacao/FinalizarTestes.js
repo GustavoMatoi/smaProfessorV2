@@ -12,11 +12,11 @@ import * as Notification from "expo-notifications"
 
 export default ({navigation, route}) => {
 
-    const {aluno, imc} = route.params
+    const {aluno, imc, pressaoArterial} = route.params
     const [salvandoAvaliacao, setSalvandoAvaliacao] = useState(false)
     const getPressaoArterial = (pressaoSistolica, pressaoDiastolica) => {
         if(pressaoSistolica, pressaoDiastolica != 0){
-            if(pressaoSistolica < 120 && pressaoDiastolica < 80){
+            if(pressaoSistolica  < 120 && pressaoSistolica > 10 &&  pressaoDiastolica > 10 &&  pressaoDiastolica < 80){
                 return 'Ótima'
             }
             if(pressaoSistolica < 130 && pressaoSistolica >= 120  && pressaoDiastolica >= 80 && pressaoDiastolica < 85){
@@ -37,6 +37,8 @@ export default ({navigation, route}) => {
             if(pressaoSistolica >= 140 && pressaoDiastolica < 90){
                 return 'Hipertensão sistólica isolada'
             }
+    } else {
+        return "Não informada"
     }
 }   
     const data = new Date()
@@ -101,7 +103,7 @@ export default ({navigation, route}) => {
         quadrilMedida1: novaAvalicao.getQuadrilMedida1(),
         quadrilMedida2: novaAvalicao.getQuadrilMedida2(),
         quadrilMedida3: novaAvalicao.getQuadrilMedida3(),
-        pressaoArterial: getPressaoArterial(novaAvalicao.getPressaoSistolica(), novaAvalicao.getPressaoDiastolica())
+        pressaoArterial: pressaoArterial
     }
     console.log(avaliacao)
     console.log("FCdR: ", avaliacao.FrequenciaCardiacaDeRepouso)
@@ -163,7 +165,7 @@ export default ({navigation, route}) => {
             quadrilMedida1: novaAvalicao.getQuadrilMedida1(),
             quadrilMedida2: novaAvalicao.getQuadrilMedida2(),
             quadrilMedida3: novaAvalicao.getQuadrilMedida3(),
-            pressaoArterial: getPressaoArterial(novaAvalicao.getPressaoSistolica(), novaAvalicao.getPressaoDiastolica()),
+            pressaoArterial:pressaoArterial,
         }).then(()=> {
             console.log("Documento criado com sucesso")
             setDoc(doc(firebaseBD, "Academias", professorLogado.getAcademia(), "Professores", aluno.professorResponsavel, 'alunos', `Aluno ${aluno.email}`, 'Notificações', `Notificação${ano}|${mes}|${dia}`), {

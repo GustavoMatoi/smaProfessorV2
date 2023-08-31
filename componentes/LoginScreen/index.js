@@ -69,7 +69,6 @@ export default ({navigation}) => {
       }
 
     const handleCadastro =() => {
-        console.log("Chegou aqui")
         navigation.navigate('Cadastro')
     }
     return (

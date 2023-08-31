@@ -258,16 +258,21 @@ export default ({navigation, route}) => {
                     <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria]}>ESTATURA (CM):</Text>
                         <View style={[style.areaBotoes]}>
                         <TextInput 
-                                onChangeText={(text)=> {setEstatura(parseFloat(text)); console.log(estatura)}}
-                                keyboardType='numeric'
-                                style={[
-                                    style.inputText, 
-                                    estilo.sombra, 
-                                    estilo.corLight,
-                                    estaturaInvalido ? {borderWidth: 1, borderColor: 'red'} : {}
-                                ]}
-                                placeholder="Estatura"
-                                ></TextInput>
+                            onChangeText={(text) => {
+                                const inputValue = parseFloat(text);
+                                const estatura = isNaN(inputValue) ? '' : inputValue <= 299 ? inputValue : 299;
+                                setEstatura(estatura.toString());
+                            }}
+                            keyboardType='numeric'
+                            style={[
+                                style.inputText, 
+                                estilo.sombra, 
+                                estilo.corLight,
+                                estaturaInvalido ? { borderWidth: 1, borderColor: 'red' } : {}
+                            ]}
+                            placeholder="Estatura"
+                            value={estatura.toString()}
+                            />
                         </View>
                     </View>
 
