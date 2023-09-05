@@ -14,167 +14,200 @@ export default ({aluno, navigation}) => {
     const anoAux = data.getFullYear()
 
     const html = `
-    <html>
-      <body>
-          <div style="width: 100%; height: 100%; position: relative; background: white">
-              <div style="width: 220px; height: 78px; left: 25px; top: 25px; position: absolute">
-                      <div style="width: 45.63px; height: 27px; left: 108.37px; top: -0px; position: absolute; text-align: center; color: #0066FF; font-size: 25px; font-family: Roboto; font-weight: 400; line-height: 28px; letter-spacing: 0.50px; word-wrap: break-word">App</div>
-                      <div style="width: 108.37px; height: 27px; left: 0px; top: 0px; position: absolute; text-align: center"><span style="color: #182128; font-size: 25px; font-family: Roboto; font-weight: 400; line-height: 30px; letter-spacing: 0.50px; word-wrap: break-word">ShapeMe <br/></span><span style="color: #182128; font-size: 20px; font-family: Roboto; font-weight: 400; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word"><br/></span></div>
-              </div>
-              <div style="width: 500px; height: 0px; left: 48px; top: 103px; position: absolute; border: 0.50px black solid"></div>
-              <div style="width: 375px; height: 43px; left: 110px; top: 125px; position: absolute; text-align: center; color: black; font-size: 32px; font-family: Roboto; font-weight: 400; line-height: 38.40px; letter-spacing: 0.64px; word-wrap: break-word">
-                  Informações do usuário
-              </div>
-              <div style="width: 75px; height: 15px; left: 48px; top: 190px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  Nome 
-              </div>
-              <div style="width: 75px; height: 15px; left: 48px; top: 259px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  CPF
-              </div>
-              <div style="width: 193px; height: 15px; left: 202px; top: 259px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  Data de nascimento
-              </div>
-              <div style="width: 169px; height: 25px; left: 48px; top: 222px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.nome}
-              </div>
-              <div style="width: 169px; height: 25px; left: 48px; top: 291px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.cpf}
-              </div>
-              <div style="width: 169px; height: 25px; left: 202px; top: 291px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.diaNascimento}/${aluno.mesNascimento}/${aluno.anoNascimento}
-              </div>
-              <div style="width: 193px; height: 15px; left: 416px; top: 259px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  Telefone
-              </div>
-              <div style="width: 169px; height: 25px; left: 416px; top: 291px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.telefone}
-              </div>
-              <div style="width: 95px; height: 15px; left: 48px; top: 567px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  Academia
-              </div>
-              <div style="width: 193px; height: 15px; left: 347px; top: 567px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  Professor
-              </div>
-              <div style="width: 169px; height: 25px; left: 48px; top: 599px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.Academia}
-              </div>
-              <div style="width: 169px; height: 25px; left: 347px; top: 599px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.professorResponsavel}
-              </div>
-              <div style="width: 193px; height: 15px; left: 347px; top: 185px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  Idade
-              </div>
-              <div style="width: 169px; height: 25px; left: 347px; top: 217px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${anoAux - aluno.anoNascimento}
-              </div>
-              <div style="width: 75px; height: 15px; left: 48px; top: 397px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  CEP
-              </div>
-              <div style="width: 193px; height: 15px; left: 202px; top: 397px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  Rua
-              </div>
-              <div style="width: 169px; height: 25px; left: 48px; top: 429px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.endereco.cep}
-              </div>
-              <div style="width: 169px; height: 25px; left: 202px; top: 429px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.endereco.rua}
-              </div>
-              <div style="width: 193px; height: 15px; left: 416px; top: 397px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  Bairro
-              </div>
-              <div style="width: 75px; height: 15px; left: 48px; top: 466px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  Cidade
-              </div>
-              <div style="width: 193px; height: 15px; left: 202px; top: 466px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  Número
-              </div>
-              <div style="width: 169px; height: 25px; left: 48px; top: 498px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.endereco.cidade}
-              </div>
-              <div style="width: 169px; height: 25px; left: 202px; top: 498px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.endereco.numero}
-              </div>
-              <div style="width: 193px; height: 15px; left: 416px; top: 466px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  Complemento
-              </div>
-              <div style="width: 169px; height: 25px; left: 416px; top: 498px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.endereco.complemento}
-              </div>
-              <div style="width: 169px; height: 25px; left: 416px; top: 429px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.endereco.bairro}
-              </div>
-              <div style="width: 95px; height: 15px; left: 48px; top: 328px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  Email
-              </div>
-              <div style="width: 193px; height: 15px; left: 202px; top: 328px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  Profissão
-              </div>
-              <div style="width: 169px; height: 25px; left: 48px; top: 360px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.email}
-              </div>
-              <div style="width: 169px; height: 25px; left: 202px; top: 360px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.profissao}
-              </div>
-              <div style="width: 193px; height: 15px; left: 416px; top: 328px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
-                  Sexo
-              </div>
-              <div style="width: 169px; height: 25px; left: 416px; top: 360px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
-                  ${aluno.sexo}
-              </div>
-          </div>
-      </body>
-    </html>
+    <!DOCTYPE html>
+        <html lang="pt-br">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        <body>
+            <div style="width: 100%; height: 100%; position: relative; background: white">
+                <div style="width: 220px; height: 78px; left: 0px; top: 25px; position: absolute">
+                    <div style="width: 154px; height: 27px; left: 60px; top: 35px; position: absolute">
+                        <div style="width: 80.63px; height: 27px; left: 115.37px; top: -0px; position: absolute; text-align: center; color: #0066FF; font-size: 28px; font-family: Roboto; font-weight: 400; line-height: 30px; letter-spacing: 0.50px; word-wrap: break-word">App</div>
+                        <div style="width: 128.37px; height: 27px; left: 0px; top: 0px; position: absolute; text-align: center"><span style="color: #182128; font-size: 28px; font-family: Roboto; font-weight: 400; line-height: 30px; letter-spacing: 0.50px; word-wrap: break-word">ShapeMe<br/></span>
+                        <span style="color: #182128; font-size: 20px; font-family: Roboto; font-weight: 400; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word"><br/></span>
+                        </div>
+                    </div>
+                </div>
+                <div style="width: 500px; height: 0px; left: 48px; top: 103px; position: absolute; border: 0.50px black solid"></div>
+                <div style="width: 375px; height: 43px; left: 110px; top: 125px; position: absolute; text-align: center; color: black; font-size: 32px; font-family: Roboto; font-weight: 400; line-height: 38.40px; letter-spacing: 0.64px; word-wrap: break-word">
+                    Informações do usuário
+                </div>
+                <div style="width: 75px; height: 15px; left: 48px; top: 190px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    Nome 
+                </div>
+                <div style="width: 75px; height: 15px; left: 48px; top: 259px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    CPF
+                </div>
+                <div style="width: 193px; height: 15px; left: 202px; top: 259px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    Data de nascimento
+                </div>
+                <div style="width: 169px; height: 25px; left: 48px; top: 222px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.nome}
+                </div>
+                <div style="width: 169px; height: 25px; left: 48px; top: 291px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.cpf}
+                </div>
+                <div style="width: 169px; height: 25px; left: 202px; top: 291px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.diaNascimento}/${aluno.mesNascimento}/${aluno.anoNascimento}
+                </div>
+                <div style="width: 193px; height: 15px; left: 416px; top: 259px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    Telefone
+                </div>
+                <div style="width: 169px; height: 25px; left: 416px; top: 291px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.telefone}
+                </div>
+                <div style="width: 95px; height: 15px; left: 48px; top: 567px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    Academia
+                </div>
+                <div style="width: 193px; height: 15px; left: 347px; top: 567px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    Professor
+                </div>
+                <div style="width: 169px; height: 25px; left: 48px; top: 599px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.Academia}
+                </div>
+                <div style="width: 169px; height: 25px; left: 347px; top: 599px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.professorResponsavel}
+                </div>
+                <div style="width: 193px; height: 15px; left: 347px; top: 185px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    Idade
+                </div>
+                <div style="width: 169px; height: 25px; left: 347px; top: 217px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${anoAux - aluno.anoNascimento}
+                </div>
+                <div style="width: 75px; height: 15px; left: 48px; top: 397px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    CEP
+                </div>
+                <div style="width: 193px; height: 15px; left: 202px; top: 397px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    Rua
+                </div>
+                <div style="width: 169px; height: 25px; left: 48px; top: 429px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.endereco.cep}
+                </div>
+                <div style="width: 169px; height: 25px; left: 202px; top: 429px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.endereco.rua}
+                </div>
+                <div style="width: 193px; height: 15px; left: 416px; top: 397px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    Bairro
+                </div>
+                <div style="width: 75px; height: 15px; left: 48px; top: 466px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    Cidade
+                </div>
+                <div style="width: 193px; height: 15px; left: 202px; top: 466px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    Número
+                </div>
+                <div style="width: 169px; height: 25px; left: 48px; top: 498px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.endereco.cidade}
+                </div>
+                <div style="width: 169px; height: 25px; left: 202px; top: 498px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.endereco.numero}
+                </div>
+                <div style="width: 193px; height: 15px; left: 416px; top: 466px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    Complemento
+                </div>
+                <div style="width: 169px; height: 25px; left: 416px; top: 498px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.endereco.complemento}
+                </div>
+                <div style="width: 169px; height: 25px; left: 416px; top: 429px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.endereco.bairro}
+                </div>
+                <div style="width: 95px; height: 15px; left: 48px; top: 328px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    Email
+                </div>
+                <div style="width: 193px; height: 15px; left: 202px; top: 328px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    Profissão
+                </div>
+                <div style="width: 169px; height: 25px; left: 48px; top: 360px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.email}
+                </div>
+                <div style="width: 169px; height: 25px; left: 202px; top: 360px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.profissao}
+                </div>
+                <div style="width: 193px; height: 15px; left: 416px; top: 328px; position: absolute; color: black; font-size: 20px; font-family: Roboto; font-weight: 700; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word">
+                    Sexo
+                </div>
+                <div style="width: 169px; height: 25px; left: 416px; top: 360px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
+                    ${aluno.sexo}
+                </div>
+            </div>
+        </body>
+        </html>
     `;
     const parq = `
-    <html>
-      <body>
-          <div style="width: 595px; height: 842px; position: relative; background: white">
-              <div style="width: 220px; height: 78px; left: 25px; top: 25px; position: absolute">
-              <div style="width: 45.63px; height: 27px; left: 108.37px; top: -0px; position: absolute; text-align: center; color: #0066FF; font-size: 25px; font-family: Roboto; font-weight: 400; line-height: 28px; letter-spacing: 0.50px; word-wrap: break-word">App</div>
-              <div style="width: 108.37px; height: 27px; left: 0px; top: 0px; position: absolute; text-align: center"><span style="color: #182128; font-size: 25px; font-family: Roboto; font-weight: 400; line-height: 30px; letter-spacing: 0.50px; word-wrap: break-word">ShapeMe<br/></span><span style="color: #182128; font-size: 20px; font-family: Roboto; font-weight: 400; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word"><br/></span></div>
-              </div>
-              <div style="width: 500px; height: 0px; left: 48px; top: 103px; position: absolute; border: 0.50px black solid"></div>
-              <div style="width: 375px; height: 43px; left: 110px; top: 125px; position: absolute; text-align: center; color: black; font-size: 32px; font-family: Roboto; font-weight: 400; line-height: 38.40px; letter-spacing: 0.64px; word-wrap: break-word">
-                  PAR-Q & Você
-              </div>
-              <div style="width: 500px; height: 32px; left: 48px; top: 168px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">
-                  Questionário de Prontidão para Atividade Física (Revisado em 1994). Para pessoas com idade entre 15 e 69 anos.
-              </div>
-              <div style="width: 500px; height: 162px; left: 47px; top: 208px; position: absolute; color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">
-                      A atividade física regular é divertida e saudável e cada vez mais pessoas estão começando a se tornar mais ativas todos os dias. Ser ativo é muito seguro para a maioria das pessoas. No entanto, algumas pessoas devem consultar um médico antes de começar a se tornar muito mais fisicamente ativo.<br/>    
-                      Se você está planejando tornar-se muito mais fisicamente ativo do que você é agora, comece respondendo as sete perguntas do quadro abaixo. Se tiver entre 15 e 69 anos de idade, o PAR-Q informará se você deve consultar o seu médico antes de começar. Se você tem mais de 69 anos de idade, e você não está acostumado a ser muito ativo, consulte seu médico.<br/>    
-                      O bom senso é seu melhor guia ao responder a estas perguntas. Por favor, leia as perguntas cuidadosamente e responda a cada uma honestamente marcando com SIM ou NÃO.
-              </div>
-              <div style="width: 501px; height: 304px; left: 47px; top: 385px; position: absolute">
-                  <span style="color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">Seu médico já disse que você possui doença cardíaca e  recomendou atividades físicas apenas sob supervisão médica?   </span>
-                  <span style="color: #182128; font-size: 16px; font-family: Montserrat; font-weight: 400; line-height: 17.60px; word-wrap: break-word">${aluno.PARQ.pergunta1}<br/></span>
-                  <span style="color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">Você apresenta dor no peito ao realizar atividade física?  </span>
-                  <span style="color: #182128; font-size: 16px; font-family: Montserrat; font-weight: 400; line-height: 17.60px; word-wrap: break-word">${aluno.PARQ.pergunta2}<br/></span>
-                  <span style="color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">No último mês você sentiu dor no peito quando não estava praticando atividade física?  </span>
-                  <span style="color: #182128; font-size: 16px; font-family: Montserrat; font-weight: 400; line-height: 17.60px; word-wrap: break-word">${aluno.PARQ.pergunta3}<br/></span>
-                  <span style="color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">Você perde o equilíbrio em virtude de tonturas ou já perdeu a consciência alguma vez?  </span>
-                  <span style="color: #182128; font-size: 16px; font-family: Montserrat; font-weight: 400; line-height: 17.60px; word-wrap: break-word">${aluno.PARQ.pergunta4}<br/></span>
-                  <span style="color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">Você tem algum problema ósseo ou articular que poderia ser agravado por uma mudança em sua atividade?  </span>
-                  <span style="color: #182128; font-size: 16px; font-family: Montserrat; font-weight: 400; line-height: 17.60px; word-wrap: break-word">${aluno.PARQ.pergunta5}<br/></span>
-                  <span style="color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">Atualmente seu médico está prescrevendo medicamentos (ex. diuréticos) para sua pressão arterial ou doença cardíaca?  </span>
-                  <span style="color: #182128; font-size: 16px; font-family: Montserrat; font-weight: 400; line-height: 17.60px; word-wrap: break-word">${aluno.PARQ.pergunta6}<br/></span>
-                  <span style="color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">Você tem conhecimento de qualquer outra razão pela qual não deveria realizar atividade física?<br/></span>
-                  <span style="color: #182128; font-size: 16px; font-family: Montserrat; font-weight: 400; line-height: 17.60px; word-wrap: break-word">${aluno.PARQ.pergunta7}</span>
-              </div>
-          </div>
-      </body>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <div style="width: 595px; height: 842px; position: relative; background: white">
+            <div style="width: 220px; height: 78px; left: 0px; top: 25px; position: absolute">
+                <div style="width: 154px; height: 27px; left: 60px; top: 35px; position: absolute">
+                    <div style="width: 80.63px; height: 27px; left: 115.37px; top: -0px; position: absolute; text-align: center; color: #0066FF;  font-size: 28px; font-family: Roboto; font-weight: 400; line-height: 30px; letter-spacing: 0.50px; word-wrap: break-word">App</div>
+                    <div style="width: 128.37px; height: 27px; left: 0px; top: 0px; position: absolute; text-align: center"><span style="color: #182128; font-size: 28px; font-family: Roboto; font-weight: 400; line-height: 30px; letter-spacing: 0.40px; word-wrap: break-word">ShapeMe<br/></span>
+                    <span style="color: #182128; font-size: 20px; font-family: Roboto; font-weight: 400; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word"><br/></span>
+                    </div>
+                </div>
+            </div>
+            <div style="width: 500px; height: 0px; left: 48px; top: 103px; position: absolute; border: 0.50px black solid"></div>
+            <div style="width: 375px; height: 43px; left: 110px; top: 125px; position: absolute; text-align: center; color: black; font-size: 32px; font-family: Roboto; font-weight: 400; line-height: 38.40px; letter-spacing: 0.64px; word-wrap: break-word">
+                PAR-Q & Você
+            </div>
+            <div style="width: 500px; height: 32px; left: 48px; top: 168px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">
+                Questionário de Prontidão para Atividade Física (Revisado em 1994). Para pessoas com idade entre 15 e 69 anos.
+            </div>
+            <div style="width: 500px; height: 162px; left: 47px; top: 208px; position: absolute; color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">
+                    A atividade física regular é divertida e saudável e cada vez mais pessoas estão começando a se tornar mais ativas todos os dias. Ser ativo é muito seguro para a maioria das pessoas. No entanto, algumas pessoas devem consultar um médico antes de começar a se tornar muito mais fisicamente ativo.<br/>    
+                    Se você está planejando tornar-se muito mais fisicamente ativo do que você é agora, comece respondendo as sete perguntas do quadro abaixo. Se tiver entre 15 e 69 anos de idade, o PAR-Q informará se você deve consultar o seu médico antes de começar. Se você tem mais de 69 anos de idade, e você não está acostumado a ser muito ativo, consulte seu médico.<br/>    
+                    O bom senso é seu melhor guia ao responder a estas perguntas. Por favor, leia as perguntas cuidadosamente e responda a cada uma honestamente marcando com SIM ou NÃO.
+            </div>
+            <div style="width: 501px; height: 304px; left: 47px; top: 385px; position: absolute">
+                <span style="color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">Seu médico já disse que você possui doença cardíaca e  recomendou atividades físicas apenas sob supervisão médica?   </span>
+                <span style="color: #182128; font-size: 16px; font-family: Montserrat; font-weight: 400; line-height: 17.60px; word-wrap: break-word">${aluno.PARQ.pergunta1}<br/></span>
+                <span style="color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">Você apresenta dor no peito ao realizar atividade física?  </span>
+                <span style="color: #182128; font-size: 16px; font-family: Montserrat; font-weight: 400; line-height: 17.60px; word-wrap: break-word">${aluno.PARQ.pergunta2}<br/></span>
+                <span style="color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">No último mês você sentiu dor no peito quando não estava praticando atividade física?  </span>
+                <span style="color: #182128; font-size: 16px; font-family: Montserrat; font-weight: 400; line-height: 17.60px; word-wrap: break-word">${aluno.PARQ.pergunta3}<br/></span>
+                <span style="color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">Você perde o equilíbrio em virtude de tonturas ou já perdeu a consciência alguma vez?  </span>
+                <span style="color: #182128; font-size: 16px; font-family: Montserrat; font-weight: 400; line-height: 17.60px; word-wrap: break-word">${aluno.PARQ.pergunta4}<br/></span>
+                <span style="color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">Você tem algum problema ósseo ou articular que poderia ser agravado por uma mudança em sua atividade?  </span>
+                <span style="color: #182128; font-size: 16px; font-family: Montserrat; font-weight: 400; line-height: 17.60px; word-wrap: break-word">${aluno.PARQ.pergunta5}<br/></span>
+                <span style="color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">Atualmente seu médico está prescrevendo medicamentos (ex. diuréticos) para sua pressão arterial ou doença cardíaca?  </span>
+                <span style="color: #182128; font-size: 16px; font-family: Montserrat; font-weight: 400; line-height: 17.60px; word-wrap: break-word">${aluno.PARQ.pergunta6}<br/></span>
+                <span style="color: #182128; font-size: 12px; font-family: Montserrat; font-weight: 400; line-height: 13.20px; word-wrap: break-word">Você tem conhecimento de qualquer outra razão pela qual não deveria realizar atividade física?<br/></span>
+                <span style="color: #182128; font-size: 16px; font-family: Montserrat; font-weight: 400; line-height: 17.60px; word-wrap: break-word">${aluno.PARQ.pergunta6}</span>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+    </body>
     </html>
     `;
   
     const anamnese = `
-    <html>
+    <!DOCTYPE html>
+    <html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
     <body>
         <div style="width: 595px; height: 842px; position: relative; background: white">
-            <div style="width: 220px; height: 78px; left: 25px; top: 25px; position: absolute">
-            <div style="width: 154px; height: 27px; left: 66px; top: 35px; position: absolute">
-            <div style="width: 45.63px; height: 27px; left: 108.37px; top: -0px; position: absolute; text-align: center; color: #0066FF; font-size: 25px; font-family: Roboto; font-weight: 400; line-height: 28px; letter-spacing: 0.50px; word-wrap: break-word">App</div>
-            <div style="width: 108.37px; height: 27px; left: 0px; top: 0px; position: absolute; text-align: center"><span style="color: #182128; font-size: 25px; font-family: Roboto; font-weight: 400; line-height: 30px; letter-spacing: 0.50px; word-wrap: break-word">ShapeMe<br/></span><span style="color: #182128; font-size: 20px; font-family: Roboto; font-weight: 400; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word"><br/></span></div>
-            </div>
+            <div style="width: 220px; height: 78px; left: 0px; top: 25px; position: absolute">
+                <div style="width: 154px; height: 27px; left: 60px; top: 35px; position: absolute">
+                    <div style="width: 80.63px; height: 27px; left: 115.37px; top: -0px; position: absolute; text-align: center; color: #0066FF;  font-size: 28px; font-family: Roboto; font-weight: 400; line-height: 30px; letter-spacing: 0.50px; word-wrap: break-word">App</div>
+                    <div style="width: 128.37px; height: 27px; left: 0px; top: 0px; position: absolute; text-align: center"><span style="color: #182128;  font-size: 28px; font-family: Roboto; font-weight: 400; line-height: 30px; letter-spacing: 0.50px; word-wrap: break-word">ShapeMe<br/></span>
+                    <span style="color: #182128; font-size: 20px; font-family: Roboto; font-weight: 400; line-height: 24px; letter-spacing: 0.40px; word-wrap: break-word"><br/></span>
+                    </div>
+                </div>
             </div>
             <div style="width: 500px; height: 0px; left: 48px; top: 103px; position: absolute; border: 0.50px black solid"></div>
             <div style="width: 375px; height: 43px; left: 110px; top: 125px; position: absolute; text-align: center; color: black; font-size: 32px; font-family: Roboto; font-weight: 400; line-height: 38.40px; letter-spacing: 0.64px; word-wrap: break-word">
@@ -207,28 +240,28 @@ export default ({aluno, navigation}) => {
             <div style="width: 142px; height: 15px; left: 351px; top: 699px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 700; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
                 Objetivo de treino:
             </div>
-            <div style="width: 100px; height: 25px; left: 351px; top: 731px; position: absolute; color: black; font-size: 14px; font-family: Roboto; font-weight: 400; line-height: 16.80px; letter-spacing: 0.28px; word-wrap: break-word">
+            <div style="width: 60px; height: 25px; left: 351px; top: 731px; position: absolute; color: black; font-size: 14px; font-family: Roboto; font-weight: 400; line-height: 16.80px; letter-spacing: 0.28px; word-wrap: break-word">
                 ${aluno.Anamnese.objetivo}
             </div>
             <div style="width: 231px; height: 15px; left: 48px; top: 699px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 700; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
                 Você teve ou tem atualmente:
             </div>
             <div style="width: 169px; height: 25px; left: 48px; top: 731px; position: absolute; color: black; font-size: 14px; font-family: Roboto; font-weight: 400; line-height: 16.80px; letter-spacing: 0.28px; word-wrap: break-word">
-                <b>Um ataque cardíaco?</b> ${aluno.Anamnese.ataqueCardiaco}
-                <b>Doença das válvulas cardíacas?</b>${aluno.Anamnese.doencaDasValvulasCardiacas} <br>
-                <b>Cirurgia cardíaca?</b>${aluno.Anamnese.cirurgiaCardiaca}
-                <b>Cateterismo cardíaco?</b>${aluno.Anamnese.cateterismoCardiaco} <br>
-                <b>Angioplastia coronária?</b> ${aluno.Anamnese.angioplastiaCoronaria} 
-                <b>Marca-passo? </b>${aluno.Anamnese.marcaPasso} <br>
-                <b>Desfibrilador cardíaco implantável?</b>${aluno.Anamnese.desfibriladorCardiacoImplantavel}
-                <b>Distúrbio do ritmo cardíaco?</b>${aluno.Anamnese.disturbioDoRitmoCardiaco}
-                <b>Insuficiência cardíaca?</b>${aluno.Anamnese.insuficienciaCardiaca}
-                <b>Cardiopatia congênita?</b>${aluno.Anamnese.cardioPatiaCongenita}
-                <b>Transplante de coração?</b>${aluno.Anamnese.transplanteDeCoracao}
-                <b>Doença renal?</b>${aluno.Anamnese.doencaRenal}
-                <b>Diabetes?</b>${aluno.Anamnese.diabetes}
-                <b>Asma?</b>${aluno.Anamnese.asma}
-                <b>Doença pulmonar?</b>${aluno.Anamnese.doencaPulmonar}
+                ${aluno.Anamnese.ataqueCardiaco == 'Sim' ? `<b>Um ataque cardíaco?</b> ${aluno.Anamnese.ataqueCardiaco}` : ''}
+                ${aluno.Anamnese.doencaDasValvulasCardiacas == 'Sim' ? ` <b>Doença das válvulas cardíacas?</b>${aluno.Anamnese.doencaDasValvulasCardiacas} <br>` : ''}
+                ${aluno.Anamnese.cirurgiaCardiaca == 'Sim' ? `<b>Cirurgia cardíaca?</b>${aluno.Anamnese.cirurgiaCardiaca}` : ''}
+                ${aluno.Anamnese.cateterismoCardiaco == 'Sim' ? `<b>Cateterismo cardíaco?</b>${aluno.Anamnese.cateterismoCardiaco} <br>` : ''}
+                ${aluno.Anamnese.angioplastiaCoronaria == 'Sim' ? `<b>Angioplastia coronária?</b> ${aluno.Anamnese.angioplastiaCoronaria}` : ''}
+                ${aluno.Anamnese.marcaPasso == 'Sim' ? `<b>Marca-passo? </b>${aluno.Anamnese.marcaPasso} <br>` : ''}
+                ${aluno.Anamnese.desfibriladorCardiacoImplantavel == 'Sim' ? `<b>Desfibrilador cardíaco implantável?</b>${aluno.Anamnese.desfibriladorCardiacoImplantavel}` : ''}
+                ${aluno.Anamnese.disturbioDoRitmoCardiaco == 'Sim' ? `<b>Distúrbio do ritmo cardíaco?</b>${aluno.Anamnese.disturbioDoRitmoCardiaco}` : ''}
+                ${aluno.Anamnese.insuficienciaCardiaca == 'Sim' ? `<b>Insuficiência cardíaca?</b>${aluno.Anamnese.insuficienciaCardiaca}` : ''}
+                ${aluno.Anamnese.cardioPatiaCongenita == 'Sim' ? `<b>Cardiopatia congênita?</b>${aluno.Anamnese.cardioPatiaCongenita}` : ''}
+                ${aluno.Anamnese.transplanteDeCoracao == 'Sim' ? `<b>Transplante de coração?</b>${aluno.Anamnese.transplanteDeCoracao}` : ''}
+                ${aluno.Anamnese.doencaRenal == 'Sim' ? `<b>Doença renal?</b>${aluno.Anamnese.doencaRenal}` : ''}
+                ${aluno.Anamnese.diabetes == 'Sim' ? `<b>Diabetes?</b>${aluno.Anamnese.diabetes}` : ''}
+                ${aluno.Anamnese.asma == 'Sim' ? `<b>Asma?</b>${aluno.Anamnese.asma}` : ''}
+                ${aluno.Anamnese.doencaPulmonar == 'Sim' ? `<b>Doença pulmonar?</b>${aluno.Anamnese.doencaPulmonar}` : ''}
             </div>
             <div style="width: 398px; height: 15px; left: 48px; top: 573px; position: absolute; color: black; font-size: 16px; font-family: Roboto; font-weight: 700; line-height: 19.20px; letter-spacing: 0.32px; word-wrap: break-word">
                 Alguma lesão muscular, óssea ou articular?
@@ -270,13 +303,12 @@ export default ({aluno, navigation}) => {
                 Gravidez?
             </div>
             <div style="width: 169px; height: 25px; left: 351px; top: 233px; position: absolute; color: black; font-size: 14px; font-family: Roboto; font-weight: 400; line-height: 16.80px; letter-spacing: 0.28px; word-wrap: break-word">
-                ${aluno.Anamnese.gravida}
+             ${aluno.Anamnese.gravida}
             </div>
 
         </div>
     </body>
-  </html>
-    `;
+    </html>`;
   
     const htmlCombinado = 
     `<html>
