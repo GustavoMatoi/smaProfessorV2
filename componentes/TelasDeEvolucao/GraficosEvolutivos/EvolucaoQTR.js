@@ -28,6 +28,7 @@ export default ({route, navigation}) => {
     const [arrayPseNoGrafico, setArrayPseNoGrafico] = useState([{x: 0, y: 0}])
     const [mesInicial, setMesInicial] = useState(0)
     const [parametroX, setParametroX] = useState([])
+
     useEffect(()=> {
         const unsubscribe = NetInfo.addEventListener(state => {
             setConexao(state.type === 'wifi' || state.type === 'cellular')
@@ -128,8 +129,7 @@ export default ({route, navigation}) => {
         setMesSelecionado(value);
 
     };
-
-   const filtraArray = useCallback(() => {
+useEffect(() => {
   const aggregateData = (filteredData, interval, mesInicial) => {
     const aggregatedData = [];
     let currentGroup = [];
@@ -242,9 +242,7 @@ function organizeData(arrayPse) {
 
   console.log('primeiroUltimoDiaString', primeiroUltimoDiaString)
 
-
-}, [mesSelecionado, mesInicial, opcao]);
-
+}, [ mesInicial])
 
 
 
@@ -253,7 +251,6 @@ function organizeData(arrayPse) {
 useEffect(() => {
     const posicaoNumerica = arrayBotaoSelectSemRepeticoes.indexOf(mesSelecionado);
     setValorMesInicial(posicaoNumerica)
-    filtraArray()
 
 }, [mesSelecionado])
 
@@ -261,7 +258,7 @@ useEffect(() => {
 const eixoXNoGrafico = arrayPseNoGrafico.map((i, element)=> {
     return `Dia ${element + 1}`
 })
-
+console.log(arrayPseNoGrafico)
     return (
         <ScrollView style={[estilo.corLightMenos1, style.container]}>
             <SafeAreaView>
@@ -283,43 +280,50 @@ const eixoXNoGrafico = arrayPseNoGrafico.map((i, element)=> {
                                     <BotaoSelect     selecionado={true}  onChange={(value, index) => {handleSelectChange(value, index)}} titulo='Selecione um mês' max={1} options={arrayBotaoSelectSemRepeticoes}>
                       </BotaoSelect>
                                     </View>
-                        <VictoryChart theme={VictoryTheme.material}>
-                        <VictoryAxis
-    style={{
-      axisLabel: { fontSize: 5 }, 
-      tickLabels: {
-        fontSize: 
-          opcao == 0
-            ? arrayPseNoGrafico.length < 10 ? 10 : arrayPseNoGrafico.length > 10 && arrayPseNoGrafico.length < 20 ? 8  : arrayPseNoGrafico.length > 20 && arrayPseNoGrafico.length < 30? 7 : 5
-            : opcao == 1
-            ? arrayFiltrado.length < 30 ? 8 : arrayFiltrado.length > 30 && arrayFiltrado.length < 60 ? 6 : 4 : null
-        
-      }    }}
+                       {arrayFiltrado.length == 0? 
+<View style={[{width: '90%', marginVertical: '5%'}, estilo.centralizado]}>
+                        <Text style={[estilo.tituloH619px, estilo.textoCorDanger, {textAlign: 'center'}]}>Selecione o mês do período inicial para renderizar os dados</Text>
+                          <View style={[estilo.centralizado, {marginVertical: '10'}]}>
+                          <Entypo name="line-graph" size={100} color="#FF6262" />
 
-  />
-    <VictoryAxis
-    dependentAxis
-    domain={[6, 20]}
-    style={{
-      axisLabel: { fontSize: 12 },
-      tickLabels: { fontSize: 10 }, 
-    }}
-    
-  />
-                            <VictoryLine
-                                containerComponent={<VictoryVoronoiContainer/>}
-                                animate={{
-                                    duration: 2000,
-                                    onLoad: { duration: 1000 }
-                                }}
-                                style={{
-                                    data: { stroke: "#0066FF" },
-                                    parent: { border: "1px solid #182128"},
-                                }}
+                            </View>                        
+                         </View>                       :  <VictoryChart theme={VictoryTheme.material}>
+                       <VictoryAxis
+   style={{
+     axisLabel: { fontSize: 5 }, 
+     tickLabels: {
+       fontSize: 
+         opcao == 0
+           ? arrayPseNoGrafico.length < 10 ? 10 : arrayPseNoGrafico.length > 10 && arrayPseNoGrafico.length < 20 ? 8  : arrayPseNoGrafico.length > 20 && arrayPseNoGrafico.length < 30? 7 : 5
+           : opcao == 1
+           ? arrayFiltrado.length < 30 ? 8 : arrayFiltrado.length > 30 && arrayFiltrado.length < 60 ? 6 : 4 : null
+       
+     }    }}
 
-                                categories={opcao == 0? {x: eixoXNoGrafico} : {x: primeiroUltimoDiaEixoX}}
-                            data={opcao == 0? arrayPseNoGrafico : arrayFiltrado } />            
-                    </VictoryChart>
+ />
+   <VictoryAxis
+   dependentAxis
+   domain={[6, 20]}
+   style={{
+     axisLabel: { fontSize: 12 },
+     tickLabels: { fontSize: 10 }, 
+   }}
+   
+ />
+                           <VictoryLine
+                               containerComponent={<VictoryVoronoiContainer/>}
+                               animate={{
+                                   duration: 2000,
+                                   onLoad: { duration: 1000 }
+                               }}
+                               style={{
+                                   data: { stroke: "#0066FF" },
+                                   parent: { border: "1px solid #182128"},
+                               }}
+
+                               categories={opcao == 0? {x: eixoXNoGrafico} : {x: primeiroUltimoDiaEixoX}}
+                           data={opcao == 0? arrayPseNoGrafico : arrayFiltrado } />            
+                   </VictoryChart>}
                     <View style={{marginLeft: '5%', marginBottom: '10%'}}>
                     <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.Montserrat]}>Selecione o parâmetro que deseja visualizar sua evolução:</Text>
                     <RadioBotao
@@ -328,6 +332,12 @@ const eixoXNoGrafico = arrayPseNoGrafico.map((i, element)=> {
                             onChangeSelect={(opt, i) => { setOpcao(i)}}
                         >
                     </RadioBotao>
+                    <View style={{marginTop: '5%' }}>
+                      <Text style = {[estilo.textoP16px, estilo.textoCorSecundaria]}>Valores:</Text>
+                    {opcao == 0? 
+                    arrayPseNoGrafico.map((i) => <Text style = {[estilo.textoSmall12px, estilo.textoCorSecundaria]}>Dia {i.x} | QTR: {i.y}</Text>
+                    ): arrayFiltrado.map((i, index) => <Text>Dia: {primeiroUltimoDiaEixoX[index]} | QTR: {i.y}</Text>)}
+                    </View>
                 </View>
                     </View>
                     )  : <ModalSemConexao ondeNavegar={'Home'} navigation={navigation}/>}
