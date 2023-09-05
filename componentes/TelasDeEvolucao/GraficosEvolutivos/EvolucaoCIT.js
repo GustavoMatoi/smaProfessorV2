@@ -183,7 +183,6 @@ export default ({route, navigation}) => {
       });
       setCitSemanal(arraySemanalTemporario);
       setCitMensal(arrayMensalTemporario);
-      console.log('citMensal', arrayMensalTemporario2)
 
       const apenasSemanasAux = []
       const teste = apenasSemanas.forEach((item) => {
@@ -216,7 +215,6 @@ export default ({route, navigation}) => {
       gruposPorMes[mesAno] += objeto.cit;
     });
     const resultadoArray = Object.entries(gruposPorMes).map(([mesAno]) => `${mesAno}`);
-    console.log(resultadoArray)
     let valor = -1; // Inicializar como -1 para indicar que não encontrou correspondência
     
     for (let i = 0; i < resultadoArray.length; i++) {
@@ -237,12 +235,10 @@ export default ({route, navigation}) => {
   
 
       const meses = calcularValoresAgregados(valor)
-      console.log(meses)    
     
 
       const citMensalMapeada = meses.map((i, element) => `Mes. ${element + 1}`);
       const citMensalNoGrafico = meses.map((i, element) =>({ x: element + 1, y: i }))
-      console.log(citMensalNoGrafico)
       setCitMensalNoGrafico(citMensalNoGrafico)
       setCitMensalEixoX(citMensalMapeada)
 
@@ -523,8 +519,7 @@ const arrayBotaoSelect = arrayMeses.map(i => {return i.data})
 
 
 const arrayBotaoSelectSemRepeticoes = [...new Set(arrayBotaoSelect)]
-console.log(arrayCitMensalNoGrafico)
-
+console.log('citObjetos', citObjetos)
 return (
         <ScrollView style={[estilo.corLightMenos1, style.container]}>
             <SafeAreaView>

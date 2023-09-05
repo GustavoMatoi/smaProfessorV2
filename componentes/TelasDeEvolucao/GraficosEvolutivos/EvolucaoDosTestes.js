@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react"
 import {Text, View, SafeAreaView, ScrollView, StyleSheet } from 'react-native'
 import estilo from "../../estilo"
 import RadioBotao from "../../RadioBotao"
-import {VictoryChart, VictoryLine, VictoryTheme, VictoryVoronoiContainer, VictoryLabel} from "victory-native"
+import {VictoryChart, VictoryLine, VictoryTheme, VictoryVoronoiContainer, VictoryLabel, VictoryAxis} from "victory-native"
 import { doc, setDoc, collection,getDocs, query,where ,addDoc, getFirestore } from "firebase/firestore"; 
 import { firebase, firebaseBD } from "../../configuracoes/firebaseconfig/config"
 import Spinner from "react-native-loading-spinner-overlay"
@@ -120,7 +120,7 @@ export default ({route, navigation}) => {
     }
 
     const avaliacaoPorOrdem = vetorContador.map((i) => {
-        return `Avaliação ${i}`
+        return `Av. ${i}`
     })
 
 
@@ -154,20 +154,28 @@ export default ({route, navigation}) => {
         </View>
       ) : (
         <View>
-          <Text style={[estilo.tituloH619px, estilo.textoCorSecundaria, estilo.centralizado, { marginTop: '3%' }]}>Evolução corporal:</Text>
+          <Text style={[estilo.tituloH619px, estilo.textoCorSecundaria, estilo.centralizado, { marginTop: '3%' }]}>Evolução dos testes:</Text>
           <Text style={[estilo.tituloH619px, estilo.textoCorSecundaria, estilo.centralizado, { marginTop: '3%' }]}>
             {titulo || 'Massa corporal'}
           </Text>
-          <View style={{marginLeft: '2%'}}>
-          <Text>Valores:</Text>
+          <View>
+          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginLeft: 10}]}>Resultados:</Text>
           
-          {opcao == 0? arrayDinamometriaPernas.map((i)=> <Text>{i}</Text>) 
-          : opcao == 1? arrayResistenciaAbdominal.map((i)=><Text>{i}</Text>)
-          : opcao == 2? arraySentarAlcancar.map((i) => <Text>{i}</Text>)
-        : arrayFrequenciaCardiacaDeRepouso.map((i)=> <Text>{i}</Text>)}
+          {opcao == 0? arrayDinamometriaPernas.map((index, value)=> <Text style ={[estilo.textoCorSecundaria, estilo.textoSmall12px, {marginLeft: 10}]}>Avaliação {value + 1}: {index}</Text>)
+          : opcao == 1? arrayResistenciaAbdominal.map((index, value)=><Text style ={[estilo.textoCorSecundaria, estilo.textoSmall12px, {marginLeft: 10}]}>Avaliação {value + 1}: {index}</Text>)
+          : opcao == 2? arraySentarAlcancar.map((index, value) => <Text style ={[estilo.textoCorSecundaria, estilo.textoSmall12px, {marginLeft: 10}]}>Avaliação {value + 1}: {index}</Text>)
+        : arrayFrequenciaCardiacaDeRepouso.map((index, value)=> <Text style ={[estilo.textoCorSecundaria, estilo.textoSmall12px, {marginLeft: 10}]}>Avaliação {value + 1}: {index}</Text>)}
           </View>
-
           <VictoryChart theme={VictoryTheme.material}>
+          <VictoryAxis
+   dependentAxis
+   domain={[0, 10]}
+   style={{
+     axisLabel: { fontSize: 12 },
+     tickLabels: { fontSize: 10 }, 
+   }}
+   
+ />
             <VictoryLine
               containerComponent={<VictoryVoronoiContainer />}
               animate={{
