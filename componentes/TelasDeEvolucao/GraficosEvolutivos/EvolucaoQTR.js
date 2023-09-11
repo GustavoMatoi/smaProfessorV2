@@ -222,7 +222,7 @@ function organizeData(arrayPse) {
           primeiroUltimoDia.push(firstItem.qtr, lastItem.qtr);
           primeiroUltimoDiaString.push(
             `${getDiaAbreviado(firstItem.diaDaSemana)}, ${firstItem.dia}/${firstItem.mes}`,
-            `${getDiaAbreviado(firstItem.diaDaSemana)}, ${lastItem.dia}/${lastItem.mes}`
+            `${getDiaAbreviado(lastItem.diaDaSemana)}, ${lastItem.dia}/${lastItem.mes}`
           );
           
         } else {

@@ -176,6 +176,9 @@ export default ({route, navigation}) => {
    }}
    
  />
+  <VictoryAxis
+
+  />
             <VictoryLine
               containerComponent={<VictoryVoronoiContainer />}
               animate={{
