@@ -21,10 +21,10 @@ export default ({route, navigation}) => {
     const [opcaoPeriodo, setOpcaoPeriodo] = useState(0)
     const [arrayMeses, setArrayMeses] = useState([])
     const [mesSelecionado, setMesSelecionado] = useState(0)
-    const [mesInicial, setMesInicial] = useState(0)
+    const [mesInicial, setMesInicial] = useState(-1)
     const [arrayParametroX, setArrayParametroX] = useState([])
     const [arrayFiltrado, setArrayFiltrado] = useState([{x: 0, y: 0}])
-
+    const [arraySomador, setArraySomador] = useState([])
     useEffect(()=> {
         const unsubscribe = NetInfo.addEventListener(state => {
             setConexao(state.type === 'wifi' || state.type == 'cellular')
@@ -37,104 +37,117 @@ export default ({route, navigation}) => {
 
 
     const getPse = async () => {
-        const db = getFirestore();
-        const diariosRef = collection(db, "Academias", professorLogado.getAcademia(), "Professores", aluno.professorResponsavel,"alunos" , `Aluno ${aluno.email}`, 'Diarios');
-        const querySnapshot = await getDocs(diariosRef);
+      const db = getFirestore();
+      const diariosRef = collection(
+        db,
+        "Academias",
+        professorLogado.getAcademia(),
+        "Professores",
+        aluno.professorResponsavel,
+        "alunos",
+        `Aluno ${aluno.email}`,
+        "Diarios"
+      );
+    
+      const querySnapshot = await getDocs(diariosRef);
+    
+      const newArrayPse = [];
+      const newArrayPseObj = [];
+      const arrayMesesAux = [];
+      const newArraySegundoParametro = [];
+      const newPseArray = [];
+      const newArraySomador = [];
+      const newArrayPseExercicio = [];
+      const maxN = 10;
+    
+      const monthNames = [
+        "Janeiro",
+        "Fevereiro",
+        "Março",
+        "Abril",
+        "Maio",
+        "Junho",
+        "Julho",
+        "Agosto",
+        "Setembro",
+        "Outubro",
+        "Novembro",
+        "Dezembro",
+      ];
+    
+      const promises = querySnapshot.docs.map(async (doc) => {
+        if (doc.get("tipoDeTreino") === "Diario") {
+          const exerciciosRef = collection(doc.ref, "Exercicio");
+          const exerciciosSnapshot = await getDocs(exerciciosRef);
+    
+          exerciciosSnapshot.forEach((exercicioDoc) => {
+            const exercicio = exercicioDoc.data();
 
-        const newArrayPse = []
-        const newArrayPseObj = []
-        const arrayMesesAux = []
-        const newArrayDatas = []
-        const newArraySegundoParametro = []
-        const newArraySomador = []
-
-        const promises = querySnapshot.docs.map(async (doc) => {
-            if (doc.get('tipoDeTreino') === 'Diario'){
-                const exerciciosRef = collection(doc.ref, 'Exercicio')
-                const exerciciosSnapshot = await getDocs(exerciciosRef)
-
-                exerciciosSnapshot.forEach((exercicioDoc) => {
-                    const exercicio = exercicioDoc.data();
-
-                    if(route.params.nome === exercicioDoc.get('Nome')){
-                        let somador2 = 0
-
-                        if(route.params.tipo == 'força'){
-                            let somador = 0
-                            const atributosDoExercicio = exercicio.pesoLevantado ?? [];
-                            for(let i = 0; i < atributosDoExercicio.length; i++){
-                                newPseArray.push(atributosDoExercicio[i])
-                                somador += atributosDoExercicio[i]
-                            }
-                        }
-                    }
-                })
+            if (route.params.nome === exercicioDoc.get("Nome")) {
+              let somador2 = 0;
+    
+                let somador = 0;
+                const atributosDoExercicio = exercicio.pesoLevantado ?? [];
+                for (let i = 0; i < atributosDoExercicio.length; i++) {
+                  newPseArray.push(atributosDoExercicio[i]);
+                  somador += atributosDoExercicio[i];
+                }
+    
+                const stringAux = monthNames[doc.get("mes") - 1];
+                newArraySegundoParametro.push(somador);
+    
+                for (let i = 1; i < maxN; i++) {
+                  const propertyName = `PSEdoExercicioSerie${i}`;
+                  if (propertyName in exercicioDoc.data()) {
+                    newArrayPseExercicio.push({
+                      pse: exercicioDoc.get(`${propertyName}.valor`),
+                      data: `${stringAux} ${doc.get("ano")}`,
+                    });
+                    somador2 += exercicioDoc.get(`${propertyName}.valor`);
+                  }
+                }
+                newArraySomador.push(somador2);
+              
+              arrayMesesAux.push({
+                data: `${monthNames[doc.get("mes") - 1]} ${doc.get("ano")}`,
+                dia: doc.get("dia"),
+              });
             }
-        })
-
-        querySnapshot.forEach((doc)=> {
-          let stringAux = doc.get('mes')
-
-          if(stringAux == 1) stringAux = 'Janeiro'
-          if(stringAux == 2) stringAux = 'Fevereiro'
-          if(stringAux == 3) stringAux = 'Março'
-          if(stringAux == 4) stringAux = 'Abril'
-          if(stringAux == 5) stringAux = 'Maio'
-          if(stringAux == 6) stringAux = 'Junho'
-          if(stringAux == 7) stringAux = 'Julho'
-          if(stringAux == 8) stringAux = 'Agosto'
-          if(stringAux == 9) stringAux = 'Setembro'
-          if(stringAux == 10) stringAux = 'Outubro'
-          if(stringAux == 11) stringAux = 'Novembro'
-          if(stringAux == 12) stringAux = 'Dezembro'
-            const pseObj = {
-              pse: doc.get('PSE.valor'),
-              data: `${stringAux} ${doc.get('ano')}`
-            }
-            newArrayPse.push(doc.get('PSE.valor') * doc.get('duracao'))
-            newArrayPseObj.push(pseObj)
-            if(doc.get('mes') === 1){ arrayMesesAux.push({data:`Janeiro ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 2){ arrayMesesAux.push({data:`Fevereiro ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 3){ arrayMesesAux.push({data:`Março ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 4){ arrayMesesAux.push({data:`Abril ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 5){ arrayMesesAux.push({data:`Maio ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 6){ arrayMesesAux.push({data:`Junho ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 7){ arrayMesesAux.push({data:`Julho ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 8){ arrayMesesAux.push({data:`Agosto ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 9){ arrayMesesAux.push({data:`Setembro ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 10){ arrayMesesAux.push({data:`Outubro ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 11){ arrayMesesAux.push({data:`Novembro ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 12){ arrayMesesAux.push({data:`Dezembro ${doc.get('ano')}`, dia: doc.get('dia')})}
-            
-        });  
-        setArrayPse(newArrayPse)
-        setCarregandoDados(false)
-        setPseObj(newArrayPseObj)
-        setArrayMeses(arrayMesesAux)
-
+          });
+        }
+    
+        const stringAux = monthNames[doc.get("mes") - 1];
+        const pseObj = {
+          pse: doc.get("PSE.valor"),
+          data: `${stringAux} ${doc.get("ano")}`,
+        };
+        newArrayPse.push(doc.get("PSE.valor") * doc.get("duracao"));
+        newArrayPseObj.push(pseObj);
+      });
+    
+      await Promise.all(promises);
+    
+      setArrayPse(newArrayPse);
+      setArrayMeses(arrayMesesAux);
+      setPseObj(newArrayPseExercicio);
+      setArraySomador(newArraySomador);
+      setCarregandoDados(false);
     };
-
+    
     useEffect(() => {
-        getPse();
+      getPse();
     }, []);
+    
 
     const handleSelectChange = (value) => {
         setMesSelecionado(value);
       };
 
 
-    const arrayPseNoGrafico =  arrayPse.map((element, i)=> {
-        return {x: +i+1, y: element}
-        
-    })
 
     const[opcao, setOpcao] = useState('')
 
-    let vetorContador = []
 
-    const valorPse = vetorContador.map((i) => {
-        return `Valor ${i}`
-    })
     const arrayBotaoSelect = arrayMeses.map(i => {return i.data})
 
     const arrayBotaoSelectSemRepeticoes = [...new Set(arrayBotaoSelect)]
@@ -160,76 +173,81 @@ export default ({route, navigation}) => {
 
 
       const filtraArray = useCallback(() => {
-        const aggregatedData30Days = aggregateData(pseObj, 30, mesInicial);
-        const aggregatedData60Days = aggregateData(pseObj, 60, mesInicial)
-        const aggregatedData90Days = aggregateData(pseObj, 90, mesInicial)
-        const diasDoArrayMeses = arrayMeses.map(i => {
-          return i.dia;
-        });
-        let arrayPseNoGrafico2 = []
-        if(opcaoPeriodo == 0){
-      
-          const arrayMesesEmNumeros = aggregatedData30Days[0].map((i, element) => {
-            return i.data;
+        console.log('coc^p')
+        console.log('pseObj', pseObj, 'mesInicial', mesInicial)
+        if(mesInicial === -1){
+          return (
+            <Spinner
+            visible={carregandoDados}
+            textContent={'Carregando dados...'}
+            textStyle={[estilo.textoCorLight, estilo.textoP16px]}
+          />
+          )
+        } else {
+          const aggregatedData30Days = aggregateData(pseObj, 30, mesInicial);
+          const aggregatedData60Days = aggregateData(pseObj, 60, mesInicial)
+          const aggregatedData90Days = aggregateData(pseObj, 90, mesInicial)
+          const diasDoArrayMeses = arrayMeses.map(i => {
+            return i.dia;
           });
-      
+          console.log('aggregatedData30Days[0]', aggregatedData30Days[0])
+          let arrayPseNoGrafico2 = []
+          
+          if(opcaoPeriodo == 0){
+            console.log('aggregatedData30Days[0]', aggregatedData30Days[0])
+            const arrayMesesEmNumeros = aggregatedData30Days[0].map((i, element) => {
+  return i.data;
+           } ); 
+  
+  
+  
+          
+          
+            if(aggregatedData30Days[0] !== undefined){ 
+              arrayPseNoGrafico2 = aggregatedData30Days[0].map((i, element) => {
+                return { x: element + 1, y: i.pse };
+              });
+            }
+          
+            console.log(arrayPseNoGrafico2)
+            
+          }
+          if(opcaoPeriodo == 1){
+            const arrayMesesEmNumeros = aggregatedData60Days[0].map((i, element) => {
+              return i.data;
+            });
         
-          arrayPseNoGrafico2 = aggregatedData30Days[0].map((i, element) => {
-            return { x: element + 1, y: i.pse };
-          });
+          
+            arrayPseNoGrafico2 = aggregatedData60Days[0].map((i, element) => {
+              return { x: element + 1, y: i.pse };
+            });
+         }
+          if(opcaoPeriodo == 2){
         
+            const arrayMesesEmNumeros = aggregatedData90Days[0].map((i, element) => {
+              return i.data;
+            });
+            arrayPseNoGrafico2 = aggregatedData90Days[0].map((i, element) => {
+              return { x: element + 1, y: i.pse };
+            });
+         }
+         
+          const arrayDatasMeses = [];
+          for (let i = mesInicial; i <pseObj.length; i++) {
+            arrayDatasMeses.push(`${i+1}`);
+           
+          }
+          console.log('arrayDatasMeses', arrayDatasMeses)
+          setArrayParametroX(arrayDatasMeses);
+          console.log(aggregatedData30Days)
+          console.log("X")
+          setArrayFiltrado(arrayPseNoGrafico2); 
+          console.log(arrayFiltrado)
+          console.log('arrayParametroX', arrayParametroX)
         }
-        if(opcaoPeriodo == 1){
-          const arrayMesesEmNumeros = aggregatedData60Days[0].map((i, element) => {
-            return i.data;
-          });
+      }, [mesInicial]);
       
-        
-          arrayPseNoGrafico2 = aggregatedData60Days[0].map((i, element) => {
-            return { x: element + 1, y: i.pse };
-          });
-       }
-        if(opcaoPeriodo == 2){
-      
-          const arrayMesesEmNumeros = aggregatedData90Days[0].map((i, element) => {
-            return i.data;
-          });
-          arrayPseNoGrafico2 = aggregatedData90Days[0].map((i, element) => {
-            return { x: element + 1, y: i.pse };
-          });
-       }
-       
-        const arrayDatasMeses = [];
-        for (let i = mesInicial; i < arrayMeses.length; i++) {
-          const numeroMes = mapearMesParaNumero(arrayMeses[i].data);
-          arrayDatasMeses.push(`${diasDoArrayMeses[i]}/${numeroMes}`);
-        }
-      
-        setArrayParametroX(arrayDatasMeses);
-        setArrayFiltrado(arrayPseNoGrafico2);
-        console.log(arrayFiltrado)
-        console.log('arrayParametroX', arrayParametroX)
-      }, [arrayMeses, mesInicial, opcaoPeriodo]);
-      
-      const mapearMesParaNumero = (mes) => {
-        const nomeMes = mes.split(" ")[0];
-        switch (nomeMes) {
-          case "Janeiro": return 1;
-          case "Fevereiro": return 2;
-          case "Março": return 3;
-          case "Abril": return 4;
-          case "Maio": return 5;
-          case "Junho": return 6;
-          case "Julho": return 7;
-          case "Agosto": return 8;
-          case "Setembro": return 9;
-          case "Outubro": return 10;
-          case "Novembro": return 11;
-          case "Dezembro": return 12;
-          default: return -1; // Mês não reconhecido
-        }
-      }
-      
+
       useEffect(() => {
         const index = pseObj.findIndex(item => item.data === mesSelecionado);
         if (index !== -1) {
@@ -238,8 +256,7 @@ export default ({route, navigation}) => {
         }
       }, [mesSelecionado, filtraArray]);
 
-      console.log('arrayParametroX', arrayParametroX)
-      console.log(mesInicial)
+
     return (
         <ScrollView style={[estilo.corLightMenos1, style.container]}>
             <SafeAreaView>
@@ -256,7 +273,7 @@ export default ({route, navigation}) => {
                         <Text style={[ estilo.textoCorSecundaria, estilo.textoP16px, {marginTop: '10%', textAlign: 'center', marginHorizontal: '5%'}, style.Montserrat]}>Você ainda não realizou nenhum treino. Treine e tente novamente mais tarde.</Text>
                     </View>) :   (
                     <View>
-                                    <Text style={[estilo.tituloH619px, estilo.textoCorSecundaria, estilo.centralizado, {marginTop: '3%'}]}>Evolução PSE:</Text>
+                                    <Text style={[estilo.tituloH619px, estilo.textoCorSecundaria, estilo.centralizado, {marginTop: '3%'}]}>Evolução PSE {route.params.tipo === 'força' ? 'Omni' : 'Borg'}:</Text>
                         
                                     <View style={[estilo.centralizado, {width: '90%', marginTop: 10}]}>
                                   <BotaoSelect     selecionado={!arrayParametroX.length == 0}  onChange={(value, index) => {handleSelectChange(value, index)}} titulo='Selecione um mês' max={1} options={arrayBotaoSelectSemRepeticoes}>
