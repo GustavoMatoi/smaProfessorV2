@@ -16,7 +16,6 @@ export default ({route, navigation}) => {
     const {aluno} = route.params
     const [arrayPse, setArrayPse] = useState([]);
     const [carregandoDados, setCarregandoDados] = useState(true);
-    const [conexao, setConexao] = useState(true)
     const [pseObj, setPseObj] = useState([])
     const [opcaoPeriodo, setOpcaoPeriodo] = useState(0)
     const [arrayMeses, setArrayMeses] = useState([])
@@ -25,6 +24,8 @@ export default ({route, navigation}) => {
     const [arrayParametroX, setArrayParametroX] = useState([])
     const [arrayFiltrado, setArrayFiltrado] = useState([{x: 0, y: 0}])
     const [arraySomador, setArraySomador] = useState([])
+
+    const [conexao, setConexao] = useState(true)
     useEffect(()=> {
         const unsubscribe = NetInfo.addEventListener(state => {
             setConexao(state.type === 'wifi' || state.type == 'cellular')

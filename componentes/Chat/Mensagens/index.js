@@ -102,7 +102,7 @@ export default ({route}) => {
       }, [recuperarMensagens]);
 
     return (
-        <SafeAreaView style={[estilo.corLightMenos1, {minHeight: altura}]}>
+        <View style={[estilo.corLightMenos1, {minHeight: altura}]}>
             <Header aluno={aluno}/>
             <ScrollView>
                 <View style={[estilo.centralizado, estilo.corLightMenos1]}>
@@ -123,7 +123,7 @@ export default ({route}) => {
                         </View>
                     </TouchableOpacity>
                 </View>
-        </SafeAreaView>
+        </View>
     )
 }
 

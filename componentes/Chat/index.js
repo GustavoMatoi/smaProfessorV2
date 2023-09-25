@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react"
-import { Text, SafeAreaView, StyleSheet, TouchableOpacity, Image } from "react-native"
+import { Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, View } from "react-native"
 import Logo from '../Logo'
 import estilo from "../estilo"
 import { FontAwesome5 } from '@expo/vector-icons'; 
@@ -102,7 +102,7 @@ export default ({navigation}) => {
       });
   }
     return (
-        <SafeAreaView 
+        <View 
         style={style.container}>
            {conexao?  carregandoAlunos ? (
       <Spinner
@@ -120,7 +120,7 @@ export default ({navigation}) => {
 })
 
 ) :  <ModalSemConexao ondeNavegar={'Home'} navigation={navigation}/>}
-        </SafeAreaView>
+        </View>
     )
 }
 
