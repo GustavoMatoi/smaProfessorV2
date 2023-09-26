@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from "react"
+import React, {useState, useEffect, useRef, cloneElement} from "react"
 import {Text, View, StyleSheet, TextInput, ScrollView, TouchableOpacity, Button} from "react-native"
 import estilo from "../estilo"
 import {useFonts} from 'expo-font'
@@ -8,7 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { professorLogado } from "../Home"
 import { Entypo } from '@expo/vector-icons'; 
 import Modal from "react-native-modal";
-export default ({route}) => {
+export default ({route, navigation}) => {
     const aluno = route.params.aluno
     const[listaDeExercicios, setListaDeExercicios] = useState([])
     const[exercicio, setExercicio] = useState({})
@@ -110,7 +110,7 @@ export default ({route}) => {
             <View style={style.areaTextos}>
                 <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Nome:</Text>
                 <Text style={[estilo.textoCorSecundaria, estilo.textoP16px, style.textos, style.Montserrat]}>{aluno.nome}</Text>
-                <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Avaliador:</Text>
+                <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Resposável:</Text>
                 <Text style={[estilo.textoCorSecundaria, estilo.textoP16px, style.textos,style.Montserrat]}>{professorLogado.getNome()}</Text>
                 <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Data:</Text>
                 <Text style={[estilo.textoCorSecundaria, estilo.textoP16px, style.textos,style.Montserrat]}>{dia}/{mes}/{ano}</Text>
@@ -146,7 +146,9 @@ export default ({route}) => {
       {i.tipo == 'aerobico' ? (  <View style={[style.quadrado, estilo.corLightMais1, estilo.sombra]}>
                 <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
                 <View style={{width: '100%'}}>
-                    <TextInput style={[style.inputTexto]} placeholder="Exercício aerobico" editable={false}/>
+                  <TouchableOpacity style={[style.inputTexto]}>
+                    <Text>Selecione o exercício</Text>
+                  </TouchableOpacity>
                 </View>
     
                 <View style={style.areaPreenchimentoParametros}>
@@ -177,7 +179,9 @@ export default ({route}) => {
       ( <View style={[style.quadrado, estilo.corLightMais1, estilo.sombra]}>
         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
         <View style={{width: '100%'}}>
-            <TextInput style={[style.inputTexto]} placeholder="Exercício força" editable={false}/>
+        <TouchableOpacity style={[style.inputTexto]} onPress={()=>navigation.navigate('Seleção do Exercício')}>
+                    <Text>Selecione o exercício</Text>
+                  </TouchableOpacity>
         </View>
 
         <View style={style.areaPreenchimentoParametros}>
@@ -199,8 +203,11 @@ export default ({route}) => {
 ( <View style={[style.quadrado, estilo.corLightMais1, estilo.sombra]}>
     <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
     <View style={{width: '100%'}}>
-        <TextInput style={[style.inputTexto]} placeholder="Exercício alongamento" editable={false}/>
-    </View>
+    <TouchableOpacity style={[style.inputTexto]}>
+    <Text>Selecione o exercício</Text>
+
+                  </TouchableOpacity>   
+                   </View>
 
     <View style={style.areaPreenchimentoParametros}>
     <View style={[style.areaParametroPequeno]}>
@@ -292,6 +299,7 @@ const style= StyleSheet.create({
         color: '#182128',
         padding: 5,
         marginVertical: 10,
+        justifyContent: 'center'
     },
     areaParametroPequeno: {
         width: '30%',

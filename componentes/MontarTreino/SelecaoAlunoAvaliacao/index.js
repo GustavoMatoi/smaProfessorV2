@@ -91,7 +91,7 @@ export default ({navigation}) => {
     <TouchableOpacity
       key={aluno.cpf}
       style={[estilo.botao, estilo.corPrimaria, style.botao]}
-      onPress={() => navigation.navigate('Montar treino', {aluno: aluno})}
+      onPress={() => navigation.navigate('Montar treino', {aluno: aluno, navigation: navigation})}
     >
 
       {console.log(aluno)}

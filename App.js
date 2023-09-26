@@ -54,6 +54,7 @@ import EvolucaoPseBorg from './componentes/TelasDeEvolucao/GraficosEvolutivos/Ev
 import NovaAvaliacao from './componentes/NovaAvaliacao';
 import FrequenciaAluno from './componentes/SelecaoAluno/PerfilDoAluno/FrequenciaAluno';
 import * as Notification from "expo-notifications"
+import SelecaoDoExercicio from './componentes/MontarTreino/SelecaoDoExercicio';
 
 const Stack = createNativeStackNavigator();
 
@@ -109,6 +110,7 @@ export default function App() {
         <Stack.Screen name="Finalizar Testes" component={FinalizarTestes}/>
         <Stack.Screen name='Modal aviso avaliação sucesso' component={AvisoAvaliacaoFinalizada} options={{headerShown: false}}/>
         <Stack.Screen name="Frequencia do aluno" component={FrequenciaAluno}/>
+        <Stack.Screen name="Seleção do Exercício" component={SelecaoDoExercicio}/>
       </Stack.Navigator>
     </NavigationContainer> 
     );
