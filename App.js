@@ -55,6 +55,7 @@ import NovaAvaliacao from './componentes/NovaAvaliacao';
 import FrequenciaAluno from './componentes/SelecaoAluno/PerfilDoAluno/FrequenciaAluno';
 import * as Notification from "expo-notifications"
 import SelecaoDoExercicio from './componentes/MontarTreino/SelecaoDoExercicio';
+import AdicionaisExercicio from './componentes/MontarTreino/SelecaoDoExercicio/AdicionaisExercicio';
 
 const Stack = createNativeStackNavigator();
 
@@ -111,6 +112,7 @@ export default function App() {
         <Stack.Screen name='Modal aviso avaliação sucesso' component={AvisoAvaliacaoFinalizada} options={{headerShown: false}}/>
         <Stack.Screen name="Frequencia do aluno" component={FrequenciaAluno}/>
         <Stack.Screen name="Seleção do Exercício" component={SelecaoDoExercicio}/>
+        <Stack.Screen name="Adicionais exercício" component={AdicionaisExercicio}/>
       </Stack.Navigator>
     </NavigationContainer> 
     );

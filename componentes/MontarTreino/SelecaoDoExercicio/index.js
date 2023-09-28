@@ -1,12 +1,13 @@
 import react, {useState, useEffect} from "react";
-import {View, SafeAreaView, Text, TouchableOpacity, StyleSheet} from 'react-native'
+import {View, SafeAreaView, Text, TouchableOpacity, StyleSheet, ScrollView, Alert} from 'react-native'
 import BotaoSelect from '../../BotaoSelect'
 import RadioBotao from '../../RadioBotao'
 import estilo from "../../estilo";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { professorLogado } from "../../Home";
+import Spinner from "react-native-loading-spinner-overlay";
 
-export default props => {
+export default ({navigation}) => {
     const [grupoMuscular, setGrupoMuscular] = useState([])
     const [carregandoDados, setCarregandoDados] = useState(true)
     const [abdominais, setAbdominais] = useState([])
@@ -24,14 +25,16 @@ export default props => {
           );
 
           const querySnapshot = await getDocs(exercicioRef);
+          console.log("X")
+
           querySnapshot.forEach(async (doc) => {
             const dados = doc.data();
             documentos.push(dados);
             
             for(const exercicioDoc of querySnapshot.docs){
               const exercicioData = exercicioDoc.data()
-              const exerciciosReferencia = collection(exercicioDoc.ref, 'Exercicios');
 
+              const exerciciosReferencia = collection(exercicioDoc.ref, 'Exercicios');
               const exerciciosSnapshot = await getDocs(exerciciosReferencia)
               
               for (const exercicioDoc of exerciciosSnapshot.docs){
@@ -49,7 +52,6 @@ export default props => {
               abdominaisTemp.push(abdominaisDoc.get('nome'))
             })
             setCarregandoDados(false)
-            console.log('Carregou')
 
           });
         } catch (error) {
@@ -57,9 +59,18 @@ export default props => {
         }
         setGrupoMuscular(documentos)        
         setAbdominais(abdominaisTemp)
+        console.log('Carregou')
  
     };
-      
+    const handleSelecaoExercicio = (value) => {
+      if(value === ''){
+        Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
+      } else {
+        setSelecionado(value)
+        navigation.navigate('Adicionais exercício', {nomeExercicio: value})
+      }
+    }
+
     console.log(selecionado)
 
     useEffect(() => {
@@ -68,20 +79,25 @@ export default props => {
     return (
         <View>
             {carregandoDados ? 
-  <Text>Carregando...</Text>
-  :
-  <View>
+      <Spinner
+      visible={carregandoDados}
+      textContent={'Carregando exercícios...'}
+      textStyle={[estilo.textoCorLight, estilo.textoP16px]}
+    />  :
+  <ScrollView style={[estilo.centralizado, {width: '95%'}]}>
   <Text>Exercício</Text>
                 {grupoMuscular.map((grupo) => 
+                        <View style={{marginTop: '5%'}}>
                         <BotaoSelect     
                         selecionado={true}  
-                        onChange={(value, index) => setSelecionado(value)} 
+                        onChange={(value, index) => handleSelecaoExercicio(value)} 
                         titulo='Selecione um exercício' max={1} 
                         options={abdominais}
                         select={grupo.grupoMuscular}
                         />
+                          </View>
                 )}
-</View>
+</ScrollView>
 }
 </View>
     

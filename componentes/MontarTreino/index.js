@@ -179,8 +179,8 @@ export default ({route, navigation}) => {
       ( <View style={[style.quadrado, estilo.corLightMais1, estilo.sombra]}>
         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
         <View style={{width: '100%'}}>
-        <TouchableOpacity style={[style.inputTexto]} onPress={()=>navigation.navigate('Seleção do Exercício')}>
-                    <Text>Selecione o exercício</Text>
+        <TouchableOpacity style={[style.inputTexto,{ backgroundColor: '#0066FF', borderRadius: 30}]} onPress={()=>navigation.navigate('Seleção do Exercício', {navigation: navigation})}>
+                    <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>Selecione o exercício</Text>
                   </TouchableOpacity>
         </View>
 
