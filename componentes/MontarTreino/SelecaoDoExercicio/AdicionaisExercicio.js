@@ -4,9 +4,10 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 import Spinner from "react-native-loading-spinner-overlay";
 import estilo from "../../estilo"
 import RadioBotao from "../../RadioBotao";
-export default ({ route }) => {
+export default ({ navigation, route }) => {
     const { nomeExercicio } = route.params;
     const { grupoMuscular } = route.params;
+    const [exercicio, setExercicio] = useState('')
     const [dataExercicio, setDataExercicio] = useState({});
     const [carregando, setCarregando] = useState(true);
     const [variacoesExercicio, setVariacoesExercicio] = useState([]);
@@ -54,7 +55,6 @@ export default ({ route }) => {
                 if ("execucao" in data) {
                     setExecucoesExercicio(Object.values(data.execucao));
                 }
-                console.log(variacoesExercicio)
 
                 setCarregando(false);
             } catch (error) {
@@ -74,8 +74,30 @@ export default ({ route }) => {
         }
     })
 
+    const montarExercicio = (nome, variacao, implemento, postura, pegada, execucao) => {
+        let exercicioAux = nome;
+        if (variacao){
+            exercicioAux += ` ${variacao}` 
+        }
+        if(implemento){
+            exercicioAux += ` ${implemento}`
+        }
+        if(postura){
+            exercicioAux += ` ${postura}`
+        }
+        if(pegada){
+            exercicioAux += ` ${pegada}`
+        }
+        if(execucao) {
+            exercicioAux += ` ${execucao}`
+        }
+
+        setExercicio(exercicioAux)
+        route.params.receberExercicio(exercicioAux)
+        navigation.navigate('Montar treino', {aluno: route.params.aluno})
+    }
+
     const nomeExercicioString = nomeExercicio.split("(");
-    console.log(nomeExercicioString)
     return (
         <View>
             <ScrollView style={[{width: '100%'}]}>
@@ -142,7 +164,7 @@ export default ({ route }) => {
 
         </View>
         <View style={[{marginVertical: '5%'}]}>
-        <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]}>
+        <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={()=> montarExercicio(nomeExercicio, variacaoString, implementoString, posturaString, pegadaString, execucaoString)}>
             <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>SALVAR EXERCÍCIO</Text>
         </TouchableOpacity>
         </View>

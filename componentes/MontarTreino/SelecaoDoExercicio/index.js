@@ -7,7 +7,8 @@ import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { professorLogado } from "../../Home";
 import Spinner from "react-native-loading-spinner-overlay";
 
-export default ({navigation}) => {
+export default ({navigation,route}) => {
+    const [exercicio, setExercicio] = useState('')
     const [grupoMuscular, setGrupoMuscular] = useState([])
     const [carregandoDados, setCarregandoDados] = useState(true)
     const [abdominais, setAbdominais] = useState([])
@@ -134,7 +135,7 @@ export default ({navigation}) => {
         Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
       }   else {
         setSelecionado(value)
-        navigation.navigate('Adicionais exercício', {nomeExercicio: value, grupoMuscular: grupoMuscular})
+        navigation.navigate('Adicionais exercício', {nomeExercicio: value, grupoMuscular: grupoMuscular, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno})
       }
     }
 
