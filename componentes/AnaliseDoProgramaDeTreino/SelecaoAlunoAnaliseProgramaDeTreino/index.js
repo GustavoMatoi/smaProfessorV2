@@ -26,6 +26,7 @@ export default ({navigation}) => {
         unsubscribe()
       }
     }, [])
+  
     useEffect(() => {
         const fetchAlunos = async () => {
           try {
@@ -46,7 +47,6 @@ export default ({navigation}) => {
                   professorLogado.getAcademia(),
                   'Professores'
                 );
-                console.log("ZZZZZZZZzz")
                 console.log(professorLogado.getAcademia())
                 const professoresSnapshot = await getDocs(professoresRef);
       

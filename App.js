@@ -56,6 +56,7 @@ import FrequenciaAluno from './componentes/SelecaoAluno/PerfilDoAluno/Frequencia
 import * as Notification from "expo-notifications"
 import SelecaoDoExercicio from './componentes/MontarTreino/SelecaoDoExercicio';
 import AdicionaisExercicio from './componentes/MontarTreino/SelecaoDoExercicio/AdicionaisExercicio';
+import NovaFicha from './componentes/MontarTreino/NovaFicha';
 
 const Stack = createNativeStackNavigator();
 
@@ -113,6 +114,7 @@ export default function App() {
         <Stack.Screen name="Frequencia do aluno" component={FrequenciaAluno}/>
         <Stack.Screen name="Seleção do Exercício" component={SelecaoDoExercicio}/>
         <Stack.Screen name="Adicionais exercício" component={AdicionaisExercicio}/>
+        <Stack.Screen name="Nova Ficha" component={NovaFicha}/>
       </Stack.Navigator>
     </NavigationContainer> 
     );

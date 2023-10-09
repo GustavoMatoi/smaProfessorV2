@@ -10,6 +10,7 @@ import { Entypo } from '@expo/vector-icons';
 import Modal from "react-native-modal";
 export default ({route, navigation}) => {
     const aluno = route.params.aluno
+    console.log(aluno)
     const[listaDeExercicios, setListaDeExercicios] = useState([])
     const[exercicio, setExercicio] = useState('')
     const [listaAux, setListaAux] = useState([])
@@ -39,24 +40,23 @@ export default ({route, navigation}) => {
         updatedLista.splice(index, 1);
         return updatedLista;
       });
-          setListaFinal((prevListaAux) => {
+      console.log(index)
+        setListaFinal((prevListaAux) => {
         const updatedListaAux = [...prevListaAux];
         updatedListaAux.splice(index, 1);
         return updatedListaAux;
       });
           setListaAux((prevListaAux) => {
-            console.log(prevListaAux, 'prevListaAux')
         const updatedListaAux = [...prevListaAux];
         updatedListaAux.splice(index, 1);
         return updatedListaAux;
       });
-      console.log(listaAux)
     };
 
-      const adicionarExercicioNaFicha = (i, nomeExercicio, index) => {
+      const adicionarExercicioNaFicha = (i, nomeExercicio, index, tipo) => {
         if(validaExercicio(i)){
           const listaDeExerciciosAux =[...listaFinal]
-          listaDeExerciciosAux.push({index, nomeExercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series})
+          listaDeExerciciosAux.push({index, tipo, nomeExercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series})
           setListaFinal([...new Set(listaDeExerciciosAux)])
         }
 
@@ -223,11 +223,9 @@ export default ({route, navigation}) => {
       
       i.tipo == 'força' ? 
       
-      ( <View style={[style.quadrado, listaFinal[index]  ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
+      ( <View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
-        {console.log("lista final ", listaFinal[index])}
-        {console.log("lista de exercicios ", listaDeExercicios[index])}
-        {console.log("lista aux ", listaAux[index])}
+
         <View style={{width: '100%'}}>
           {listaAux[index] ? 
           <View style={[style.inputTexto]}>
@@ -241,15 +239,26 @@ export default ({route, navigation}) => {
         <View style={style.areaPreenchimentoParametros}>
         <View style={[style.areaParametroPequeno]}>
             <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
-            <TextInput style={[style.inputTextoPequeno]} editable={!listaFinal[index] } placeholder="Sér." keyboardType="numeric" onChangeText={(text) => {handleSeries(i, text)}}/>
+            <TextInput style={[style.inputTextoPequeno]}  
+            value={typeof listaFinal[index] !== 'undefined' ? i.series : 0}
+            placeholder="Sér." keyboardType="numeric" onChangeText={(text) => {handleSeries(i, text)}}/>
         </View>
+        {console.log(i.series)}
         <View style={[style.areaParametroPequeno]}>
             <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Repetições:</Text>
-            <TextInput style={[style.inputTextoPequeno]} editable={!listaFinal[index] } placeholder="Reps." keyboardType="numeric" onChangeText={(text)=> {handleReps(i, text)}}/>
+            <TextInput style={[style.inputTextoPequeno]} placeholder="Reps." keyboardType="numeric" 
+            onChangeText={(text)=> {handleReps(i, text)}}
+            value={typeof listaFinal[index] !== 'undefined' ? i.repeticoes : 0}
+
+            />
         </View>
         <View style={[style.areaParametroPequeno]}>
             <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
-            <TextInput style={[style.inputTextoPequeno]} editable={!listaFinal[index] } placeholder="Desc." keyboardType="numeric" onChangeText={(text)=>{handleDescanso(i, text)}}/>
+            <TextInput style={[style.inputTextoPequeno]}   placeholder="Desc." keyboardType="numeric" 
+            onChangeText={(text)=>{handleDescanso(i, text)}}
+            value={typeof listaFinal[index] !== 'undefined' ? i.descanso : 0}
+
+            />
         </View>
         </View>
     </View>)
@@ -286,7 +295,7 @@ export default ({route, navigation}) => {
     </View>)
       }
       <View style={style.botoesCrud}>
-        <TouchableOpacity style={[estilo.botao, estilo.corSuccess, {width: '40%', marginTop: '5%', flexDirection: 'row', justifyContent:'center'}]} disabled={listaFinal[index] !== undefined} onPress={()=> adicionarExercicioNaFicha(i, listaAux[index], index)}>
+        <TouchableOpacity style={[estilo.botao, estilo.corSuccess, {width: '40%', marginTop: '5%', flexDirection: 'row', justifyContent:'center'}]} disabled={typeof listaFinal[index] !== 'undefined'} onPress={()=> adicionarExercicioNaFicha(i, listaAux[index], index, i.tipo)}>
           <AntDesign name="edit" size={16} color="white" />
           <Text style={[estilo.textoP16px, estilo.textoCorLight, style.Montserrat, {marginHorizontal: '10%'}]}>SALVAR</Text>
         </TouchableOpacity>
@@ -302,6 +311,9 @@ export default ({route, navigation}) => {
                 <TouchableOpacity style={[estilo.corLightMenos1, style.botao]}  onPress={addExercicio}>
                     <Entypo name="add-to-list" size={30} color={'#0066FF'} />
                     <Text style={[estilo.tituloH619px, estilo.textoCorPrimaria]}>ADICIONAR EXERCÍCIO</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[estilo.corPrimaria, style.botao, {marginVertical: '5%'}]}  onPress={() => {navigation.navigate('Nova Ficha', {exercicios: listaFinal, aluno: aluno})}}>
+                    <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>FINALIZAR FICHA</Text>
                 </TouchableOpacity>
                 </View>
             </View>

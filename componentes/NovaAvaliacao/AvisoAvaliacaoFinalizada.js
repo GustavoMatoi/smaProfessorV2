@@ -26,9 +26,6 @@ export default ({navigation}) => {
             </View>
 
             <View style={{marginTop: '20%'}}>
-                <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={()=>navigation.navigate('Montar treino')}> 
-                    <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>MONTAR TREINO</Text>
-                </TouchableOpacity>
                 <TouchableOpacity style={[estilo.botao, estilo.corLightMenos1, {borderWidth: 3, borderColor: '#0066FF' }]} onPress={()=> navigation.navigate('Home')}>
                     <Text style={[estilo.textoCorPrimaria, estilo.tituloH619px]}>VOLTAR AO INÍCIO</Text>
                 </TouchableOpacity>

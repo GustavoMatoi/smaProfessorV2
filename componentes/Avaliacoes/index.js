@@ -58,7 +58,7 @@ export default ({ navigation, route }) => {
     fetchAvaliacoes();
   }, []);
 
-
+  console.log(numAvaliacoes)
   return (
     <ScrollView style={[style.container, estilo.corLightMenos1]} >
       {carregandoAlunos? 
@@ -76,7 +76,7 @@ export default ({ navigation, route }) => {
             <Entypo name="emoji-sad" size={100} color="#182128" />
           </View>
           <Text style={[estilo.textoCorSecundaria, estilo.textoP16px, { marginTop: '10%', textAlign: 'center', marginHorizontal: '5%' }]}>
-            Você ainda não possui nenhuma avaliação cadastrada. Realize uma avaliação física e tente novamente mais tarde.
+            Este aluno ainda não possui nenhuma avaliação cadastrada. Realize uma avaliação física e tente novamente mais tarde.
           </Text>
         </View>
       ) : (

@@ -164,7 +164,7 @@ export default ({ navigation, route }) => {
 
         </View>
         <View style={[{marginVertical: '5%'}]}>
-        <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={()=> montarExercicio(nomeExercicio, variacaoString, implementoString, posturaString, pegadaString, execucaoString)}>
+        <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={()=> montarExercicio(nomeExercicioString[0].trim(), variacaoString, implementoString, posturaString, pegadaString, execucaoString)}>
             <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>SALVAR EXERCÍCIO</Text>
         </TouchableOpacity>
         </View>
