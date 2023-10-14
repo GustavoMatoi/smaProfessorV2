@@ -5,7 +5,7 @@ import estilo from '../../estilo'
 import { professorLogado } from '../../Home'
 import { getFirestore, setDoc, doc } from 'firebase/firestore'
 import BotaoSelect from '../../BotaoSelect'
-
+import Expo from 'expo'
 export default ({navigation, route}) => {
     const {exercicios, aluno} = route.params
     console.log('aluno', aluno)

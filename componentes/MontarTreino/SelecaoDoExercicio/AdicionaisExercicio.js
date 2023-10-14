@@ -5,8 +5,7 @@ import Spinner from "react-native-loading-spinner-overlay";
 import estilo from "../../estilo"
 import RadioBotao from "../../RadioBotao";
 export default ({ navigation, route }) => {
-    const { nomeExercicio } = route.params;
-    const { grupoMuscular } = route.params;
+    const { nomeExercicio, grupoMuscular, tipo } = route.params;
     const [exercicio, setExercicio] = useState('')
     const [dataExercicio, setDataExercicio] = useState({});
     const [carregando, setCarregando] = useState(true);
@@ -15,6 +14,27 @@ export default ({ navigation, route }) => {
     const [posturasExercicio, setPosturaExercicios] = useState([]);
     const [pegadasExercicio, setPegadasExercicio] = useState([]);
     const [execucoesExercicio, setExecucoesExercicio] = useState([]);
+    const [posicaoDosPes, setPosicaoDosPes] = useState([])
+    const [quadril, setQuadril] = useState([])
+    const [amplitude, setAmplitude] = useState([])
+    const [posicao, setPosicao] = useState([])
+    const [posicaoDosJoelhos, setPosicaoDosJoelhos] = useState([])
+    const [apoioDosPes, setApoioDosPes] = useState([])
+
+    const [posicaoDosPesSelecionada, setPosicaoDosPesSelecionada] = useState(-1)
+    const [quadrilSelecionado, setQuadrilSelecionado] = useState(-1)
+    const [amplitudeSelecionada, setAmplitudeSelecionada] = useState(-1)
+    const [posicaoSelecionada, setPosicaoSelecionada] = useState(-1)
+    const [posicaoDosJoelhosSelecionada, setPosicaoDosJoelhosSelecionada] = useState(-1)
+    const [apoioDosPesSelecionado, setApoioDosPesSelecionado] = useState(-1)
+
+    const [posicaoDosPesString, setPosicaoDosPesString] = useState('')
+    const [quadrilString, setQuadrilString] = useState('')
+    const [amplitudeString, setAmplitudeString] = useState('')
+    const [posicaoString, setPosicaoString] = useState('')
+    const [posicaoDosJoelhosString, setPosicaoDosJoelhosString] = useState('')
+    const [apoioDosPesString, setApoioDosPesString] = useState('')
+
     const [variacaoSelecionada, setVariacaoSelecionada] = useState(-1)
     const [variacaoString, setVariacaoString] = useState('')
     const [implementoSelecionado, setImplementoSelecionado] = useState(-1)
@@ -29,7 +49,7 @@ export default ({ navigation, route }) => {
         const fetchData = async () => {
             try {
                 const db = getFirestore();
-                const documentRef = doc(db, "Exercicios", "listaDeExercicios", 'ExerciciosMembrosSuperiores', grupoMuscular, 'Exercicios', nomeExercicio);
+                const documentRef = doc(db, "Exercicios", "listaDeExercicios", tipo, grupoMuscular, 'Exercicios', nomeExercicio);
 
                 const documentSnapshot = await getDoc(documentRef);
                 const data = documentSnapshot.data();
@@ -55,6 +75,24 @@ export default ({ navigation, route }) => {
                 if ("execucao" in data) {
                     setExecucoesExercicio(Object.values(data.execucao));
                 }
+                if ('posicaoDosPes' in data){
+                    setPosicaoDosPes(Object.values(data.posicaoDosPes))
+                }
+                if('quadril' in data){
+                    setQuadril(Object.values(data.quadril))
+                }
+                if('amplitude' in data){
+                    setAmplitude(Object.values(data.amplitude))
+                }
+                if('posicao' in data){
+                    setPosicao(Object.values(data.posicao))
+                }
+                if('posicaoDosJoelhos' in data){
+                    setPosicaoDosJoelhos(Object.values(data.posicaoDosJoelhos))
+                }
+                if('apoioDosPes' in data){
+                    setApoioDosPes(Object.values(data.apoioDosPes))
+                }
 
                 setCarregando(false);
             } catch (error) {
@@ -74,7 +112,7 @@ export default ({ navigation, route }) => {
         }
     })
 
-    const montarExercicio = (nome, variacao, implemento, postura, pegada, execucao) => {
+    const montarExercicio = (nome, variacao, implemento, postura, pegada, execucao, posicaoDosPes, posicaoDosJoelhos, quadril, amplitude, apoioDosPes) => {
         let exercicioAux = nome;
         if (variacao){
             exercicioAux += ` ${variacao}` 
@@ -90,6 +128,18 @@ export default ({ navigation, route }) => {
         }
         if(execucao) {
             exercicioAux += ` ${execucao}`
+        }
+        if(posicaoDosPes){
+            exercicioAux += ` ${posicaoDosJoelhos}`
+        }
+        if(quadril){
+            exercicioAux += ` ${quadril}`
+        }
+        if(amplitude){
+            exercicioAux += ` ${amplitude}`
+        }
+        if(apoioDosPes){
+            exercicioAux += ` ${apoioDosPes}`
         }
 
         setExercicio(exercicioAux)
@@ -155,16 +205,72 @@ export default ({ navigation, route }) => {
                             selected={execucaoSelecionada}
                         />
                         </View>}
+                    {posicaoDosPes.length === 0 ? null : 
+                    <View style={style.areaSelecao}>
+                    <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Posição dos pés: </Text>
+                        <RadioBotao
+                            options={posicaoDosPes}
+                            onChangeSelect={(opt, i) => {setPosicaoDosPesSelecionada(i); setPosicaoDosPesString(opt)}}
+                            selected={posicaoDosPesSelecionada}
+                        />
+                        </View>}
+                    {quadril.length === 0 ? null : 
+                    <View style={style.areaSelecao}>
+                    <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Quadril: </Text>
+                        <RadioBotao
+                            options={quadril}
+                            onChangeSelect={(opt, i) => {setQuadrilSelecionado(i); setQuadrilString(opt)}}
+                            selected={quadrilSelecionado}
+                        />
+                        </View>}
+                        
+                    {amplitude.length === 0 ? null : 
+                    <View style={style.areaSelecao}>
+                    <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Amplitude: </Text>
+                        <RadioBotao
+                            options={amplitude}
+                            onChangeSelect={(opt, i) => {setAmplitudeSelecionada(i); setAmplitudeString(opt)}}
+                            selected={amplitudeSelecionada}
+                        />
+                        </View>}
+                    {posicao.length === 0 ? null : 
+                    <View style={style.areaSelecao}>
+                    <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Posição: </Text>
+                        <RadioBotao
+                            options={posicao}
+                            onChangeSelect={(opt, i) => {setPosicaoSelecionada(i); setPosicaoString(opt)}}
+                            selected={posicaoSelecionada}
+                        />
+                        </View>}
+                  
+                    {posicaoDosJoelhos.length === 0 ? null : 
+                    <View style={style.areaSelecao}>
+                    <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Posição dos Joelhos: </Text>
+                        <RadioBotao
+                            options={posicaoDosJoelhos}
+                            onChangeSelect={(opt, i) => {setPosicaoDosJoelhosSelecionada(i); setPosicaoDosJoelhosString(opt)}}
+                            selected={posicaoDosJoelhosSelecionada}
+                        />
+                        </View>}
+                    {apoioDosPes.length === 0 ? null : 
+                    <View style={style.areaSelecao}>
+                    <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Apoio dos pés: </Text>
+                        <RadioBotao
+                            options={apoioDosPes}
+                            onChangeSelect={(opt, i) => {setApoioDosPesSelecionado(i); setApoioDosPesString(opt)}}
+                            selected={apoioDosPesSelecionado}
+                        />
+                        </View>}
                         
                 
                 </View>
 )}
         <View style={[estilo.centralizado, {width: '80%'}]}>
-        <Text style={[ estilo.textoCorSecundaria, estilo.textoP16px]}>Exercício: {nomeExercicioString[0].trim()} {implementoString} {posturaString} {variacaoString} {pegadaString} {execucaoString}</Text>
+        <Text style={[ estilo.textoCorSecundaria, estilo.textoP16px]}>Exercício: {nomeExercicioString[0].trim()} {implementoString} {posturaString} {variacaoString} {pegadaString} {execucaoString} {posicaoDosPesString} {quadrilString} {amplitudeString} {posicaoString} {posicaoDosJoelhosString} {apoioDosPesString}</Text>
 
         </View>
         <View style={[{marginVertical: '5%'}]}>
-        <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={()=> montarExercicio(nomeExercicioString[0].trim(), variacaoString, implementoString, posturaString, pegadaString, execucaoString)}>
+        <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={()=> montarExercicio(nomeExercicioString[0].trim(), variacaoString, implementoString, posturaString, pegadaString, execucaoString, posicaoDosPesString, posicaoDosJoelhosString, quadrilString, amplitudeString, apoioDosPesString)}>
             <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>SALVAR EXERCÍCIO</Text>
         </TouchableOpacity>
         </View>
