@@ -48,50 +48,56 @@ export default ({ navigation, route }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const db = getFirestore();
-                const documentRef = doc(db, "Exercicios", "listaDeExercicios", tipo, grupoMuscular, 'Exercicios', nomeExercicio);
+                if(tipo === 'ExerciciosMembrosSuperiores' || tipo === 'ExerciciosMembrosInferiores'){
+                    const db = getFirestore();
+                    const documentRef = doc(db, "Exercicios", "listaDeExercicios", tipo, grupoMuscular, 'Exercicios', nomeExercicio);
+    
+                    const documentSnapshot = await getDoc(documentRef);
+                    const data = documentSnapshot.data();
+                    
+                    setDataExercicio(data || {});
+                    
+                    if ("variacoes" in data) {
+                        setVariacoesExercicio(Object.values(data.variacoes));
+                    }
+                    
+                    if ("implemento" in data) {
+                        setImplementosExercicio(Object.values(data.implemento));
+                    }
+                    
+                    if ("postura" in data) {
+                        setPosturaExercicios(Object.values(data.postura));
+                    }
+                    
+                    if ("pegada" in data) {
+                        setPegadasExercicio(Object.values(data.pegada));
+                    }
+                    
+                    if ("execucao" in data) {
+                        setExecucoesExercicio(Object.values(data.execucao));
+                    }
+                    if ('posicaoDosPes' in data){
+                        setPosicaoDosPes(Object.values(data.posicaoDosPes))
+                    }
+                    if('quadril' in data){
+                        setQuadril(Object.values(data.quadril))
+                    }
+                    if('amplitude' in data){
+                        setAmplitude(Object.values(data.amplitude))
+                    }
+                    if('posicao' in data){
+                        setPosicao(Object.values(data.posicao))
+                    }
+                    if('posicaoDosJoelhos' in data){
+                        setPosicaoDosJoelhos(Object.values(data.posicaoDosJoelhos))
+                    }
+                    if('apoioDosPes' in data){
+                        setApoioDosPes(Object.values(data.apoioDosPes))
+                    }
 
-                const documentSnapshot = await getDoc(documentRef);
-                const data = documentSnapshot.data();
-                
-                setDataExercicio(data || {});
-                
-                if ("variacoes" in data) {
-                    setVariacoesExercicio(Object.values(data.variacoes));
-                }
-                
-                if ("implemento" in data) {
-                    setImplementosExercicio(Object.values(data.implemento));
-                }
-                
-                if ("postura" in data) {
-                    setPosturaExercicios(Object.values(data.postura));
-                }
-                
-                if ("pegada" in data) {
-                    setPegadasExercicio(Object.values(data.pegada));
-                }
-                
-                if ("execucao" in data) {
-                    setExecucoesExercicio(Object.values(data.execucao));
-                }
-                if ('posicaoDosPes' in data){
-                    setPosicaoDosPes(Object.values(data.posicaoDosPes))
-                }
-                if('quadril' in data){
-                    setQuadril(Object.values(data.quadril))
-                }
-                if('amplitude' in data){
-                    setAmplitude(Object.values(data.amplitude))
-                }
-                if('posicao' in data){
-                    setPosicao(Object.values(data.posicao))
-                }
-                if('posicaoDosJoelhos' in data){
-                    setPosicaoDosJoelhos(Object.values(data.posicaoDosJoelhos))
-                }
-                if('apoioDosPes' in data){
-                    setApoioDosPes(Object.values(data.apoioDosPes))
+
+                } else if (tipo === 'Aerobicos'){
+                    setExercicio(nomeExercicio)
                 }
 
                 setCarregando(false);

@@ -5,14 +5,12 @@ import estilo from '../../estilo'
 import { professorLogado } from '../../Home'
 import { getFirestore, setDoc, doc } from 'firebase/firestore'
 import BotaoSelect from '../../BotaoSelect'
+import ExerciciosCardio from '../../Ficha/ExerciciosCardio'
 import Expo from 'expo'
 export default ({navigation, route}) => {
     const {exercicios, aluno} = route.params
-    console.log('aluno', aluno)
-    console.log(exercicios)
-    console.log(route.params)
 
-
+    console.log('exercicios', exercicios)
     const style = StyleSheet.create({
         container: {
             flex: 1,
@@ -42,8 +40,7 @@ export default ({navigation, route}) => {
         const bd = getFirestore();
     
         const documentos = exercicios.map((exercicio, index) => {
-            console.log('index', exercicio);
-            console.log('i', index);
+
             return {
                 Nome: exercicio.nomeExercicio,
                 descanso: exercicio.descanso,
@@ -99,14 +96,31 @@ export default ({navigation, route}) => {
                 <Text style={[estilo.textoP16px, estilo.textoCorSecundaria]}>Responsável: {professorLogado.getNome()}</Text>
                 <Text style={[estilo.textoP16px, estilo.textoCorSecundaria]}>Aluno: {aluno.nome}</Text>
             </View>
-                <FlatList
-                data={exercicios}
-                style={{width: '100%', marginVertical: 10}}
-                renderItem={({item}) => 
-                item.tipo === 'força'? <ExerciciosForça nomeDoExercicio={item.nomeExercicio} series={item.series} repeticoes={item.repeticoes} descanso={item.descanso} /> : <Text>Texto</Text>
-            }
-                keyExtractor={item => item.nomeDoExercicio}
-            />
+            <FlatList
+  data={exercicios}
+  style={{ width: '100%', marginVertical: 10 }}
+  renderItem={({ item }) =>
+    item.tipo === 'força' ? (
+      <ExerciciosForça
+        nomeDoExercicio={item.nomeExercicio}
+        series={item.series}
+        repeticoes={item.repeticoes}
+        descanso={item.descanso}
+      />
+    ) : item.tipo === 'aerobico' ? (
+      <ExerciciosCardio
+        nomeDoExercicio={item.nomeExercicio}
+        seriesDoExercicio={item.series}
+        velocidadeDoExercicio={item.velocidade}
+        descansoDoExercicio={item.descanso}
+        duracaoDoExercicio={item.duracao}
+      />
+    ) : (
+      <Text>Texto</Text>
+    )
+  }
+  keyExtractor={item => item.nomeDoExercicio}
+/>
 
             <View style={ [{marginVertical: 10}]}>
             <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, {marginVertical: 10}]}>Objetivo do treino:</Text>

@@ -10,7 +10,6 @@ import { Entypo } from '@expo/vector-icons';
 import Modal from "react-native-modal";
 export default ({route, navigation}) => {
     const aluno = route.params.aluno
-    console.log(aluno)
     const[listaDeExercicios, setListaDeExercicios] = useState([])
     const[exercicio, setExercicio] = useState('')
     const [listaAux, setListaAux] = useState([])
@@ -56,7 +55,8 @@ export default ({route, navigation}) => {
       const adicionarExercicioNaFicha = (i, nomeExercicio, index, tipo) => {
         if(validaExercicio(i)){
           const listaDeExerciciosAux =[...listaFinal]
-          listaDeExerciciosAux.push({index, tipo, nomeExercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series})
+          if(tipo === 'força') listaDeExerciciosAux.push({index, tipo, nomeExercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series})
+          if(tipo === 'aerobico') listaDeExerciciosAux.push({index, tipo, nomeExercicio, validado: true, descanso: i.descanso, velocidade: i.velocidade, duracao: i.duracao, series: i.series})
           setListaFinal([...new Set(listaDeExerciciosAux)])
         }
 
@@ -105,6 +105,7 @@ export default ({route, navigation}) => {
         });
         setListaDeExercicios(updatedExercicios);
         setModalVisible(false);
+
       };
 
       const handleVelocidade = (exercicio, velocidade) => {
@@ -129,6 +130,7 @@ export default ({route, navigation}) => {
       };
 
       const validaExercicio = (exercicio) => {
+        console.log('exercicio.tipo', exercicio.tipo)
         if(exercicio.tipo === 'força'){
           let validarDescanso = false
           let validarReps = false 
@@ -143,6 +145,32 @@ export default ({route, navigation}) => {
             validarSeries = true
           }
           if(validarDescanso && validarReps && validarSeries){
+            return true;
+          } else {
+            Alert.alert("Preencha direito!")
+          }
+        }
+        if(exercicio.tipo === 'aerobico'){
+          let validarDescanso = false
+          let validarVelocidade = false 
+          let validarSeries = false
+          let validarDuracao = false
+
+          if(exercicio.descanso){
+            validarDescanso = true
+          }
+          if(exercicio.velocidade){
+            validarVelocidade = true
+          }
+          if(exercicio.series){
+            validarSeries = true
+          }
+          if(exercicio.duracao){
+            validarDuracao = true
+          }
+
+          if(validarDescanso && validarVelocidade && validarSeries && validarDuracao){
+            console.log(exercicio)
             return true;
           } else {
             Alert.alert("Preencha direito!")
@@ -189,33 +217,39 @@ export default ({route, navigation}) => {
 
 
       </Modal>
-      {i.tipo == 'aerobico' ? (  <View style={[style.quadrado, estilo.corLightMais1, estilo.sombra]}>
+      {i.tipo == 'aerobico' ? (  <View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
                 <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
                 <View style={{width: '100%'}}>
-                  <TouchableOpacity style={[style.inputTexto]}>
-                    <Text>Selecione o exercício</Text>
-                  </TouchableOpacity>
+                {listaAux[index] ? 
+          <View style={[style.inputTexto]}>
+            <Text>{listaAux[index]}</Text>
+            </View>
+          : <TouchableOpacity style={[style.inputTexto,{ backgroundColor: '#0066FF', borderRadius: 30}]} onPress={()=>navigation.navigate('Seleção do Exercício', {navigation: navigation, receberExercicio: receberExercicio, aluno: aluno, tipo: 'aerobicos'})}>
+        <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>Selecione o exercício</Text>
+      </TouchableOpacity>}
                 </View>
     
                 <View style={style.areaPreenchimentoParametros}>
                     <View style={[style.areaParametroMedio]}>
                         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Velocidade:</Text>
-                        <TextInput style={[style.inputTextoPequeno]} placeholder="Vel." onChangeText={(text)=>handleVelocidade(i, text)}/>
+                        <TextInput style={[style.inputTextoPequeno]} placeholder="Vel. (km)" onChangeText={(text)=>handleVelocidade(i, text)}/>
                     </View>
                     <View style={[style.areaParametroMedio]}>
                         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Duração:</Text>
-                        <TextInput style={[style.inputTextoPequeno]} placeholder="Durac." onChangeText={(text)=> {handleDescanso(i, text)}}/>
+                        <TextInput style={[style.inputTextoPequeno]} placeholder="Durac. (min)" onChangeText={(text)=> {handleDuracao(i, text)}}/>
                     </View>
                 </View>
 
                 <View style={style.areaPreenchimentoParametros}>
                     <View style={[style.areaParametroMedio]}>
                         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
-                        <TextInput style={[style.inputTextoPequeno]} placeholder="Desc." onChangeText={(text)=> {handleDescanso(i,text)}}/>
+                        <TextInput style={[style.inputTextoPequeno]} placeholder="Desc. (seg)" onChangeText={(text)=> {handleDescanso(i,text)}}/>
                     </View>
                     <View style={[style.areaParametroMedio]}>
                         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
-                        <TextInput style={[style.inputTextoPequeno]} placeholder="Sér." onChangeText={(text)=> {handleSeries(i, text)}}/>
+                        <TextInput style={[style.inputTextoPequeno]} placeholder="Sér." 
+                      onChangeText={(text) => {handleSeries(i, text)}}
+            />
                     </View>
                 </View>
             </View>): 
@@ -231,7 +265,7 @@ export default ({route, navigation}) => {
           <View style={[style.inputTexto]}>
             <Text>{listaAux[index]}</Text>
             </View>
-          : <TouchableOpacity style={[style.inputTexto,{ backgroundColor: '#0066FF', borderRadius: 30}]} onPress={()=>navigation.navigate('Seleção do Exercício', {navigation: navigation, receberExercicio: receberExercicio, aluno: aluno})}>
+          : <TouchableOpacity style={[style.inputTexto,{ backgroundColor: '#0066FF', borderRadius: 30}]} onPress={()=>navigation.navigate('Seleção do Exercício', {navigation: navigation, receberExercicio: receberExercicio, aluno: aluno, tipo: 'força'})}>
         <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>Selecione o exercício</Text>
       </TouchableOpacity>}
         </View>
@@ -241,9 +275,10 @@ export default ({route, navigation}) => {
             <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
             <TextInput style={[style.inputTextoPequeno]}  
             value={typeof listaFinal[index] !== 'undefined' ? i.series : 0}
-            placeholder="Sér." keyboardType="numeric" onChangeText={(text) => {handleSeries(i, text)}}/>
+            placeholder="Sér." keyboardType="numeric" o
+            onChangeText={(text) => {handleSeries(i, text)}}
+            />
         </View>
-        {console.log(i.series)}
         <View style={[style.areaParametroPequeno]}>
             <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Repetições:</Text>
             <TextInput style={[style.inputTextoPequeno]} placeholder="Reps." keyboardType="numeric" 
@@ -254,7 +289,7 @@ export default ({route, navigation}) => {
         </View>
         <View style={[style.areaParametroPequeno]}>
             <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
-            <TextInput style={[style.inputTextoPequeno]}   placeholder="Desc." keyboardType="numeric" 
+            <TextInput style={[style.inputTextoPequeno]}   placeholder="Desc. (seg)" keyboardType="numeric" 
             onChangeText={(text)=>{handleDescanso(i, text)}}
             value={typeof listaFinal[index] !== 'undefined' ? i.descanso : 0}
 
@@ -283,7 +318,7 @@ export default ({route, navigation}) => {
     </View>
     <View style={[style.areaParametroPequeno]}>
         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
-        <TextInput style={[style.inputTextoPequeno]} placeholder="Desc." onChangeText={(text)=> {handleDescanso(i, text)}}/>
+        <TextInput style={[style.inputTextoPequeno]} placeholder="Desc. (seg)" onChangeText={(text)=> {handleDescanso(i, text)}}/>
     </View>
     </View>
 </View>) : 

@@ -26,7 +26,10 @@ export default ({navigation,route}) => {
     const [triceps, setTriceps] = useState([])
     const [multiarticular, setMultiArticular] = useState([])
     const [uniarticular, setUniarticular] = useState([])
+    const [cardios, setCardios] = useState([])
     const [selecionado, setSelecionado] = useState('')
+    const [cardioSelecionado, setCardioSelecionado] = useState('')
+    const {tipo} = route.params
     const recuperarExercicios = async () => {
         const documentos = [];
         const abdominaisTemp = []
@@ -45,6 +48,8 @@ export default ({navigation,route}) => {
         const multiarticularTemp = []
         const uniarticularTemp = []
         try {
+          if(tipo === 'força'){
+            
           const db = getFirestore();
           const exercicioRef = collection(
             db,
@@ -154,6 +159,26 @@ export default ({navigation,route}) => {
           })
 
           
+        
+          } else if (tipo === 'aerobicos'){                
+            const cardiosAux = []  
+            const db = getFirestore();
+              const exercicioRef = collection(
+                db,
+                'Exercicios',
+                'listaDeExercicios',
+                'Aerobicos'
+              );
+    
+              const querySnapshot = await getDocs(exercicioRef);
+              querySnapshot.forEach( async (aerobicoDoc) => {
+                cardiosAux.push(aerobicoDoc.get('nome'))
+              })
+
+              setCardios(cardiosAux)
+              console.log(cardiosAux)
+              console.log(cardios)
+          }
         } catch (error) {
           console.error('Error retrieving exercises:', error);
         }
@@ -172,6 +197,14 @@ export default ({navigation,route}) => {
         navigation.navigate('Adicionais exercício', {nomeExercicio: value, grupoMuscular: grupoMuscular, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo})
       }
     }
+    const handleSelecaoExercicioCardio = (value, tipo) => {
+            if(value.length === 0){
+        Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
+      }   else {
+        setSelecionado(value)
+        navigation.navigate('Adicionais exercício', {nomeExercicio: value, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo})
+      }
+    }
 
 
     useEffect(() => {
@@ -186,205 +219,224 @@ export default ({navigation,route}) => {
             textStyle={[estilo.textoCorLight, estilo.textoP16px]}
           />
         ) : (
-          <ScrollView style={[estilo.centralizado, { width: '100%' }]}>
-            <View style={[ estilo.centralizado, {marginVertical: 10}]}>
-              <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Grupos musculares:</Text>
+          tipo === 'força' ? <ScrollView style={[estilo.centralizado, { width: '100%' }]}>
+          <View style={[ estilo.centralizado, {marginVertical: 10}]}>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Grupos musculares:</Text>
 
-            </View>
+          </View>
 
-            {grupoMuscular.length === 0 ?           <Spinner
-            visible={carregandoDados}
-            textContent={'Carregando exercícios...'}
-            textStyle={[estilo.textoCorLight, estilo.textoP16px]}
-          /> : (
-              <>
-            <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Membros superiores:</Text>
+          {grupoMuscular.length === 0 ?           <Spinner
+          visible={carregandoDados}
+          textContent={'Carregando exercícios...'}
+          textStyle={[estilo.textoCorLight, estilo.textoP16px]}
+        /> : (
+            <>
+          <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Membros superiores:</Text>
 
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[0].grupoMuscular, 'ExerciciosMembrosSuperiores')
-                    }
-                    options={abdominais}
-                    select={grupoMuscular[0].grupoMuscular}
-                  />
-                </View>
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[1].grupoMuscular, 'ExerciciosMembrosSuperiores')
-                    }
-                    options={antebracos}
-                    select={grupoMuscular[1].grupoMuscular}
-                  />
-                </View>
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[2].grupoMuscular, 'ExerciciosMembrosSuperiores')
-                    }
-                    options={biceps}
-                    select={grupoMuscular[2].grupoMuscular}
-                  />
-                </View>
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[3].grupoMuscular, 'ExerciciosMembrosSuperiores')
-                    }
-                    options={deltoide}
-                    select={grupoMuscular[3].grupoMuscular}
-                  />
-                </View>
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[4].grupoMuscular, 'ExerciciosMembrosSuperiores')
-                    }
-                    options={gradeDorsal}
-                    select={grupoMuscular[4].grupoMuscular}
-                  />
-                </View>
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[5].grupoMuscular, 'ExerciciosMembrosSuperiores')
-                    }
-                    options={latissimoDoDorso}
-                    select={grupoMuscular[5].grupoMuscular}
-                  />
-                </View>
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[6].grupoMuscular, 'ExerciciosMembrosSuperiores')
-                    }
-                    options={manguitoRotador}
-                    select={grupoMuscular[6].grupoMuscular}
-                  />
-                </View>
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[7].grupoMuscular, 'ExerciciosMembrosSuperiores')
-                    }
-                    options={paravertebrais}
-                    select={grupoMuscular[7].grupoMuscular}
-                  />
-                </View>
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[8].grupoMuscular, 'ExerciciosMembrosSuperiores')
-                    }
-                    options={peitoral}
-                    select={grupoMuscular[8].grupoMuscular}
-                  />
-                </View>
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[9].grupoMuscular, 'ExerciciosMembrosSuperiores')
-                    }
-                    options={subescapular}
-                    select={grupoMuscular[9].grupoMuscular}
-                  />
-                </View>
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[10].grupoMuscular, 'ExerciciosMembrosSuperiores')
-                    }
-                    options={transvesversoAbdominal}
-                    select={grupoMuscular[10].grupoMuscular}
-                  />
-                </View>
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[11].grupoMuscular, 'ExerciciosMembrosSuperiores')
-                    }
-                    options={trapezio}
-                    select={grupoMuscular[11].grupoMuscular}
-                  />
-                </View>
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[12].grupoMuscular, 'ExerciciosMembrosSuperiores')
-                    }
-                    options={triceps}
-                    select={grupoMuscular[12].grupoMuscular}
-                  />
-                </View>
-                <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Membros inferiores:</Text>
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[13].grupoMuscular, 'ExerciciosMembrosInferiores')
-                    }
-                    options={multiarticular}
-                    select={grupoMuscular[13].grupoMuscular}
-                  />
-                </View>
-                <View style={{ marginBottom: '5%' }}>
-                  <BotaoSelect
-                    selecionado={true}
-                    titulo='Selecione um exercício'
-                    max={1}
-                    onChange={(value) =>
-                      handleSelecaoExercicio(value, grupoMuscular[14].grupoMuscular, 'ExerciciosMembrosInferiores')
-                    }
-                    options={uniarticular}
-                    select={grupoMuscular[14].grupoMuscular}
-                  />
-                </View>
-              </>
-            )}
-          </ScrollView>
-        )}
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[0].grupoMuscular, 'ExerciciosMembrosSuperiores')
+                  }
+                  options={abdominais}
+                  select={grupoMuscular[0].grupoMuscular}
+                />
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[1].grupoMuscular, 'ExerciciosMembrosSuperiores')
+                  }
+                  options={antebracos}
+                  select={grupoMuscular[1].grupoMuscular}
+                />
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[2].grupoMuscular, 'ExerciciosMembrosSuperiores')
+                  }
+                  options={biceps}
+                  select={grupoMuscular[2].grupoMuscular}
+                />
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[3].grupoMuscular, 'ExerciciosMembrosSuperiores')
+                  }
+                  options={deltoide}
+                  select={grupoMuscular[3].grupoMuscular}
+                />
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[4].grupoMuscular, 'ExerciciosMembrosSuperiores')
+                  }
+                  options={gradeDorsal}
+                  select={grupoMuscular[4].grupoMuscular}
+                />
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[5].grupoMuscular, 'ExerciciosMembrosSuperiores')
+                  }
+                  options={latissimoDoDorso}
+                  select={grupoMuscular[5].grupoMuscular}
+                />
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[6].grupoMuscular, 'ExerciciosMembrosSuperiores')
+                  }
+                  options={manguitoRotador}
+                  select={grupoMuscular[6].grupoMuscular}
+                />
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[7].grupoMuscular, 'ExerciciosMembrosSuperiores')
+                  }
+                  options={paravertebrais}
+                  select={grupoMuscular[7].grupoMuscular}
+                />
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[8].grupoMuscular, 'ExerciciosMembrosSuperiores')
+                  }
+                  options={peitoral}
+                  select={grupoMuscular[8].grupoMuscular}
+                />
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[9].grupoMuscular, 'ExerciciosMembrosSuperiores')
+                  }
+                  options={subescapular}
+                  select={grupoMuscular[9].grupoMuscular}
+                />
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[10].grupoMuscular, 'ExerciciosMembrosSuperiores')
+                  }
+                  options={transvesversoAbdominal}
+                  select={grupoMuscular[10].grupoMuscular}
+                />
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[11].grupoMuscular, 'ExerciciosMembrosSuperiores')
+                  }
+                  options={trapezio}
+                  select={grupoMuscular[11].grupoMuscular}
+                />
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[12].grupoMuscular, 'ExerciciosMembrosSuperiores')
+                  }
+                  options={triceps}
+                  select={grupoMuscular[12].grupoMuscular}
+                />
+              </View>
+              <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Membros inferiores:</Text>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[13].grupoMuscular, 'ExerciciosMembrosInferiores')
+                  }
+                  options={multiarticular}
+                  select={grupoMuscular[13].grupoMuscular}
+                />
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                  selecionado={true}
+                  titulo='Selecione um exercício'
+                  max={1}
+                  onChange={(value) =>
+                    handleSelecaoExercicio(value, grupoMuscular[14].grupoMuscular, 'ExerciciosMembrosInferiores')
+                  }
+                  options={uniarticular}
+                  select={grupoMuscular[14].grupoMuscular}
+                />
+              </View>
+            </>
+          )}
+        </ScrollView>
+       :               
+       <>
+       {cardios.length === 0 ? <Text>Carregando exercícios...</Text> : 
+       <View style={{ marginBottom: '5%', padding: 10 }}>
+          <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Membros superiores:</Text>
+
+       <BotaoSelect
+         selecionado={true}
+         titulo='Selecione um exercício'
+         max={1}
+         onChange={(value) =>
+           handleSelecaoExercicioCardio(value, 'Aerobicos')
+         }
+         options={cardios}
+        /> 
+     </View>}
+       
+       </>
+       
+       )}
       </View>
     );
     
