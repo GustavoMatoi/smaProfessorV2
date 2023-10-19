@@ -3,14 +3,14 @@ import {Text, View, SafeAreaView, FlatList, TouchableOpacity, StyleSheet, TextIn
 import ExerciciosForça from '../../Ficha/ExerciciosForça'
 import estilo from '../../estilo'
 import { professorLogado } from '../../Home'
-import { getFirestore, setDoc, doc } from 'firebase/firestore'
+import { getFirestore, setDoc, doc, serverTimestamp } from 'firebase/firestore'
 import BotaoSelect from '../../BotaoSelect'
 import ExerciciosCardio from '../../Ficha/ExerciciosCardio'
 import Expo from 'expo'
+import ExerciciosAlongamento from '../../Ficha/ExerciciosAlongamento'
 export default ({navigation, route}) => {
-    const {exercicios, aluno} = route.params
+    const {exercicios, aluno, objetivo} = route.params
 
-    console.log('exercicios', exercicios)
     const style = StyleSheet.create({
         container: {
             flex: 1,
@@ -27,11 +27,8 @@ export default ({navigation, route}) => {
             width: '90%'
         },
     })
-    const [selected, setSelected] = useState('')
     const [dataFim, setDataFim] = useState('')
-    const  handleSelectChange = (value) => {
-        setSelected(value);
-      }
+
     const data = new Date()
     const dia = data.getDate()
     const mes = data.getMonth() + 1
@@ -41,13 +38,24 @@ export default ({navigation, route}) => {
     
         const documentos = exercicios.map((exercicio, index) => {
 
-            return {
-                Nome: exercicio.nomeExercicio,
-                descanso: exercicio.descanso,
-                repeticoes: exercicio.repeticoes,
-                series: exercicio.series,
-                tipo: exercicio.tipo
-            };
+            if(exercicio.tipo === 'força'){
+                return {
+                    Nome: exercicio.nomeExercicio,
+                    descanso: exercicio.descanso,
+                    repeticoes: exercicio.repeticoes,
+                    series: exercicio.series,
+                    tipo: exercicio.tipo
+                };
+            } else if (exercicio.tipo === 'aerobico'){
+                return {
+                    Nome: exercicio.nomeExercicio,
+                    velocidade: exercicio.velocidade,
+                    descanso: exercicio.descanso,
+                    series: exercicio.series,
+                    duracao: exercicio.duracao,
+                    tipo: exercicio.tipo
+                };
+            }
         });
     
         try {
@@ -64,11 +72,15 @@ export default ({navigation, route}) => {
             ), {
                 dataFim: dataFim,
                 dataInicio: `${dia}/${mes}/${ano}`,
-                objetivoDoTreino: selected,
-                responsavel: professorLogado.getNome()
+                data: serverTimestamp(),
+                objetivoDoTreino: objetivo,
+                responsavel: professorLogado.getNome(),
             });
     
             await Promise.all(documentos.map((element, index) => {
+                console.log('documentos', documentos)
+                console.log('elemnt', element)
+                console.log('index', index)
                 return setDoc(doc(
                     bd,
                     'Academias',
@@ -82,7 +94,8 @@ export default ({navigation, route}) => {
                     'Exercicios',
                     `Exercicio ${index}`
                 ), element);
-            }));
+            }
+            ));
     
             console.log('Ficha de exercícios salva com sucesso');
         } catch (error) {
@@ -116,29 +129,22 @@ export default ({navigation, route}) => {
         duracaoDoExercicio={item.duracao}
       />
     ) : (
-      <Text>Texto</Text>
+        <ExerciciosAlongamento
+        nomeDoExercicio={item.nomeExercicio}
+        repeticoesDoExercicio={item.repeticoesDoExercicio}
+        velocidadeDoExercicio={item.velocidade}
+        descansoDoExercicio={item.descanso}
+        duracaoDoExercicio={item.duracao}
+        imagem={'https://p2.trrsf.com/image/fget/cf/1200/900/middle/images.terra.com/2022/03/14/41529531-alongamento-aquecimento-1.jpg'}
+      />
     )
   }
   keyExtractor={item => item.nomeDoExercicio}
 />
 
             <View style={ [{marginVertical: 10}]}>
-            <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, {marginVertical: 10}]}>Objetivo do treino:</Text>
-            <BotaoSelect
-                        selecionado={selected == '' ? false : true}
-                        onChange={handleSelectChange}
-                        titulo='Objetivo do treino' max={1} 
-                        options={['Enrijecimento', 
-                        'Hipertrofia Geral Intensa',
-                        'Hipertrofia Geral Moderada',
-                        'Fortalecimento',
-                        'Definição Muscular',
-                        'Bem Estar Geral',
-                        'Relaxamento',
-                        'Aliviar dores',
-                        'Flexibilidade',
-                        'Manter forma física'
-                        ]} ></BotaoSelect>
+            <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, {marginVertical: 10}]}>Objetivo do treino: {objetivo}</Text>
+
                 <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, {marginVertical: 10}]}>Data fim (opcional):</Text>
                 <TextInput style={[style.inputTexto, estilo.sombra]}
                     onChangeText={(text)=>setDataFim(text)}

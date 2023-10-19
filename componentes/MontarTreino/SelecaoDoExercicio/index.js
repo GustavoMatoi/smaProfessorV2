@@ -27,6 +27,7 @@ export default ({navigation,route}) => {
     const [multiarticular, setMultiArticular] = useState([])
     const [uniarticular, setUniarticular] = useState([])
     const [cardios, setCardios] = useState([])
+    const [alongamentos, setAlongamentos] = useState([])
     const [selecionado, setSelecionado] = useState('')
     const [cardioSelecionado, setCardioSelecionado] = useState('')
     const {tipo} = route.params
@@ -178,6 +179,10 @@ export default ({navigation,route}) => {
               setCardios(cardiosAux)
               console.log(cardiosAux)
               console.log(cardios)
+          } else {
+            const alongamentosAux = []
+            alongamentosAux.push('Alogamento cobra', 'Alongamento vaca', 'Alongamento X')
+            setAlongamentos(alongamentosAux)
           }
         } catch (error) {
           console.error('Error retrieving exercises:', error);
@@ -207,6 +212,7 @@ export default ({navigation,route}) => {
     }
 
 
+    console.log('tipo', tipo)
     useEffect(() => {
         recuperarExercicios()
     }, [])
@@ -418,24 +424,42 @@ export default ({navigation,route}) => {
           )}
         </ScrollView>
        :               
-       <>
-       {cardios.length === 0 ? <Text>Carregando exercícios...</Text> : 
-       <View style={{ marginBottom: '5%', padding: 10 }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Membros superiores:</Text>
+      tipo === 'aerobicos' ?        <>
+      {console.log('cardios.length', cardios.length)}
+      {cardios.length === 0 ? <Text>Carregando exercícios...</Text> : 
+      <View style={{ marginBottom: '5%', padding: 10 }}>
+         <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Selecione um exercício:</Text>
 
-       <BotaoSelect
-         selecionado={true}
-         titulo='Selecione um exercício'
-         max={1}
-         onChange={(value) =>
-           handleSelecaoExercicioCardio(value, 'Aerobicos')
-         }
-         options={cardios}
-        /> 
-     </View>}
-       
-       </>
-       
+      <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+          handleSelecaoExercicioCardio(value, 'Aerobicos')
+        }
+        options={cardios}
+       /> 
+    </View>}
+      
+      </> :
+      
+      <>
+      {alongamentos.length === 0 ? <Text>Carregando exercícios...</Text> : 
+      <View style={{ marginBottom: '5%', padding: 10 }}>
+         <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Membros superiores:</Text>
+
+      <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+          handleSelecaoExercicioCardio(value, 'Alongamentos')
+        }
+        options={alongamentos}
+       /> 
+    </View>}
+      
+      </>
        )}
       </View>
     );

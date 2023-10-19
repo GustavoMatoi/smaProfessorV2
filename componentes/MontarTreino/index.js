@@ -8,8 +8,11 @@ import { AntDesign } from '@expo/vector-icons';
 import { professorLogado } from "../Home"
 import { Entypo } from '@expo/vector-icons'; 
 import Modal from "react-native-modal";
+import BotaoSelect from "../BotaoSelect"
 export default ({route, navigation}) => {
     const aluno = route.params.aluno
+    const [selected, setSelected] = useState('')
+
     const[listaDeExercicios, setListaDeExercicios] = useState([])
     const[exercicio, setExercicio] = useState('')
     const [listaAux, setListaAux] = useState([])
@@ -28,6 +31,9 @@ export default ({route, navigation}) => {
       setExercicio(exercicio)
       listaAux.push(exercicio)
 
+    }
+    const  handleSelectChange = (value) => {
+      setSelected(value);
     }
     const addExercicio = () => {
       setModalVisible(true);
@@ -57,6 +63,8 @@ export default ({route, navigation}) => {
           const listaDeExerciciosAux =[...listaFinal]
           if(tipo === 'força') listaDeExerciciosAux.push({index, tipo, nomeExercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series})
           if(tipo === 'aerobico') listaDeExerciciosAux.push({index, tipo, nomeExercicio, validado: true, descanso: i.descanso, velocidade: i.velocidade, duracao: i.duracao, series: i.series})
+          console.log("ARRUMAR O ALONGAMENTO")
+          if(tipo === 'alongamento') listaDeExerciciosAux.push({index, tipo, nomeExercicio, validado: true, duracao: i.duracao, repeticoes: i.repeticoes, descanso: i.descanso})
           setListaFinal([...new Set(listaDeExerciciosAux)])
         }
 
@@ -176,7 +184,20 @@ export default ({route, navigation}) => {
             Alert.alert("Preencha direito!")
           }
         }
+        if(exercicio.tipo === 'alongamento'){
+          console.log(exercicio)
+          return true;
+        }
       }
+
+      const handleValidacao = () => {
+        if(selected == '' || listaFinal.length === 0) {
+          Alert.alert("Há campos não preenchidos", "Preencha os campos e tente novamente")
+        } else {
+          navigation.navigate('Nova Ficha', {exercicios: listaFinal, aluno: aluno, objetivo: selected})
+        }
+      }
+
     return(
         <ScrollView style={[style.container, estilo.corLightMenos1]}>
 
@@ -187,6 +208,22 @@ export default ({route, navigation}) => {
                 <Text style={[estilo.textoCorSecundaria, estilo.textoP16px, style.textos,style.Montserrat]}>{professorLogado.getNome()}</Text>
                 <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Data:</Text>
                 <Text style={[estilo.textoCorSecundaria, estilo.textoP16px, style.textos,style.Montserrat]}>{dia}/{mes}/{ano}</Text>
+                <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Objetivo do treino:</Text>
+                <BotaoSelect
+                        selecionado={selected == '' ? false : true}
+                        onChange={handleSelectChange}
+                        titulo='Objetivo do treino' max={1} 
+                        options={['Enrijecimento', 
+                        'Hipertrofia Geral Intensa',
+                        'Hipertrofia Geral Moderada',
+                        'Fortalecimento',
+                        'Definição Muscular',
+                        'Bem Estar Geral',
+                        'Relaxamento',
+                        'Aliviar dores',
+                        'Flexibilidade',
+                        'Manter forma física'
+                        ]} ></BotaoSelect>
             </View>
             <View style={style.areaTextos}>
                 <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Exercícios</Text>
@@ -301,10 +338,13 @@ export default ({route, navigation}) => {
 ( <View style={[style.quadrado, estilo.corLightMais1, estilo.sombra]}>
     <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
     <View style={{width: '100%'}}>
-    <TouchableOpacity style={[style.inputTexto]}>
-    <Text>Selecione o exercício</Text>
-
-                  </TouchableOpacity>   
+    {listaAux[index] ? 
+          <View style={[style.inputTexto]}>
+            <Text>{listaAux[index]}</Text>
+            </View>
+          : <TouchableOpacity style={[style.inputTexto,{ backgroundColor: '#0066FF', borderRadius: 30}]} onPress={()=>navigation.navigate('Seleção do Exercício', {navigation: navigation, receberExercicio: receberExercicio, aluno: aluno, tipo: 'alongamento'})}>
+        <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>Selecione o exercício</Text>
+      </TouchableOpacity>} 
                    </View>
 
     <View style={style.areaPreenchimentoParametros}>
@@ -343,11 +383,12 @@ export default ({route, navigation}) => {
   ))
 }
 
-                <TouchableOpacity style={[estilo.corLightMenos1, style.botao]}  onPress={addExercicio}>
+                <TouchableOpacity style={[estilo.corLightMenos1, style.botao, {borderColor: '#0066FF', borderWidth: 4}]}  onPress={addExercicio}>
                     <Entypo name="add-to-list" size={30} color={'#0066FF'} />
                     <Text style={[estilo.tituloH619px, estilo.textoCorPrimaria]}>ADICIONAR EXERCÍCIO</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[estilo.corPrimaria, style.botao, {marginVertical: '5%'}]}  onPress={() => {navigation.navigate('Nova Ficha', {exercicios: listaFinal, aluno: aluno})}}>
+
+                <TouchableOpacity style={[listaFinal.length === 0? estilo.corDisabled :estilo.corPrimaria, style.botao, {marginVertical: '5%'}]} disabled={listaFinal.length === 0}  onPress={() => handleValidacao()}>
                     <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>FINALIZAR FICHA</Text>
                 </TouchableOpacity>
                 </View>
@@ -376,8 +417,6 @@ const style= StyleSheet.create({
         marginBottom: '5%'
     },
     botao: {
-        borderWidth: 4,
-        borderColor: '#0066FF',
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         width: '90%',

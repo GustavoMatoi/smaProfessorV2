@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import Spinner from "react-native-loading-spinner-overlay";
 import estilo from "../../estilo"
@@ -98,6 +98,8 @@ export default ({ navigation, route }) => {
 
                 } else if (tipo === 'Aerobicos'){
                     setExercicio(nomeExercicio)
+                } else { 
+                    setExercicio('Aaaa')
                 }
 
                 setCarregando(false);
@@ -267,7 +269,7 @@ export default ({ navigation, route }) => {
                             selected={apoioDosPesSelecionado}
                         />
                         </View>}
-                        
+
                 
                 </View>
 )}
