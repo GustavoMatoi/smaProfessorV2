@@ -11,6 +11,8 @@ import ExerciciosAlongamento from '../../Ficha/ExerciciosAlongamento'
 export default ({navigation, route}) => {
     const {exercicios, aluno, objetivo} = route.params
 
+    console.log(exercicios)
+    console.log(exercicios)
     const style = StyleSheet.create({
         container: {
             flex: 1,
@@ -30,8 +32,10 @@ export default ({navigation, route}) => {
     const [dataFim, setDataFim] = useState('')
 
     const data = new Date()
-    const dia = data.getDate()
-    const mes = data.getMonth() + 1
+    let dia = data.getDate()
+    dia < 10 ? dia = `0${dia}` : dia = dia
+    let mes = data.getMonth() + 1
+    mes < 10 ? mes = `0${mes}` : mes = mes
     const ano = data.getFullYear()
     const salvarFicha = async () => {
         const bd = getFirestore();
@@ -55,6 +59,15 @@ export default ({navigation, route}) => {
                     duracao: exercicio.duracao,
                     tipo: exercicio.tipo
                 };
+            } else {
+                return {
+                    Nome: exercicio.nomeExercicio,
+                    descanso: exercicio.descanso,
+                    repeticoes: exercicio.repeticoes,
+                    series: exercicio.series,
+                    tipo: exercicio.tipo,
+                    imagem: exercicio.imagem
+                                }
             }
         });
     
@@ -102,6 +115,11 @@ export default ({navigation, route}) => {
             console.error('Erro ao salvar a ficha de exercícios:', error);
         }
     };
+
+    const transformedData = exercicios.map(item => ({
+        key: item.nomeDoExercicio, 
+        ...item,
+      }));
     return (
         <SafeAreaView style={[style.container, estilo.centralizado, estilo.corLightMenos1]}>
                 <Text style={[estilo.tituloH427px, estilo.textoCorSecundaria, estilo.centralizado]}>NOVA FICHA</Text>
@@ -110,9 +128,9 @@ export default ({navigation, route}) => {
                 <Text style={[estilo.textoP16px, estilo.textoCorSecundaria]}>Aluno: {aluno.nome}</Text>
             </View>
             <FlatList
-  data={exercicios}
+  data={transformedData}
   style={{ width: '100%', marginVertical: 10 }}
-  renderItem={({ item }) =>
+  renderItem={({ item }) => (
     item.tipo === 'força' ? (
       <ExerciciosForça
         nomeDoExercicio={item.nomeExercicio}
@@ -129,17 +147,16 @@ export default ({navigation, route}) => {
         duracaoDoExercicio={item.duracao}
       />
     ) : (
-        <ExerciciosAlongamento
+      <ExerciciosAlongamento
         nomeDoExercicio={item.nomeExercicio}
-        repeticoesDoExercicio={item.repeticoesDoExercicio}
-        velocidadeDoExercicio={item.velocidade}
-        descansoDoExercicio={item.descanso}
-        duracaoDoExercicio={item.duracao}
-        imagem={'https://p2.trrsf.com/image/fget/cf/1200/900/middle/images.terra.com/2022/03/14/41529531-alongamento-aquecimento-1.jpg'}
+        series={item.series}
+        repeticoes={item.repeticoes}
+        descanso={item.descanso}
+        imagem={item.imagem ? item.imagem : ''}
       />
     )
-  }
-  keyExtractor={item => item.nomeDoExercicio}
+  )}
+  keyExtractor={item => item.key}
 />
 
             <View style={ [{marginVertical: 10}]}>

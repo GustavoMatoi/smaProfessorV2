@@ -27,9 +27,15 @@ export default ({route, navigation}) => {
     const ano = data.getFullYear()
 
 
-    const receberExercicio = (exercicio) => {
+    const receberExercicio = (exercicio, imagem) => {
       setExercicio(exercicio)
-      listaAux.push(exercicio)
+      if(typeof(imagem) !== 'undefined'){
+        const objeto = { exercicio, imagem}
+        listaAux.push(objeto)
+      } else {
+        listaAux.push(exercicio)
+
+      }
 
     }
     const  handleSelectChange = (value) => {
@@ -58,13 +64,13 @@ export default ({route, navigation}) => {
       });
     };
 
-      const adicionarExercicioNaFicha = (i, nomeExercicio, index, tipo) => {
-        if(validaExercicio(i)){
+      const adicionarExercicioNaFicha = (i, nomeExercicio, index, tipo, imagem) => {
+        console.log('imagem', imagem)
+        if(validaExercicio(i, nomeExercicio)){
           const listaDeExerciciosAux =[...listaFinal]
           if(tipo === 'força') listaDeExerciciosAux.push({index, tipo, nomeExercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series})
           if(tipo === 'aerobico') listaDeExerciciosAux.push({index, tipo, nomeExercicio, validado: true, descanso: i.descanso, velocidade: i.velocidade, duracao: i.duracao, series: i.series})
-          console.log("ARRUMAR O ALONGAMENTO")
-          if(tipo === 'alongamento') listaDeExerciciosAux.push({index, tipo, nomeExercicio, validado: true, duracao: i.duracao, repeticoes: i.repeticoes, descanso: i.descanso})
+          if(tipo === 'alongamento')listaDeExerciciosAux.push({index, tipo, nomeExercicio: nomeExercicio.exercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series, imagem: nomeExercicio.imagem})
           setListaFinal([...new Set(listaDeExerciciosAux)])
         }
 
@@ -137,8 +143,10 @@ export default ({route, navigation}) => {
         setModalVisible(false);
       };
 
-      const validaExercicio = (exercicio) => {
-        console.log('exercicio.tipo', exercicio.tipo)
+      const validaExercicio = (exercicio, nomeExercicio) => {
+        if(exercicio && nomeExercicio){
+
+        
         if(exercicio.tipo === 'força'){
           let validarDescanso = false
           let validarReps = false 
@@ -155,7 +163,11 @@ export default ({route, navigation}) => {
           if(validarDescanso && validarReps && validarSeries){
             return true;
           } else {
-            Alert.alert("Preencha direito!")
+            let textoAlerta = "Parâmetros: "
+            !validarDescanso? textoAlerta += " descanso, " : null 
+            !validarSeries? textoAlerta += " séries," : null 
+            !validarReps ? textoAlerta += " repetições" : null
+            Alert.alert("Há parâmetros não preenchidos!", textoAlerta)
           }
         }
         if(exercicio.tipo === 'aerobico'){
@@ -181,14 +193,42 @@ export default ({route, navigation}) => {
             console.log(exercicio)
             return true;
           } else {
-            Alert.alert("Preencha direito!")
+            let textoAlerta = "Parâmetros: "
+            !validarDescanso? textoAlerta += " descanso, " : null 
+            !validarVelocidade ? textoAlerta += " velocidade," : null 
+            !validarSeries? textoAlerta += " séries," : null 
+            !validarDuracao ? textoAlerta += " duração" : null
+            Alert.alert("Há parâmetros não preenchidos!", textoAlerta)
           }
         }
         if(exercicio.tipo === 'alongamento'){
           console.log(exercicio)
-          return true;
+          let validarDescanso = false
+          let validarReps = false 
+          let validarSeries = false
+          if(exercicio.descanso){
+            validarDescanso = true
+          }
+          if(exercicio.repeticoes){
+            validarReps = true
+          }
+          if(exercicio.series){
+            validarSeries = true
+          }
+          if(validarDescanso && validarReps && validarSeries){
+            return true;
+          } else {
+            let textoAlerta = "Parâmetros: "
+            !validarDescanso? textoAlerta += " descanso, " : null 
+            !validarSeries? textoAlerta += " séries," : null 
+            !validarReps ? textoAlerta += " repetições" : null
+            Alert.alert("Há parâmetros não preenchidos!", textoAlerta)
+          }
         }
+      } else {
+        Alert.alert("Exercício não selecionado", "É necessário selecionar um exercício antes de prosseguir.")
       }
+    }
 
       const handleValidacao = () => {
         if(selected == '' || listaFinal.length === 0) {
@@ -257,13 +297,30 @@ export default ({route, navigation}) => {
       {i.tipo == 'aerobico' ? (  <View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
                 <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
                 <View style={{width: '100%'}}>
-                {listaAux[index] ? 
-          <View style={[style.inputTexto]}>
-            <Text>{listaAux[index]}</Text>
-            </View>
-          : <TouchableOpacity style={[style.inputTexto,{ backgroundColor: '#0066FF', borderRadius: 30}]} onPress={()=>navigation.navigate('Seleção do Exercício', {navigation: navigation, receberExercicio: receberExercicio, aluno: aluno, tipo: 'aerobicos'})}>
-        <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>Selecione o exercício</Text>
-      </TouchableOpacity>}
+                {listaAux[index] && typeof listaAux[index] === 'object' ? (
+        <View style={style.inputTexto}>
+          <Text>{listaAux[index].exercicio}</Text>
+        </View>
+      ) : (
+        <TouchableOpacity
+          style={[
+            style.inputTexto,
+            { backgroundColor: '#0066FF', borderRadius: 30 },
+          ]}
+          onPress={() =>
+            navigation.navigate('Seleção do Exercício', {
+              navigation: navigation,
+              receberExercicio: receberExercicio,
+              aluno: aluno,
+              tipo: 'aerobicos',
+            })
+          }
+        >
+          <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>
+            Selecione o exercício
+          </Text>
+        </TouchableOpacity>
+      )}
                 </View>
     
                 <View style={style.areaPreenchimentoParametros}>
@@ -298,13 +355,30 @@ export default ({route, navigation}) => {
         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
 
         <View style={{width: '100%'}}>
-          {listaAux[index] ? 
-          <View style={[style.inputTexto]}>
-            <Text>{listaAux[index]}</Text>
-            </View>
-          : <TouchableOpacity style={[style.inputTexto,{ backgroundColor: '#0066FF', borderRadius: 30}]} onPress={()=>navigation.navigate('Seleção do Exercício', {navigation: navigation, receberExercicio: receberExercicio, aluno: aluno, tipo: 'força'})}>
-        <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>Selecione o exercício</Text>
-      </TouchableOpacity>}
+        {listaAux[index] && typeof listaAux[index] === 'object' ? (
+        <View style={style.inputTexto}>
+          <Text>{listaAux[index].exercicio}</Text>
+        </View>
+      ) : (
+        <TouchableOpacity
+          style={[
+            style.inputTexto,
+            { backgroundColor: '#0066FF', borderRadius: 30 },
+          ]}
+          onPress={() =>
+            navigation.navigate('Seleção do Exercício', {
+              navigation: navigation,
+              receberExercicio: receberExercicio,
+              aluno: aluno,
+              tipo: 'força',
+            })
+          }
+        >
+          <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>
+            Selecione o exercício
+          </Text>
+        </TouchableOpacity>
+      )}
         </View>
 
         <View style={style.areaPreenchimentoParametros}>
@@ -335,32 +409,61 @@ export default ({route, navigation}) => {
         </View>
     </View>)
       : i.tipo == 'alongamento' ?
-( <View style={[style.quadrado, estilo.corLightMais1, estilo.sombra]}>
+( <View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
     <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
     <View style={{width: '100%'}}>
-    {listaAux[index] ? 
-          <View style={[style.inputTexto]}>
-            <Text>{listaAux[index]}</Text>
-            </View>
-          : <TouchableOpacity style={[style.inputTexto,{ backgroundColor: '#0066FF', borderRadius: 30}]} onPress={()=>navigation.navigate('Seleção do Exercício', {navigation: navigation, receberExercicio: receberExercicio, aluno: aluno, tipo: 'alongamento'})}>
-        <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>Selecione o exercício</Text>
-      </TouchableOpacity>} 
+    {listaAux[index] && typeof listaAux[index] === 'object' ? (
+        <View style={style.inputTexto}>
+          <Text>{listaAux[index].exercicio}</Text>
+        </View>
+      ) : (
+        <TouchableOpacity
+          style={[
+            style.inputTexto,
+            { backgroundColor: '#0066FF', borderRadius: 30 },
+          ]}
+          onPress={() =>
+            navigation.navigate('Seleção do Exercício', {
+              navigation: navigation,
+              receberExercicio: receberExercicio,
+              aluno: aluno,
+              tipo: 'alongamento',
+            })
+          }
+        >
+          <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>
+            Selecione o exercício
+          </Text>
+        </TouchableOpacity>
+      )}
                    </View>
 
-    <View style={style.areaPreenchimentoParametros}>
-    <View style={[style.areaParametroPequeno]}>
-        <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Duração:</Text>
-        <TextInput style={[style.inputTextoPequeno]} placeholder="Durac." onChangeText={(text)=>{handleDuracao(i, text)}}/>
-    </View>
-    <View style={[style.areaParametroPequeno]}>
-        <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Repetições:</Text>
-        <TextInput style={[style.inputTextoPequeno]} placeholder="Reps." onChangeText={(text)=> {handleReps(i, text)}}/>
-    </View>
-    <View style={[style.areaParametroPequeno]}>
-        <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
-        <TextInput style={[style.inputTextoPequeno]} placeholder="Desc. (seg)" onChangeText={(text)=> {handleDescanso(i, text)}}/>
-    </View>
-    </View>
+                   <View style={style.areaPreenchimentoParametros}>
+        <View style={[style.areaParametroPequeno]}>
+            <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
+            <TextInput style={[style.inputTextoPequeno]}  
+            value={typeof listaFinal[index] !== 'undefined' ? i.series : 0}
+            placeholder="Sér." keyboardType="numeric" o
+            onChangeText={(text) => {handleSeries(i, text)}}
+            />
+        </View>
+        <View style={[style.areaParametroPequeno]}>
+            <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Repetições:</Text>
+            <TextInput style={[style.inputTextoPequeno]} placeholder="Reps." keyboardType="numeric" 
+            onChangeText={(text)=> {handleReps(i, text)}}
+            value={typeof listaFinal[index] !== 'undefined' ? i.repeticoes : 0}
+
+            />
+        </View>
+        <View style={[style.areaParametroPequeno]}>
+            <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
+            <TextInput style={[style.inputTextoPequeno]}   placeholder="Desc. (seg)" keyboardType="numeric" 
+            onChangeText={(text)=>{handleDescanso(i, text)}}
+            value={typeof listaFinal[index] !== 'undefined' ? i.descanso : 0}
+
+            />
+        </View>
+        </View>
 </View>) : 
     (<View style={[style.quadrado, estilo.corLightMais1, estilo.sombra]}>
         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
@@ -370,7 +473,7 @@ export default ({route, navigation}) => {
     </View>)
       }
       <View style={style.botoesCrud}>
-        <TouchableOpacity style={[estilo.botao, estilo.corSuccess, {width: '40%', marginTop: '5%', flexDirection: 'row', justifyContent:'center'}]} disabled={typeof listaFinal[index] !== 'undefined'} onPress={()=> adicionarExercicioNaFicha(i, listaAux[index], index, i.tipo)}>
+        <TouchableOpacity style={[estilo.botao, estilo.corSuccess, {width: '40%', marginTop: '5%', flexDirection: 'row', justifyContent:'center'}]} disabled={typeof listaFinal[index] !== 'undefined'} onPress={()=> adicionarExercicioNaFicha(i, listaAux[index], index, i.tipo, listaAux[index].imagem)}>
           <AntDesign name="edit" size={16} color="white" />
           <Text style={[estilo.textoP16px, estilo.textoCorLight, style.Montserrat, {marginHorizontal: '10%'}]}>SALVAR</Text>
         </TouchableOpacity>

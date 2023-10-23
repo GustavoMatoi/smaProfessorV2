@@ -32,6 +32,8 @@ export default ({navigation,route}) => {
     const [cardioSelecionado, setCardioSelecionado] = useState('')
     const {tipo} = route.params
     const recuperarExercicios = async () => {
+      const db = getFirestore();
+
         const documentos = [];
         const abdominaisTemp = []
         const antebracoTemp = []
@@ -51,7 +53,6 @@ export default ({navigation,route}) => {
         try {
           if(tipo === 'força'){
             
-          const db = getFirestore();
           const exercicioRef = collection(
             db,
             'Exercicios',
@@ -163,8 +164,8 @@ export default ({navigation,route}) => {
         
           } else if (tipo === 'aerobicos'){                
             const cardiosAux = []  
-            const db = getFirestore();
-              const exercicioRef = collection(
+
+            const exercicioRef = collection(
                 db,
                 'Exercicios',
                 'listaDeExercicios',
@@ -181,8 +182,16 @@ export default ({navigation,route}) => {
               console.log(cardios)
           } else {
             const alongamentosAux = []
-            alongamentosAux.push('Alogamento cobra', 'Alongamento vaca', 'Alongamento X')
+            const alongamentosRef = collection(db, 'Exercicios', 'listaDeExercicios', 'Alongamentos')
+
+            const querySnapshot = await getDocs(alongamentosRef)
+
+
+            querySnapshot.forEach((doc) => {
+              alongamentosAux.push(doc.get('nome'))
+            })
             setAlongamentos(alongamentosAux)
+
           }
         } catch (error) {
           console.error('Error retrieving exercises:', error);
@@ -203,6 +212,15 @@ export default ({navigation,route}) => {
       }
     }
     const handleSelecaoExercicioCardio = (value, tipo) => {
+            if(value.length === 0){
+        Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
+      }   else {
+        setSelecionado(value)
+        navigation.navigate('Adicionais exercício', {nomeExercicio: value, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo})
+      }
+    }
+    const handleSelecaoAlongamento = (value, tipo) => {
+      console.log(value)
             if(value.length === 0){
         Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
       }   else {
@@ -446,14 +464,14 @@ export default ({navigation,route}) => {
       <>
       {alongamentos.length === 0 ? <Text>Carregando exercícios...</Text> : 
       <View style={{ marginBottom: '5%', padding: 10 }}>
-         <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Membros superiores:</Text>
+         <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Exercício:</Text>
 
       <BotaoSelect
         selecionado={true}
         titulo='Selecione um exercício'
         max={1}
         onChange={(value) =>
-          handleSelecaoExercicioCardio(value, 'Alongamentos')
+          handleSelecaoAlongamento(value, 'Alongamentos')
         }
         options={alongamentos}
        /> 

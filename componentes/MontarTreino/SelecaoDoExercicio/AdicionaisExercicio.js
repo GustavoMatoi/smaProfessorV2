@@ -45,6 +45,8 @@ export default ({ navigation, route }) => {
     const [pegadaString, setPegadaString] = useState('')
     const [execucaoSelecionada, setExecucaoSelecionada] = useState(-1)
     const [execucaoString, setExecucaoString] = useState('')
+
+    const [imagem, setImagem] = useState('')
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -99,12 +101,65 @@ export default ({ navigation, route }) => {
                 } else if (tipo === 'Aerobicos'){
                     setExercicio(nomeExercicio)
                 } else { 
-                    setExercicio('Aaaa')
+                    const db = getFirestore();
+                    const documentRef = doc(db, "Exercicios", "listaDeExercicios", 'Alongamentos', nomeExercicio);
+    
+                    const documentSnapshot = await getDoc(documentRef);
+                    const data = documentSnapshot.data();
+                    
+                    setDataExercicio(data || {});
+                    
+                    if ("variacoes" in data) {
+                        setVariacoesExercicio(Object.values(data.variacoes));
+                    }
+                    
+                   /* if ("implemento" in data) {
+                        setImplementosExercicio(Object.values(data.implemento));
+                    } 
+                    
+                    if ("postura" in data) {
+                        setPosturaExercicios(Object.values(data.postura));
+                    }
+                    
+                    if ("pegada" in data) {
+                        setPegadasExercicio(Object.values(data.pegada));
+                    } 
+                    
+                                        if ('posicaoDosPes' in data){
+                        setPosicaoDosPes(Object.values(data.posicaoDosPes))
+                    }
+                    if('quadril' in data){
+                        setQuadril(Object.values(data.quadril))
+                    }
+
+                    
+                    if('amplitude' in data){
+                        setAmplitude(Object.values(data.amplitude))
+                    }
+
+                    if('posicaoDosJoelhos' in data){
+                        setPosicaoDosJoelhos(Object.values(data.posicaoDosJoelhos))
+                    }
+                    if('apoioDosPes' in data){
+                        setApoioDosPes(Object.values(data.apoioDosPes))
+                    }
+                    */
+                    
+                    if ("execucao" in data) {
+                        setExecucoesExercicio(Object.values(data.execucao));
+                    }
+                    if('posicao' in data){
+                        setPosicao(Object.values(data.posicao))
+                    }
+                    if(data.hasOwnProperty('imagem')){
+                        setImagem(data.imagem)
+                    }
+
                 }
 
                 setCarregando(false);
             } catch (error) {
-                console.error('Erro ao recuperar exercício:', error);
+                console.error('Erro ao recuperar o exercício:', error);
             }
         };
     
@@ -151,7 +206,7 @@ export default ({ navigation, route }) => {
         }
 
         setExercicio(exercicioAux)
-        route.params.receberExercicio(exercicioAux)
+        route.params.receberExercicio(exercicioAux, imagem)
         navigation.navigate('Montar treino', {aluno: route.params.aluno})
     }
 
@@ -268,7 +323,16 @@ export default ({ navigation, route }) => {
                             onChangeSelect={(opt, i) => {setApoioDosPesSelecionado(i); setApoioDosPesString(opt)}}
                             selected={apoioDosPesSelecionado}
                         />
-                        </View>}
+                        </View>
+                        
+                        }
+
+                    {imagem != '' ? 
+                    <Image source={{uri: imagem}}
+                        width={300}
+                        height={300}
+                        style={[estilo.centralizado, {marginBottom: 10}]}/> : null
+                }
 
                 
                 </View>
@@ -278,7 +342,7 @@ export default ({ navigation, route }) => {
 
         </View>
         <View style={[{marginVertical: '5%'}]}>
-        <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={()=> montarExercicio(nomeExercicioString[0].trim(), variacaoString, implementoString, posturaString, pegadaString, execucaoString, posicaoDosPesString, posicaoDosJoelhosString, quadrilString, amplitudeString, apoioDosPesString)}>
+        <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={()=> montarExercicio(nomeExercicioString[0].trim(), variacaoString, implementoString, posturaString, pegadaString, execucaoString, posicaoDosPesString, posicaoDosJoelhosString, quadrilString, amplitudeString, apoioDosPesString, imagem)}>
             <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>SALVAR EXERCÍCIO</Text>
         </TouchableOpacity>
         </View>
