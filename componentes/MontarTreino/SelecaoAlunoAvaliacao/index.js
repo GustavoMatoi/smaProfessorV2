@@ -61,11 +61,12 @@ export default ({navigation}) => {
             }
       
             setAlunos(newArrayAlunos);
-            setCarregandoAlunos(false);
-            setLoading(false); 
           } catch (error) {
             console.log(error);
+          } finally {
+            setCarregandoAlunos(false);
             setLoading(false); 
+
           }
         };
     

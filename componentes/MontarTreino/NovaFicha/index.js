@@ -133,14 +133,14 @@ export default ({navigation, route}) => {
   renderItem={({ item }) => (
     item.tipo === 'força' ? (
       <ExerciciosForça
-        nomeDoExercicio={item.nomeExercicio}
+        nomeDoExercicio={item.nomeExercicio.exercicio}
         series={item.series}
         repeticoes={item.repeticoes}
         descanso={item.descanso}
       />
     ) : item.tipo === 'aerobico' ? (
       <ExerciciosCardio
-        nomeDoExercicio={item.nomeExercicio}
+        nomeDoExercicio={item.nomeExercicio.exercicio}
         seriesDoExercicio={item.series}
         velocidadeDoExercicio={item.velocidade}
         descansoDoExercicio={item.descanso}
@@ -148,7 +148,7 @@ export default ({navigation, route}) => {
       />
     ) : (
       <ExerciciosAlongamento
-        nomeDoExercicio={item.nomeExercicio}
+        nomeDoExercicio={item.nomeExercicio.exercicio}
         series={item.series}
         repeticoes={item.repeticoes}
         descanso={item.descanso}
@@ -158,6 +158,7 @@ export default ({navigation, route}) => {
   )}
   keyExtractor={item => item.key}
 />
+
 
             <View style={ [{marginVertical: 10}]}>
             <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, {marginVertical: 10}]}>Objetivo do treino: {objetivo}</Text>

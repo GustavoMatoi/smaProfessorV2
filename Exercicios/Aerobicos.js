@@ -1,0 +1,1 @@
+export default ['Esteira', 'Bicicleta Ergométrica', 'Elíptico', 'Corda']

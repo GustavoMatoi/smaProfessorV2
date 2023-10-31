@@ -37,26 +37,21 @@ const style = StyleSheet.create({
     container: {
         width: '100%',
         flexDirection: 'row',
+        minHeight: 60,
         justifyContent: 'space-between',
-        marginTop: '9%'
+        marginTop: '8%'
 
-    },
-
-    containerConjugado: {
-      height: '200%',
-      width: '100%',
     },
     nomeDoExercicio: {
-        width: '35%',
-        minHeight: 40,
+        width: '55%',
+        minHeight: 60,
         justifyContent: 'center',
         alignItems: 'center'
     },
 
     parametroGrande: {
-        width: '21.5%',
-        minHeight: 40,
-        padding: 2
+        width: '14%',
+        height: '100%'
     },
     tituloParametro: {
         marginTop: -12,
@@ -65,6 +60,7 @@ const style = StyleSheet.create({
     textoParametro: {
         textAlign: 'center',
         width: '100%',
-        marginTop: 10
+        marginTop: 20,
+
     }
 })

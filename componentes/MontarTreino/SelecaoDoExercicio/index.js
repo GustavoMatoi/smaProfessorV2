@@ -6,24 +6,15 @@ import estilo from "../../estilo";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { professorLogado } from "../../Home";
 import Spinner from "react-native-loading-spinner-overlay";
-
+import Aerobicos from "../../../Exercicios/Aerobicos";
+import MembrosSuperiores from "../../../Exercicios/MembrosSuperiores";
 export default ({navigation,route}) => {
+
+
     const [exercicio, setExercicio] = useState('')
     const [grupoMuscular, setGrupoMuscular] = useState([])
-    const [carregandoDados, setCarregandoDados] = useState(true)
-    const [abdominais, setAbdominais] = useState([])
-    const [antebracos, setAntebracos] = useState([])
-    const [biceps, setBiceps] = useState([])
-    const [deltoide, setDeltoide] = useState([])
-    const [gradeDorsal, setGradeDorsal] = useState([])
-    const [latissimoDoDorso, setLatissimoDoDorso] = useState([])
-    const [manguitoRotador, setManguitoRotador] = useState([])
-    const [paravertebrais, setParavertebrais] = useState([])
-    const [peitoral, setPeitoral] = useState([])
-    const [subescapular, setSubescapular] = useState([])
-    const [transvesversoAbdominal, setTransversoAbdominal] = useState([])
-    const [trapezio, setTrapezio] = useState([])
-    const [triceps, setTriceps] = useState([])
+    const [carregandoDados, setCarregandoDados] = useState(false)
+
     const [multiarticular, setMultiArticular] = useState([])
     const [uniarticular, setUniarticular] = useState([])
     const [cardios, setCardios] = useState([])
@@ -43,7 +34,6 @@ export default ({navigation,route}) => {
         const latissimoDoDorsoTemp = []
         const manguitoRotadorTemp = []
         const paravertebraisTemp = []
-        const peitoralTemp = []
         const subescapularTemp = []
         const transvesversoAbdominalTemp = []
         const trapezioTemp = []
@@ -95,9 +85,7 @@ export default ({navigation,route}) => {
               if(doc.id === 'Paravertebrais'){
                 paravertebraisTemp.push(abdominaisDoc.get('nome'))
               }
-              if(doc.id === 'Peitoral'){
-                peitoralTemp.push(abdominaisDoc.get('nome'))
-              }
+
               if(doc.id === 'Subescapular'){
                 subescapularTemp.push(abdominaisDoc.get('nome'))
               }
@@ -141,19 +129,6 @@ export default ({navigation,route}) => {
 
             console.log(uniarticularTemp)
 
-            setAbdominais(abdominaisTemp)
-            setAntebracos(antebracoTemp)
-            setBiceps(bicepsTemp)
-            setDeltoide(deltoideTemp)
-            setGradeDorsal(gradeDorsalTemp)
-            setLatissimoDoDorso(latissimoDoDorsoTemp)
-            setManguitoRotador(manguitoRotadorTemp)
-            setParavertebrais(paravertebraisTemp)
-            setPeitoral(peitoralTemp)
-            setSubescapular(subescapularTemp)
-            setTransversoAbdominal(transvesversoAbdominalTemp)
-            setTrapezio(trapezioTemp)
-            setTriceps(tricepsTemp)
 
             setGrupoMuscular(documentos)        
             setMultiArticular(multiarticularTemp)
@@ -231,9 +206,23 @@ export default ({navigation,route}) => {
 
 
     console.log('tipo', tipo)
-    useEffect(() => {
-        recuperarExercicios()
-    }, [])
+    console.log('membrosSUperioress', MembrosSuperiores[0].exercicios[0].nome)
+
+    const peitoral = MembrosSuperiores[0].exercicios.map((item) => item.nome)
+    const grandeDorsal = MembrosSuperiores[1].exercicios.map((item) => item.nome)
+    const biceps = MembrosSuperiores[2].exercicios.map((item) => item.nome)
+    const triceps = MembrosSuperiores[3].exercicios.map((item)=> item.nome)
+    const abdominais = MembrosSuperiores[4].exercicios.map((item) => item.nome)
+    const deltoide = MembrosSuperiores[5].exercicios.map((item) => item.nome)
+    const paravertebrais = MembrosSuperiores[6].exercicios.map((item) => item.nome)
+    const antebracos = MembrosSuperiores[7].exercicios.map((item) => item.nome)
+    const transversoAbdominal = MembrosSuperiores[8].exercicios.map((item) => item.nome)
+    const trapezio = MembrosSuperiores[9].exercicios.map((item) => item.nome)
+    const subescapular = MembrosSuperiores[10].exercicios.map((item) => item.nome)
+    const manguitoRotador = MembrosSuperiores[11].exercicios.map((item) => item.nome)
+    const latissimoDoDorso = MembrosSuperiores[12].exercicios.map((item => item.nome))
+    console.log(peitoral)
+
     return (
       <View>
         {carregandoDados ? (
@@ -248,8 +237,179 @@ export default ({navigation,route}) => {
             <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Grupos musculares:</Text>
 
           </View>
+          <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Membros superiores:</Text>
 
-          {grupoMuscular.length === 0 ?           <Spinner
+              <View style={{ marginBottom: '5%' }}>
+              <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+          //handleSelecaoExercicioCardio(value, 'Aerobicos')
+          console.log(value)
+        }
+        options={peitoral}
+        select={'Peitoral'}
+       /> 
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                selecionado={true}
+                titulo='Selecione um exercício'
+                max={1}
+                onChange={(value) =>
+                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
+                  console.log(value)
+                }
+                options={grandeDorsal}
+                select={'Grande dorsal'}
+       /> 
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                selecionado={true}
+                titulo='Selecione um exercício'
+                max={1}
+                onChange={(value) =>
+                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
+                  console.log(value)
+                }
+                options={biceps}
+                select={'Bíceps'}
+       /> 
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                selecionado={true}
+                titulo='Selecione um exercício'
+                max={1}
+                onChange={(value) =>
+                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
+                  console.log(value)
+                }
+                options={triceps}
+                select={'Tríceps'}
+       /> 
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                selecionado={true}
+                titulo='Selecione um exercício'
+                max={1}
+                onChange={(value) =>
+                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
+                  console.log(value)
+                }
+                options={abdominais}
+                select={'Abdominais'}
+       /> 
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                selecionado={true}
+                titulo='Selecione um exercício'
+                max={1}
+                onChange={(value) =>
+                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
+                  console.log(value)
+                }
+                options={deltoide}
+                select={'Deltóide'}
+       /> 
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                selecionado={true}
+                titulo='Selecione um exercício'
+                max={1}
+                onChange={(value) =>
+                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
+                  console.log(value)
+                }
+                options={paravertebrais}
+                select={'Paravertebrais'}
+       /> 
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                selecionado={true}
+                titulo='Selecione um exercício'
+                max={1}
+                onChange={(value) =>
+                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
+                  console.log(value)
+                }
+                options={antebracos}
+                select={'Antebraços'}
+       /> 
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                selecionado={true}
+                titulo='Selecione um exercício'
+                max={1}
+                onChange={(value) =>
+                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
+                  console.log(value)
+                }
+                options={transversoAbdominal}
+                select={'Transverso Abdominal'}
+       /> 
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                selecionado={true}
+                titulo='Selecione um exercício'
+                max={1}
+                onChange={(value) =>
+                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
+                  console.log(value)
+                }
+                options={trapezio}
+                select={'Trapézio'}
+       /> 
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                selecionado={true}
+                titulo='Selecione um exercício'
+                max={1}
+                onChange={(value) =>
+                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
+                  console.log(value)
+                }
+                options={subescapular}
+                select={'Subescapular'}
+       /> 
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                selecionado={true}
+                titulo='Selecione um exercício'
+                max={1}
+                onChange={(value) =>
+                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
+                  console.log(value)
+                }
+                options={manguitoRotador}
+                select={'Manguito Rotador'}
+       /> 
+              </View>
+              <View style={{ marginBottom: '5%' }}>
+                <BotaoSelect
+                selecionado={true}
+                titulo='Selecione um exercício'
+                max={1}
+                onChange={(value) =>
+                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
+                  console.log(value)
+                }
+                options={latissimoDoDorso}
+                select={'Latíssimo do Dorso'}
+       /> 
+              </View>
+          {
+          /*grupoMuscular.length === 0 ?           <Spinner
           visible={carregandoDados}
           textContent={'Carregando exercícios...'}
           textStyle={[estilo.textoCorLight, estilo.textoP16px]}
@@ -439,12 +599,10 @@ export default ({navigation,route}) => {
                 />
               </View>
             </>
-          )}
+          )*/}
         </ScrollView>
        :               
       tipo === 'aerobicos' ?        <>
-      {console.log('cardios.length', cardios.length)}
-      {cardios.length === 0 ? <Text>Carregando exercícios...</Text> : 
       <View style={{ marginBottom: '5%', padding: 10 }}>
          <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Selecione um exercício:</Text>
 
@@ -455,9 +613,9 @@ export default ({navigation,route}) => {
         onChange={(value) =>
           handleSelecaoExercicioCardio(value, 'Aerobicos')
         }
-        options={cardios}
+        options={Aerobicos}
        /> 
-    </View>}
+    </View>
       
       </> :
       

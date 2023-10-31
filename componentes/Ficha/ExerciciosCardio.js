@@ -38,32 +38,29 @@ const style = StyleSheet.create({
     container: {
         width: '100%',
         flexDirection: 'row',
-        height: 40,
+        minHeight: 60,
         justifyContent: 'space-between',
         marginTop: '8%'
+
     },
     nomeDoExercicio: {
-        width: '35%',
-        height: 40,
+        width: '55%',
+        minHeight: 60,
         justifyContent: 'center',
         alignItems: 'center'
     },
-    parametroPequeno :{
-        width: '16%',
-        height:'100%'
 
-    },
     parametroGrande: {
-        width: '19%',
-        height:'100%'
+        width: '14%',
+        height: '100%'
     },
     tituloParametro: {
         marginTop: -12,
-        fontSize: 10
+        fontSize: 9
     },
     textoParametro: {
         textAlign: 'center',
         width: '100%',
-        marginTop: 10
+        marginTop: 20,
     }
 })
