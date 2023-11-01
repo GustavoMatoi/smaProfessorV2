@@ -21,7 +21,6 @@ export default ({aluno, posicaoDoArray}) =>{
   const [ultimaFicha, setUltimaFicha] = useState([]);
 
 
-console.log(aluno.email)
   useEffect(() => {
     async function getExercicios() {
         const db = getFirestore();
@@ -46,6 +45,7 @@ console.log(aluno.email)
             novoExercicioNaFicha.setRepeticoes(exercicioData.repeticoes);
             novoExercicioNaFicha.setSeries(exercicioData.series);
             novoExercicioNaFicha.setVelocidade(exercicioData.velocidade);
+            novoExercicioNaFicha.setImagem(exercicioData.imagem)  
             return novoExercicioNaFicha;
           });
         });
@@ -72,14 +72,19 @@ console.log(aluno.email)
       const ultimaFicha = arrayFicha[posicaoDoArray]
       setUltimaFicha(ultimaFicha);
       setIsLoading(false);
-      console.log(ultimaFicha)
     }
 
     getExercicios();
   }, []);
 
   const largura = Dimensions.get('screen').width
-
+  console.log('ultimaFicha', ultimaFicha)
+  const ultimaFichaExercicios = ultimaFicha.map((item) => item.exercicio)
+  const ultimaFichaExercicios3 = ultimaFicha.map((item) => item.exercicio.nome)
+  const ultimaFichaExercicios2 = ultimaFicha.map((item) => item.series)
+  console.log('ultimaFichaExercicios', ultimaFichaExercicios)
+  console.log('ultimaFichaExercicios2', ultimaFichaExercicios2)
+  console.log('ultimaFichaExercicios3', ultimaFichaExercicios3)
   return (
     <ScrollView style={style.container}>
  <ScrollView style={style.container}>
@@ -90,14 +95,14 @@ console.log(aluno.email)
       <View key={index} style={[{ width: largura }]}>
       {exercicioNaFicha.exercicio.tipo == 'força' ? (
       <ExerciciosForça
-      nomeDoExercicio={exercicioNaFicha.exercicio.nome}
+      nomeDoExercicio={exercicioNaFicha.exercicio.nome.exercicio}
       series={exercicioNaFicha.series}
       repeticoes={exercicioNaFicha.repeticoes}
       descanso={exercicioNaFicha.descanso}
       />
       ) : exercicioNaFicha.exercicio.tipo == 'aerobico' ? (
       <ExerciciosCardio
-                   nomeDoExercicio={exercicioNaFicha.exercicio.nome}
+                   nomeDoExercicio={exercicioNaFicha.exercicio.nome.exercicio}
                    velocidadeDoExercicio={exercicioNaFicha.velocidade}
                    duracaoDoExercicio={exercicioNaFicha.duracao}
                    seriesDoExercicio={exercicioNaFicha.series}
@@ -110,6 +115,7 @@ console.log(aluno.email)
                    repeticoesDoExercicio={exercicioNaFicha.repeticoes}
                    duracao={exercicioNaFicha.duracao}
                    descansoDoExercicio={exercicioNaFicha.descanso}
+                   imagem={exercicioNaFicha.imagem}
                  />
       ) : null}
       </View>

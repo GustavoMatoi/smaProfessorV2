@@ -1,5 +1,5 @@
 class ExercicioNaFicha {
-    constructor(exercicio, fichaDeExercicios, conjugado){
+    constructor(exercicio, imagem ,fichaDeExercicios, conjugado){
         this.exercicio = exercicio 
         this.fichaDeExercicios = fichaDeExercicios
         this.repeticoes = null
@@ -8,8 +8,11 @@ class ExercicioNaFicha {
         this.velocidade = null
         this.duracao = null
         this.conjugado = false
+        this.imagem = ''
     }
 
+    setImagem = (imagem) => {this.imagem = imagem}
+    getImagem = () => {return this.imagem}
     setExercicio = (exercicio) => {this.exercicio = exercicio}
     getExercicio = () => {return this.exercicio}
 
