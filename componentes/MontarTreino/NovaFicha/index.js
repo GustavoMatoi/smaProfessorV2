@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {Text, View, SafeAreaView, FlatList, TouchableOpacity, StyleSheet, TextInput } from 'react-native'
+import {Text, View, SafeAreaView, FlatList, TouchableOpacity, StyleSheet, TextInput, Alert } from 'react-native'
 import ExerciciosForça from '../../Ficha/ExerciciosForça'
 import estilo from '../../estilo'
 import { professorLogado } from '../../Home'
@@ -113,6 +113,9 @@ export default ({navigation, route}) => {
             console.log('Ficha de exercícios salva com sucesso');
         } catch (error) {
             console.error('Erro ao salvar a ficha de exercícios:', error);
+        } finally {
+            Alert.alert("Ficha salva com sucesso!", "A ficha foi salva no banco de dados.")
+            navigation.navigate("Principal")
         }
     };
 

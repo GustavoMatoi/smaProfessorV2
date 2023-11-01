@@ -204,28 +204,6 @@ export default [
         ]
     },
     {
-        grupoMuscular: 'panturrilha',
-        exercicios: [
-            {
-                nome: 'Panturrilha (com calcanhar sobre o step)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilhaComCalcanharSobreStep.png?alt=media&token=c1bd5cdc-773b-4b1f-811c-31c5b8849827&_gl=1*1w8pa9s*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0OTcyLjYwLjAuMA..',
-            },
-            {
-                nome: 'Panturrilha (com as pontas dos dedos no step)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilhaComAPontaDosDedosNoStep.png?alt=media&token=4178d378-dd4e-43b8-a2d2-b29354fbed1c&_gl=1*1pawd8m*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1MDEyLjIwLjAuMA..'
-            },
-            {
-                nome: 'Panturrilha ( apenas com calcanhar no step)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilha.png?alt=media&token=40732984-e6ca-4928-a9cd-3b261a98ad86&_gl=1*f6e1jx*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1MTAwLjYwLjAuMA..'
-            },
-            {
-                nome: 'Panturrilha, isquiotibiais e glúteo máximo',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilhaIsquiotibiaisEGluteoMaximo.png?alt=media&token=0c1e8590-3bd3-4759-8d90-8c6f08c70404&_gl=1*q9fvt0*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1MTQ3LjEzLjAuMA..'
-            },
-
-        ]
-    },
-    {
         grupoMuscular: 'Reto femoral',
         exercicios: [
             {

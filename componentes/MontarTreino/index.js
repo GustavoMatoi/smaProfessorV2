@@ -423,12 +423,15 @@ export default ({route, navigation}) => {
             { backgroundColor: '#0066FF', borderRadius: 30 },
           ]}
           onPress={() =>
+            {console.log('chegou aqui')
+            
             navigation.navigate('Seleção do Exercício', {
               navigation: navigation,
               receberExercicio: receberExercicio,
               aluno: aluno,
               tipo: 'alongamento',
             })
+          }
           }
         >
           <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>
