@@ -8,192 +8,57 @@ import { professorLogado } from "../../Home";
 import Spinner from "react-native-loading-spinner-overlay";
 import Aerobicos from "../../../Exercicios/Aerobicos";
 import MembrosSuperiores from "../../../Exercicios/MembrosSuperiores";
+import Alongamentos from "../../../Exercicios/Alongamentos";
 export default ({navigation,route}) => {
-
-
+    console.log('alongamento length', Alongamentos.length)
+    
     const [exercicio, setExercicio] = useState('')
     const [grupoMuscular, setGrupoMuscular] = useState([])
     const [carregandoDados, setCarregandoDados] = useState(false)
 
     const [multiarticular, setMultiArticular] = useState([])
     const [uniarticular, setUniarticular] = useState([])
-    const [cardios, setCardios] = useState([])
     const [alongamentos, setAlongamentos] = useState([])
     const [selecionado, setSelecionado] = useState('')
     const [cardioSelecionado, setCardioSelecionado] = useState('')
     const {tipo} = route.params
-    const recuperarExercicios = async () => {
-      const db = getFirestore();
-
-        const documentos = [];
-        const abdominaisTemp = []
-        const antebracoTemp = []
-        const bicepsTemp = []
-        const deltoideTemp = []
-        const gradeDorsalTemp = []
-        const latissimoDoDorsoTemp = []
-        const manguitoRotadorTemp = []
-        const paravertebraisTemp = []
-        const subescapularTemp = []
-        const transvesversoAbdominalTemp = []
-        const trapezioTemp = []
-        const tricepsTemp = []
-        const multiarticularTemp = []
-        const uniarticularTemp = []
-        try {
-          if(tipo === 'força'){
-            
-          const exercicioRef = collection(
-            db,
-            'Exercicios',
-            'listaDeExercicios',
-            'ExerciciosMembrosSuperiores'
-          );
-
-          const querySnapshot = await getDocs(exercicioRef);
-
-          querySnapshot.forEach(async (doc) => {
-            const dados = doc.data();
-            documentos.push(dados);
-
-            const abdominaisRef = collection(exercicioRef, doc.id, 'Exercicios')
-
-            const abdomnaisSnapshot = await getDocs (abdominaisRef)
-            
-            abdomnaisSnapshot.forEach((abdominaisDoc) => {
-              if(doc.id === 'Abdominais'){
-                abdominaisTemp.push(abdominaisDoc.get('nome'))              
-              } 
-              if( doc.id === 'Antebracos'){
-                antebracoTemp.push(abdominaisDoc.get('nome'))
-              }
-              if(doc.id === 'Biceps'){
-                bicepsTemp.push(abdominaisDoc.get('nome'))
-              }
-              if(doc.id === 'Deltoide'){
-                deltoideTemp.push(abdominaisDoc.get('nome'))
-              }
-              if(doc.id === 'GradeDorsal'){
-                gradeDorsalTemp.push(abdominaisDoc.get('nome'))
-              }
-              if(doc.id === 'LatissimoDoDorso'){
-                latissimoDoDorsoTemp.push(abdominaisDoc.get('nome'))
-              }
-              if(doc.id === 'ManguitoRotador'){
-                manguitoRotadorTemp.push(abdominaisDoc.get('nome'))
-              }
-              if(doc.id === 'Paravertebrais'){
-                paravertebraisTemp.push(abdominaisDoc.get('nome'))
-              }
-
-              if(doc.id === 'Subescapular'){
-                subescapularTemp.push(abdominaisDoc.get('nome'))
-              }
-              if(doc.id === 'TransversoAbdominal'){
-                transvesversoAbdominalTemp.push(abdominaisDoc.get('nome'))
-                console.log(transvesversoAbdominalTemp)
-              }
-              if(doc.id === 'Trapezio'){
-                trapezioTemp.push(abdominaisDoc.get('nome'))
-              }
-              if(doc.id === 'Triceps'){
-                tricepsTemp.push(abdominaisDoc.get('nome'))
-              }
-            })
-            const exercicioInferiorRef = collection(
-              db,
-              'Exercicios',
-              'listaDeExercicios',
-              'ExerciciosMembrosInferiores'
-            );
-    
-            const querySnapshot2 = await getDocs(exercicioInferiorRef);
-
-            querySnapshot2.forEach(async (doc) => {
-              const dados = doc.data();
-              documentos.push(dados);
-  
-              const exerciciosRef = collection(exercicioInferiorRef, doc.id, 'Exercicios')
-  
-              const inferioresSnapshot = await getDocs (exerciciosRef)
-              
-              inferioresSnapshot.forEach((abdominaisDoc) => {
-                if(doc.id === 'Multiarticular'){
-                  multiarticularTemp.push(abdominaisDoc.get('nome'))              
-                } 
-                if( doc.id === 'Uniarticular'){
-                  uniarticularTemp.push(abdominaisDoc.get('nome'))
-                }
-             
-              })})
-
-            console.log(uniarticularTemp)
-
-
-            setGrupoMuscular(documentos)        
-            setMultiArticular(multiarticularTemp)
-            setUniarticular(uniarticularTemp)
-          })
-
-          
-        
-          } else if (tipo === 'aerobicos'){                
-            const cardiosAux = []  
-
-            const exercicioRef = collection(
-                db,
-                'Exercicios',
-                'listaDeExercicios',
-                'Aerobicos'
-              );
-    
-              const querySnapshot = await getDocs(exercicioRef);
-              querySnapshot.forEach( async (aerobicoDoc) => {
-                cardiosAux.push(aerobicoDoc.get('nome'))
-              })
-
-              setCardios(cardiosAux)
-              console.log(cardiosAux)
-              console.log(cardios)
-          } else {
-            const alongamentosAux = []
-            const alongamentosRef = collection(db, 'Exercicios', 'listaDeExercicios', 'Alongamentos')
-
-            const querySnapshot = await getDocs(alongamentosRef)
-
-
-            querySnapshot.forEach((doc) => {
-              alongamentosAux.push(doc.get('nome'))
-            })
-            setAlongamentos(alongamentosAux)
-
-          }
-        } catch (error) {
-          console.error('Error retrieving exercises:', error);
+   
+    const handleSelecaoExercicioForcaSuperior = (value, index) => {
+      console.log(value);
+      let exercicioAux = {}
+      for (i of MembrosSuperiores[index].exercicios){
+        if (i.nome === value){
+          exercicioAux = {...i}
         }
-        finally {
-          setCarregandoDados(false)
-        }
-
-
- 
-    };
-    const handleSelecaoExercicio = (value, grupoMuscular, tipo) => {
-            if(value.length === 0 || grupoMuscular == ''){
+      }
+      if(Object.keys(exercicioAux).length === 0){
         Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
       }   else {
         setSelecionado(value)
-        navigation.navigate('Adicionais exercício', {nomeExercicio: value, grupoMuscular: grupoMuscular, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo})
+        navigation.navigate('Adicionais exercício', {exercicio: exercicioAux, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo})
       }
-    }
+        }
+    
+
+    
     const handleSelecaoExercicioCardio = (value, tipo) => {
-            if(value.length === 0){
+      console.log(value)
+      console.log(value);
+      let exercicioAux = {}
+      for (i of Aerobicos){
+        console.log(i)
+        if (i.nome === value){
+          exercicioAux = {...i}
+        }
+      }
+      if(Object.keys(exercicioAux).length === 0){
         Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
       }   else {
         setSelecionado(value)
-        navigation.navigate('Adicionais exercício', {nomeExercicio: value, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo})
+        navigation.navigate('Adicionais exercício', {exercicio: exercicioAux, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo})
       }
-    }
+        }
+    
     const handleSelecaoAlongamento = (value, tipo) => {
       console.log(value)
             if(value.length === 0){
@@ -221,6 +86,7 @@ export default ({navigation,route}) => {
     const subescapular = MembrosSuperiores[10].exercicios.map((item) => item.nome)
     const manguitoRotador = MembrosSuperiores[11].exercicios.map((item) => item.nome)
     const latissimoDoDorso = MembrosSuperiores[12].exercicios.map((item => item.nome))
+    const cardios = Aerobicos.map((item) => item.nome)
     console.log(peitoral)
 
     return (
@@ -245,167 +111,154 @@ export default ({navigation,route}) => {
         titulo='Selecione um exercício'
         max={1}
         onChange={(value) =>
-          //handleSelecaoExercicioCardio(value, 'Aerobicos')
-          console.log(value)
+                    handleSelecaoExercicioForcaSuperior(value, 0)
         }
         options={peitoral}
         select={'Peitoral'}
        /> 
               </View>
               <View style={{ marginBottom: '5%' }}>
-                <BotaoSelect
-                selecionado={true}
-                titulo='Selecione um exercício'
-                max={1}
-                onChange={(value) =>
-                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
-                  console.log(value)
-                }
-                options={grandeDorsal}
-                select={'Grande dorsal'}
+              <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+                    handleSelecaoExercicioForcaSuperior(value, 1 )
+        }
+        options={grandeDorsal}
+        select={'Grande dorsal'}
        /> 
               </View>
               <View style={{ marginBottom: '5%' }}>
-                <BotaoSelect
-                selecionado={true}
-                titulo='Selecione um exercício'
-                max={1}
-                onChange={(value) =>
-                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
-                  console.log(value)
-                }
-                options={biceps}
-                select={'Bíceps'}
+              <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+                    handleSelecaoExercicioForcaSuperior(value, 2)
+        }
+        options={biceps}
+        select={'Bíceps'}
        /> 
               </View>
               <View style={{ marginBottom: '5%' }}>
-                <BotaoSelect
-                selecionado={true}
-                titulo='Selecione um exercício'
-                max={1}
-                onChange={(value) =>
-                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
-                  console.log(value)
-                }
-                options={triceps}
-                select={'Tríceps'}
+              <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+                    handleSelecaoExercicioForcaSuperior(value, 3)
+        }
+        options={triceps}
+        select={'Tríceps'}
        /> 
               </View>
               <View style={{ marginBottom: '5%' }}>
-                <BotaoSelect
-                selecionado={true}
-                titulo='Selecione um exercício'
-                max={1}
-                onChange={(value) =>
-                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
-                  console.log(value)
-                }
-                options={abdominais}
-                select={'Abdominais'}
+              <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+                    handleSelecaoExercicioForcaSuperior(value, 4)
+        }
+        options={abdominais}
+        select={'Abdominais'}
        /> 
               </View>
               <View style={{ marginBottom: '5%' }}>
-                <BotaoSelect
-                selecionado={true}
-                titulo='Selecione um exercício'
-                max={1}
-                onChange={(value) =>
-                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
-                  console.log(value)
-                }
-                options={deltoide}
-                select={'Deltóide'}
+              <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+                    handleSelecaoExercicioForcaSuperior(value, 5)
+        }
+        options={deltoide}
+        select={'Deltóide'}
        /> 
               </View>
               <View style={{ marginBottom: '5%' }}>
-                <BotaoSelect
-                selecionado={true}
-                titulo='Selecione um exercício'
-                max={1}
-                onChange={(value) =>
-                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
-                  console.log(value)
-                }
-                options={paravertebrais}
-                select={'Paravertebrais'}
+              <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+                    handleSelecaoExercicioForcaSuperior(value, 6)
+        }
+        options={paravertebrais}
+        select={'Paravertebrais'}
        /> 
               </View>
               <View style={{ marginBottom: '5%' }}>
-                <BotaoSelect
-                selecionado={true}
-                titulo='Selecione um exercício'
-                max={1}
-                onChange={(value) =>
-                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
-                  console.log(value)
-                }
-                options={antebracos}
-                select={'Antebraços'}
+              <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+                    handleSelecaoExercicioForcaSuperior(value, 7)
+        }
+        options={antebracos}
+        select={'Antebraços'}
        /> 
               </View>
               <View style={{ marginBottom: '5%' }}>
-                <BotaoSelect
-                selecionado={true}
-                titulo='Selecione um exercício'
-                max={1}
-                onChange={(value) =>
-                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
-                  console.log(value)
-                }
-                options={transversoAbdominal}
-                select={'Transverso Abdominal'}
+              <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+                    handleSelecaoExercicioForcaSuperior(value, 8)
+        }
+        options={transversoAbdominal}
+        select={'Transverso Abdominal'}
        /> 
               </View>
               <View style={{ marginBottom: '5%' }}>
-                <BotaoSelect
-                selecionado={true}
-                titulo='Selecione um exercício'
-                max={1}
-                onChange={(value) =>
-                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
-                  console.log(value)
-                }
-                options={trapezio}
-                select={'Trapézio'}
+              <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+                    handleSelecaoExercicioForcaSuperior(value, 9)
+        }
+        options={trapezio}
+        select={'Trapézio'}
        /> 
               </View>
               <View style={{ marginBottom: '5%' }}>
-                <BotaoSelect
-                selecionado={true}
-                titulo='Selecione um exercício'
-                max={1}
-                onChange={(value) =>
-                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
-                  console.log(value)
-                }
-                options={subescapular}
-                select={'Subescapular'}
+              <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+                    handleSelecaoExercicioForcaSuperior(value, 10)
+        }
+        options={subescapular}
+        select={'Subescapular'}
        /> 
               </View>
               <View style={{ marginBottom: '5%' }}>
-                <BotaoSelect
-                selecionado={true}
-                titulo='Selecione um exercício'
-                max={1}
-                onChange={(value) =>
-                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
-                  console.log(value)
-                }
-                options={manguitoRotador}
-                select={'Manguito Rotador'}
+              <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+                    handleSelecaoExercicioForcaSuperior(value, 11)
+        }
+        options={manguitoRotador}
+        select={'Manguito Rotador'}
        /> 
               </View>
               <View style={{ marginBottom: '5%' }}>
-                <BotaoSelect
-                selecionado={true}
-                titulo='Selecione um exercício'
-                max={1}
-                onChange={(value) =>
-                  //handleSelecaoExercicioCardio(value, 'Aerobicos')
-                  console.log(value)
-                }
-                options={latissimoDoDorso}
-                select={'Latíssimo do Dorso'}
+              <BotaoSelect
+        selecionado={true}
+        titulo='Selecione um exercício'
+        max={1}
+        onChange={(value) =>
+                    handleSelecaoExercicioForcaSuperior(value, 12)
+        }
+        options={latissimoDoDorso}
+        select={'Latissimo do Dorso'}
        /> 
               </View>
           {
@@ -613,7 +466,7 @@ export default ({navigation,route}) => {
         onChange={(value) =>
           handleSelecaoExercicioCardio(value, 'Aerobicos')
         }
-        options={Aerobicos}
+        options={cardios}
        /> 
     </View>
       

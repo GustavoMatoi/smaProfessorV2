@@ -5,8 +5,8 @@ import Spinner from "react-native-loading-spinner-overlay";
 import estilo from "../../estilo"
 import RadioBotao from "../../RadioBotao";
 export default ({ navigation, route }) => {
-    const { nomeExercicio, grupoMuscular, tipo } = route.params;
-    const [exercicio, setExercicio] = useState('')
+    const { nomeExercicio, exercicio, tipo } = route.params;
+    const [exercicioString, setExercicioString] = useState('')
     const [dataExercicio, setDataExercicio] = useState({});
     const [carregando, setCarregando] = useState(true);
     const [variacoesExercicio, setVariacoesExercicio] = useState([]);
@@ -20,7 +20,7 @@ export default ({ navigation, route }) => {
     const [posicao, setPosicao] = useState([])
     const [posicaoDosJoelhos, setPosicaoDosJoelhos] = useState([])
     const [apoioDosPes, setApoioDosPes] = useState([])
-
+    const [sentidoDoMovimento, setSentidoDoMovimento] = useState([])
     const [posicaoDosPesSelecionada, setPosicaoDosPesSelecionada] = useState(-1)
     const [quadrilSelecionado, setQuadrilSelecionado] = useState(-1)
     const [amplitudeSelecionada, setAmplitudeSelecionada] = useState(-1)
@@ -48,123 +48,73 @@ export default ({ navigation, route }) => {
 
     const [imagem, setImagem] = useState('')
     useEffect(() => {
-        const fetchData = async () => {
-            try {
+        const fetchData =  () => {
                 if(tipo === 'ExerciciosMembrosSuperiores' || tipo === 'ExerciciosMembrosInferiores'){
-                    const db = getFirestore();
-                    const documentRef = doc(db, "Exercicios", "listaDeExercicios", tipo, grupoMuscular, 'Exercicios', nomeExercicio);
-    
-                    const documentSnapshot = await getDoc(documentRef);
-                    const data = documentSnapshot.data();
                     
-                    setDataExercicio(data || {});
-                    
-                    if ("variacoes" in data) {
-                        setVariacoesExercicio(Object.values(data.variacoes));
+                    if ("variacoes" in exercicio) {
+                        setVariacoesExercicio(Object.values(exercicio.variacoes));
                     }
                     
-                    if ("implemento" in data) {
-                        setImplementosExercicio(Object.values(data.implemento));
+                    if ("implemento" in exercicio) {
+                        setImplementosExercicio(Object.values(exercicio.implemento));
                     }
                     
-                    if ("postura" in data) {
-                        setPosturaExercicios(Object.values(data.postura));
+                    if ("postura" in exercicio) {
+                        setPosturaExercicios(Object.values(exercicio.postura));
                     }
                     
-                    if ("pegada" in data) {
-                        setPegadasExercicio(Object.values(data.pegada));
+                    if ("pegada" in exercicio) {
+                        setPegadasExercicio(Object.values(exercicio.pegada));
                     }
                     
-                    if ("execucao" in data) {
-                        setExecucoesExercicio(Object.values(data.execucao));
+                    if ("execucao" in exercicio) {
+                        setExecucoesExercicio(Object.values(exercicio.execucao));
                     }
-                    if ('posicaoDosPes' in data){
-                        setPosicaoDosPes(Object.values(data.posicaoDosPes))
+                    if ('posicaoDosPes' in exercicio){
+                        setPosicaoDosPes(Object.values(exercicio.posicaoDosPes))
                     }
-                    if('quadril' in data){
-                        setQuadril(Object.values(data.quadril))
+                    if('quadril' in exercicio){
+                        setQuadril(Object.values(exercicio.quadril))
                     }
-                    if('amplitude' in data){
-                        setAmplitude(Object.values(data.amplitude))
+                    if('amplitude' in exercicio){
+                        setAmplitude(Object.values(exercicio.amplitude))
                     }
-                    if('posicao' in data){
-                        setPosicao(Object.values(data.posicao))
+                    if('posicao' in exercicio){
+                        setPosicao(Object.values(exercicio.posicao))
                     }
-                    if('posicaoDosJoelhos' in data){
-                        setPosicaoDosJoelhos(Object.values(data.posicaoDosJoelhos))
+                    if('posicaoDosJoelhos' in exercicio){
+                        setPosicaoDosJoelhos(Object.values(exercicio.posicaoDosJoelhos))
                     }
-                    if('apoioDosPes' in data){
-                        setApoioDosPes(Object.values(data.apoioDosPes))
+                    if('apoioDosPes' in exercicio){
+                        setApoioDosPes(Object.values(exercicio.apoioDosPes))
                     }
 
 
                 } else if (tipo === 'Aerobicos'){
-                    setExercicio(nomeExercicio)
+                    setExercicioString(exercicio)
                 } else { 
-                    const db = getFirestore();
-                    const documentRef = doc(db, "Exercicios", "listaDeExercicios", 'Alongamentos', nomeExercicio);
-    
-                    const documentSnapshot = await getDoc(documentRef);
-                    const data = documentSnapshot.data();
-                    
-                    setDataExercicio(data || {});
-                    
-                    if ("variacoes" in data) {
-                        setVariacoesExercicio(Object.values(data.variacoes));
-                    }
-                    
-                   /* if ("implemento" in data) {
-                        setImplementosExercicio(Object.values(data.implemento));
-                    } 
-                    
-                    if ("postura" in data) {
-                        setPosturaExercicios(Object.values(data.postura));
-                    }
-                    
-                    if ("pegada" in data) {
-                        setPegadasExercicio(Object.values(data.pegada));
-                    } 
-                    
-                                        if ('posicaoDosPes' in data){
-                        setPosicaoDosPes(Object.values(data.posicaoDosPes))
-                    }
-                    if('quadril' in data){
-                        setQuadril(Object.values(data.quadril))
-                    }
 
                     
-                    if('amplitude' in data){
-                        setAmplitude(Object.values(data.amplitude))
+                    setDataExercicio(exercicio || {});
+                    
+                    if ("sentidoDoMovimento" in exercicio) {
+                        setSentidoDoMovimento(Object.values(exercicio.sentidoDoMovimento));
+                    }
+                    
+                    if ("execucao" in exercicio) {
+                        setExecucoesExercicio(Object.values(exercicio.execucao));
                     }
 
-                    if('posicaoDosJoelhos' in data){
-                        setPosicaoDosJoelhos(Object.values(data.posicaoDosJoelhos))
-                    }
-                    if('apoioDosPes' in data){
-                        setApoioDosPes(Object.values(data.apoioDosPes))
-                    }
-                    */
-                    
-                    if ("execucao" in data) {
-                        setExecucoesExercicio(Object.values(data.execucao));
-                    }
-                    if('posicao' in data){
-                        setPosicao(Object.values(data.posicao))
-                    }
-                    if(data.hasOwnProperty('imagem')){
-                        setImagem(data.imagem)
+                    if(exercicio.hasOwnProperty('imagem')){
+                        setImagem(exercicio.imagem)
                     }
 
                 }
-
                 setCarregando(false);
-            } catch (error) {
-                console.error('Erro ao recuperar o exercício:', error);
-            }
         };
     
         fetchData();
-    }, [nomeExercicio, grupoMuscular]);
+    }, [nomeExercicio]);
 
 
     
@@ -178,39 +128,39 @@ export default ({ navigation, route }) => {
     const montarExercicio = (nome, variacao, implemento, postura, pegada, execucao, posicaoDosPes, posicaoDosJoelhos, quadril, amplitude, apoioDosPes) => {
         let exercicioAux = nome;
         if (variacao){
-            exercicioAux += ` ${variacao}` 
+            exercicioAux += `${variacao}` 
         }
         if(implemento){
-            exercicioAux += ` ${implemento}`
+            exercicioAux += `${implemento}`
         }
         if(postura){
-            exercicioAux += ` ${postura}`
+            exercicioAux += `${postura}`
         }
         if(pegada){
-            exercicioAux += ` ${pegada}`
+            exercicioAux += `${pegada}`
         }
         if(execucao) {
-            exercicioAux += ` ${execucao}`
+            exercicioAux += `${execucao}`
         }
         if(posicaoDosPes){
-            exercicioAux += ` ${posicaoDosJoelhos}`
+            exercicioAux += `${posicaoDosJoelhos}`
         }
         if(quadril){
-            exercicioAux += ` ${quadril}`
+            exercicioAux += `${quadril}`
         }
         if(amplitude){
-            exercicioAux += ` ${amplitude}`
+            exercicioAux += `${amplitude}`
         }
         if(apoioDosPes){
-            exercicioAux += ` ${apoioDosPes}`
+            exercicioAux += `${apoioDosPes}`
         }
 
-        setExercicio(exercicioAux)
+        setExercicioString(exercicioAux)
         route.params.receberExercicio(exercicioAux, imagem)
         navigation.navigate('Montar treino', {aluno: route.params.aluno})
     }
 
-    const nomeExercicioString = nomeExercicio.split("(");
+    const nomeExercicioString = exercicio.nome.split("(");
     return (
         <View>
             <ScrollView style={[{width: '100%'}]}>
@@ -222,7 +172,7 @@ export default ({ navigation, route }) => {
                 />
             ) : (
                 <View style={[{width: '95%'}]}>
-                                <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, estilo.centralizado, {marginVertical: '5%'}]}>{nomeExercicio}</Text>
+                                <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, estilo.centralizado, {marginVertical: '5%'}]}>{exercicio.nome}</Text>
                     {implementosExercicio.length === 0 ? null : 
                     <View style={style.areaSelecao}>
                         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Implemeto: </Text>

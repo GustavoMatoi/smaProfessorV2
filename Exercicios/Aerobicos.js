@@ -1,1 +1,1 @@
-export default ['Esteira', 'Bicicleta Ergométrica', 'Elíptico', 'Corda']
+export default [{nome: 'Esteira'},{nome: 'Bicicleta Ergométrica'}, {nome:'Elíptico'}, {nome:'Corda'}]
