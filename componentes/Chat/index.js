@@ -67,12 +67,12 @@ export default ({navigation}) => {
                   
                   const q = query(mensagensRef, orderBy('data', 'asc'));
                   const mensagensSnapshot = await getDocs(q);
-        
                   const lastMessageDoc = mensagensSnapshot.docs[mensagensSnapshot.docs.length - 1];
+
                   if (lastMessageDoc) {
                     const remetente = lastMessageDoc.get('remetente');
                     newArrayAlunos.push({ aluno: alunoData, remetente: remetente });
-                    console.log(remetente)
+                    console.log('newArrayAlunos', newArrayAlunos)
                   }
                 }
               }
@@ -88,6 +88,8 @@ export default ({navigation}) => {
     
       fetchAlunos();
     }, []);
+
+    console.log("ALUNOS LENGHT", alunos.length)
       
     const handleNotificationLocal = async(alunoUltimaMensagem) => {
       await Notification.scheduleNotificationAsync({

@@ -41,8 +41,9 @@ export default ({navigation, route}) => {
         const exerciciosRef = collection(doc.ref, "Exercicios");
         const promise = getDocs(exerciciosRef).then((exerciciosSnapshot) => {
           const exercicios = exerciciosSnapshot.docs.map((exercicioDoc) => {
+            console.log(exercicioDoc.data())
             return {
-              nome: exercicioDoc.data().Nome,
+              nome: exercicioDoc.data().Nome.exercicio,
               tipo: exercicioDoc.data().tipo
             };
           });
