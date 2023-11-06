@@ -46,10 +46,13 @@ export default ({ navigation, route }) => {
     const [execucaoSelecionada, setExecucaoSelecionada] = useState(-1)
     const [execucaoString, setExecucaoString] = useState('')
 
+
+    console.log(exercicio)
     const [imagem, setImagem] = useState('')
     useEffect(() => {
         const fetchData =  () => {
-                if(tipo === 'ExerciciosMembrosSuperiores' || tipo === 'ExerciciosMembrosInferiores'){
+            console.log(tipo)
+                if(tipo === 'MembrosSuperiores' || tipo === 'MembrosInferiores'){
                     
                     if ("variacoes" in exercicio) {
                         setVariacoesExercicio(Object.values(exercicio.variacoes));

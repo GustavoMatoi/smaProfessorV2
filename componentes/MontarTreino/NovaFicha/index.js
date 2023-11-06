@@ -127,7 +127,7 @@ export default ({ navigation, route }) => {
         } catch (error) {
             console.error('Erro ao salvar a ficha de exercícios:', error);
         } finally {
-            if(!conexao){
+            if(conexao){
                 Alert.alert("Ficha salva com sucesso!", "A ficha foi salva no banco de dados.")
                 navigation.navigate("Principal")
             } else{
