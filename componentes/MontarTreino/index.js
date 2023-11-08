@@ -78,13 +78,13 @@ export default ({ route, navigation }) => {
       if (tipo === 'alongamento') listaDeExerciciosAux[index] = { index, tipo, nomeExercicio: nomeExercicio.exercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series, imagem: nomeExercicio.imagem }
       setListaFinal([...new Set(listaDeExerciciosAux)])
     }
-
+    listaDeExercicios[index].editando = false
   }
 
   const selecionaTipoExercicio = (exercicio, tipo, index) => {
     const updatedExercicios = listaDeExercicios.map((ex) => {
       if (ex === exercicio) {
-        return { ...ex, tipo, index, validado: false };
+        return { ...ex, tipo, index, validado: false, editando: true };
       }
       return ex;
     });
@@ -244,7 +244,10 @@ export default ({ route, navigation }) => {
   }
 
   const editarExercicio = (i, nomeExercicio, index, tipo, imagem) => {
+    listaDeExercicios[index].editando = true
     listaAux[index] = {}
+    console.log(listaDeExercicios[index])
+    setListaAux([...listaAux])
     console.log(i)
   }
 
@@ -342,12 +345,12 @@ export default ({ route, navigation }) => {
                   </View>
 
                   <View style={style.areaPreenchimentoParametros}>
-                  <View style={[style.areaParametroMedio]}>
-                    <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
-                    <TextInput style={[style.inputTextoPequeno]} placeholder="Sér."
-                      onChangeText={(text) => { handleSeries(i, text) }}
-                    />
-                  </View>
+                    <View style={[style.areaParametroMedio]}>
+                      <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
+                      <TextInput style={[style.inputTextoPequeno]} placeholder="Sér."
+                        onChangeText={(text) => { handleSeries(i, text) }}
+                      />
+                    </View>
                     <View style={[style.areaParametroMedio]}>
                       <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
                       <TextInput style={[style.inputTextoPequeno]} placeholder="Desc. (seg)" onChangeText={(text) => { handleDescanso(i, text) }} />
@@ -358,16 +361,16 @@ export default ({ route, navigation }) => {
 
                   i.tipo == 'força' ?
 
-                    (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
+                    (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' && listaAux[index].exercicio && listaAux[index], !i.editando ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
                       <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício força:</Text>
 
                       <View style={{ width: '100%' }}>
-                        {listaAux[index] && typeof listaAux[index] === 'object' ? (
+                        {listaAux.length > 0 && typeof listaAux[index] === 'object' && listaAux[index].exercicio ? (
                           <View style={style.inputTexto}>
                             <Text>{listaAux[index].exercicio}</Text>
                           </View>
                         ) : (
-                          
+
                           <TouchableOpacity
                             style={[
                               style.inputTexto,
@@ -488,17 +491,17 @@ export default ({ route, navigation }) => {
                       </View>)
                 }
                 <View style={style.botoesCrud}>
-                  <TouchableOpacity style={[estilo.botao, estilo.corSuccess, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} disabled={typeof listaFinal[index] !== 'undefined'} onPress={() => adicionarExercicioNaFicha(i, listaAux[index], index, i.tipo, listaAux[index].imagem)}>
+                  <TouchableOpacity style={[estilo.botao, estilo.corSuccess, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} disabled={!i.editando} onPress={() => adicionarExercicioNaFicha(i, listaAux[index], index, i.tipo, listaAux[index].imagem)}>
                     <AntDesign name="edit" size={16} color="white" />
-                    <Text style={[estilo.textoP16px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>SALVAR</Text>
+                    <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>SALVAR</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={[estilo.botao, estilo.corDanger, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => deleteExercicio(index)}>
                     <AntDesign name="delete" size={16} color="white" />
-                    <Text style={[estilo.textoP16px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>EXCLUIR</Text>
+                    <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>EXCLUIR</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={[estilo.botao, estilo.corPrimaria, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => editarExercicio(i, listaAux[index], index, i.tipo, listaAux[index].imagem)}>
                     <AntDesign name="edit" size={16} color="white" />
-                    <Text style={[estilo.textoP16px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>EDITAR</Text>
+                    <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>EDITAR</Text>
                   </TouchableOpacity>
                 </View>
               </View>
