@@ -23,7 +23,7 @@ export default props => {
             </View>
 
             <View style={[style.parametroGrande,estilo.corLight]}>
-                <Text style={[style.tituloParametro]}>Repetições</Text>
+                <Text style={[style.tituloParametro]}>Duração</Text>
                 <Text style={[estilo.textoSmall12px, style.textoParametro,  {alignItems: 'center', marginTop: '40%'}]}>{props.repeticoes || "Reps."}</Text>
             </View>
 

@@ -12,7 +12,7 @@ export default [
             },
             {
                 nome: 'Supino (peitoral, deltóide, tríceps)',
-                pegada: [' aberta ', 'fechada'],
+                pegada: [' pegada aberta ', ' pegada fechada'],
                 implemento: [' barra ', ' halter ', ' Smith '],
                 postura: [ ' reto ', ' inclinado ', ' declinado ']
             },
@@ -39,26 +39,26 @@ export default [
         exercicios: [
             {
                 nome: 'Remada com halteres(grande dorsal, bíceps)',
-                pegada: [ 'neutra ',' supinada ', ' pronada '],
+                pegada: [ ' pegada neutra ',' pegada supinada ', ' pegada pronada '],
                 braco: [ ' aberto ', ' fechado ']
             },
             {
                 nome: 'Barra Fixa (chinup) (grande dorsal, bíceps, redondo maior, rombóide, trapézio)',
-                pegada: [' aberta ', ' fechada ', ' triângulo ', ' invertida ']
+                pegada: [' pegada aberta ', ' pegada fechada ', ' pegada triângulo ', ' pegada invertida ']
             },
             {
                 nome: 'Graviton (grande dorsal, trapézio, bíceps, redondo maior, rombóide)'
             },
             {
                 nome: 'Remada (grande dorsal, bíceps, rombóide)',
-                pegada: [' neutra ', ' pronada ', ' supinada '],
+                pegada: [' pegada neutra ', ' pegada pronada ', ' pegada supinada '],
                 implemento: [' barra ', ' polia ', ' halter ', ' máquina ', ' banco '],
                 postura: [' em pé ', ' sentado ', ' 3 apoios ereto ', ' 3 apoios inclinado '],
                 execucao: [' unilateral ', ' bilateral ']
             },
             {
                 nome: 'Puxada (grande dorsal, trapézio, bíceps)',
-                pegada: [' abeerta ', ' fechada ', 'barra V ']
+                pegada: [' pegada aberta ', ' pegada fechada ', ' pegada barra V ']
             },
             {
                 nome: 'Woodchoppers  polia alta (grande dorsal, peitoral, coraco braquial, deltóide, abdominais)'
@@ -73,7 +73,7 @@ export default [
         exercicios: [
             {
                 nome: 'Rosca bíceps (bíceps)',
-                pegada: [' neutra ', ' supinada ', ' pronada '],
+                pegada: [' pegada neutra ', ' pegada supinada ', ' pegada pronada '],
                 implemento: [' barra ',' halter ',' polia '],
                 postura: [' em pé ', ' sentado ']
             },
@@ -87,13 +87,13 @@ export default [
         exercicios: [
             {
                 nome: 'Tríceps (tríceps)',
-                pegada: [' neutra ', ' supinada ', ' pronada '],
+                pegada: [' pegada neutra ', ' pegada supinada ', ' pegada pronada '],
                 implemento: [' barra ', ' corda ', ' máquina '],
                 execucao: [' unilateral ', ' bilateral ']
             },
             {
                 nome: 'Tríceps testa (tríceps)',
-                pegada: [' neutra ', ' pronada '],
+                pegada: [' pegada neutra ', ' pegada pronada '],
                 implemento: [' barra ', ' polia ', ' halter '],
                 postura: [' em pé ', ' deitado ', 'sentado ereto ', ' sentado inclinado ']
             },
@@ -257,14 +257,14 @@ export default [
             },
             {
                 nome: 'Desenvolvimento ombro (deltóide, trapézio, serrátil anterior)',
-                implemento: [' barra ', ' halter ', ' máquina '],
+                implemento: [' barra na frente ', ' halter ', ' máquina '],
                 postura: [' em pé ', ' sentado ']
             },
             {
                 nome: 'Abdução horizontal de ombro (deltóide, romboides, trapézio medial)',
                 postura: [' deitado ', ' curvado ', ' sentado '],
                 implemento: [' polia baixa ', ' halter ', ' máquina '],
-                pegada: [' pronada ', ' neutra ']
+                pegada: [' pegada pronada ', ' pegada neutra ']
             },
             {
                 nome: 'Abdução horizontal inclinado com cabeça no banco (deltóide, rombóides)'
@@ -274,26 +274,26 @@ export default [
             },
             {
                 nome: 'Elevação frontal de ombro (deltóide)',
-                pegada: [' neutra ', ' pronada ', ' supinada '],
-                implemento: [' barra ', ' polia ', ' halter '],
+                pegada: [' pegada neutra ', ' pegada pronada ', ' pegada supinada '],
+                implemento: [' barra na frente', ' polia ', ' halter '],
                 postura: [' em pé ', ' sentado ', ' inclinado '],
                 execucao: [' unilateral ', ' bilateral ']
             },
             {
                 nome: 'Elevação lateral de ombro (deltóide, rombóide, trapézio medial)',
-                pegada: [' neutra ', ' supinada '],
+                pegada: [' pegada neutra ', ' pegada supinada '],
                 implemento: [' polia ', ' halter '],
                 postura: [' em pé ', ' sentado ', ' inclinado '],
                 execucao: [' unilateral ', ' bilateral ']
             },
             {
                 nome: 'Remada alta (deltóide, trapézio, serrátil anterior)',
-                implemento: [' Smith ', ' polia ', ' halter ', ' barra '],
+                implemento: [' Smith ', ' polia ', ' halter ', ' barra na frente '],
                 execucao: [' unilateral ', ' bilateral ']
             },
             {
                 nome: 'Flexão de ombro (Deltóide, peitoral e coracobraquial, bíceps braquial)',
-                implemento: [' barra ', ' polia ', ' halter ']
+                implemento: [' barra na frente ', ' polia ', ' halter ']
             }
         ]
     },

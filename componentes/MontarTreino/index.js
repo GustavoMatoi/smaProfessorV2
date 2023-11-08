@@ -18,6 +18,8 @@ export default ({ route, navigation }) => {
   const [listaAux, setListaAux] = useState([])
   const [isModalVisible, setModalVisible] = useState(false);
   const [listaFinal, setListaFinal] = useState([])
+  const [modoEdicao, setModoEdicao] = useState(false);
+  const [indicesEmEdicao, setIndicesEmEdicao] = useState([]);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -27,13 +29,16 @@ export default ({ route, navigation }) => {
   const ano = data.getFullYear()
 
 
-  const receberExercicio = (exercicio, imagem) => {
+  const receberExercicio = (exercicio, imagem, index) => {
     setExercicio(exercicio)
+    console.log('index', index)
     if (typeof (imagem) !== 'undefined') {
       const objeto = { exercicio, imagem }
-      listaAux.push(objeto)
+
+      listaAux[index] = objeto;
+
     } else {
-      listaAux.push(exercicio)
+      listaAux[index] = exercicio;
 
     }
 
@@ -238,9 +243,12 @@ export default ({ route, navigation }) => {
     }
   }
 
+  const editarExercicio = (index) => {
+    
+  }
+
   return (
     <ScrollView style={[style.container, estilo.corLightMenos1]}>
-
       <View style={style.areaTextos}>
         <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Nome:</Text>
         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px, style.textos, style.Montserrat]}>{aluno.nome}</Text>
@@ -253,16 +261,12 @@ export default ({ route, navigation }) => {
           selecionado={selected == '' ? false : true}
           onChange={handleSelectChange}
           titulo='Objetivo do treino' max={1}
-          options={['Enrijecimento',
-            'Hipertrofia Geral Intensa',
-            'Hipertrofia Geral Moderada',
-            'Fortalecimento',
-            'Definição Muscular',
-            'Bem Estar Geral',
-            'Relaxamento',
-            'Aliviar dores',
-            'Flexibilidade',
-            'Manter forma física'
+          options={['Melhorar desempenho físico',
+            'Melhorar a saúde',
+            'Emagrecimento',
+            'Hipertrofia',
+            'Manter a forma física',
+            'Definição muscular'
           ]} ></BotaoSelect>
       </View>
       <View style={style.areaTextos}>
@@ -295,7 +299,7 @@ export default ({ route, navigation }) => {
 
                 </Modal>
                 {i.tipo == 'aerobico' ? (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
-                  <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
+                  <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício aeróbico:</Text>
                   <View style={{ width: '100%' }}>
                     {listaAux[index] && typeof listaAux[index] === 'object' ? (
                       <View style={style.inputTexto}>
@@ -335,15 +339,15 @@ export default ({ route, navigation }) => {
                   </View>
 
                   <View style={style.areaPreenchimentoParametros}>
+                  <View style={[style.areaParametroMedio]}>
+                    <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
+                    <TextInput style={[style.inputTextoPequeno]} placeholder="Sér."
+                      onChangeText={(text) => { handleSeries(i, text) }}
+                    />
+                  </View>
                     <View style={[style.areaParametroMedio]}>
                       <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
                       <TextInput style={[style.inputTextoPequeno]} placeholder="Desc. (seg)" onChangeText={(text) => { handleDescanso(i, text) }} />
-                    </View>
-                    <View style={[style.areaParametroMedio]}>
-                      <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
-                      <TextInput style={[style.inputTextoPequeno]} placeholder="Sér."
-                        onChangeText={(text) => { handleSeries(i, text) }}
-                      />
                     </View>
                   </View>
                 </View>) :
@@ -352,7 +356,7 @@ export default ({ route, navigation }) => {
                   i.tipo == 'força' ?
 
                     (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
-                      <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
+                      <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício força:</Text>
 
                       <View style={{ width: '100%' }}>
                         {listaAux[index] && typeof listaAux[index] === 'object' ? (
@@ -360,6 +364,7 @@ export default ({ route, navigation }) => {
                             <Text>{listaAux[index].exercicio}</Text>
                           </View>
                         ) : (
+                          
                           <TouchableOpacity
                             style={[
                               style.inputTexto,
@@ -371,11 +376,13 @@ export default ({ route, navigation }) => {
                                 receberExercicio: receberExercicio,
                                 aluno: aluno,
                                 tipo: 'força',
+                                index: index
                               })
                             }
                           >
                             <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>
                               Selecione o exercício
+                              {console.log('index', index)}
                             </Text>
                           </TouchableOpacity>
                         )}
@@ -410,7 +417,7 @@ export default ({ route, navigation }) => {
                     </View>)
                     : i.tipo == 'alongamento' ?
                       (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
-                        <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
+                        <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício alongamento:</Text>
                         <View style={{ width: '100%' }}>
                           {listaAux[index] && typeof listaAux[index] === 'object' ? (
                             <View style={style.inputTexto}>
@@ -451,8 +458,8 @@ export default ({ route, navigation }) => {
                             />
                           </View>
                           <View style={[style.areaParametroPequeno]}>
-                            <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Repetições:</Text>
-                            <TextInput style={[style.inputTextoPequeno]} placeholder="Reps." keyboardType="numeric"
+                            <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Duração:</Text>
+                            <TextInput style={[style.inputTextoPequeno]} placeholder="Dur. (seg)" keyboardType="numeric"
                               onChangeText={(text) => { handleReps(i, text) }}
                               value={typeof listaFinal[index] !== 'undefined' ? i.repeticoes : 0}
 
@@ -476,13 +483,17 @@ export default ({ route, navigation }) => {
                       </View>)
                 }
                 <View style={style.botoesCrud}>
-                  <TouchableOpacity style={[estilo.botao, estilo.corSuccess, { width: '40%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} disabled={typeof listaFinal[index] !== 'undefined'} onPress={() => adicionarExercicioNaFicha(i, listaAux[index], index, i.tipo, listaAux[index].imagem)}>
+                  <TouchableOpacity style={[estilo.botao, estilo.corSuccess, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} disabled={typeof listaFinal[index] !== 'undefined'} onPress={() => adicionarExercicioNaFicha(i, listaAux[index], index, i.tipo, listaAux[index].imagem)}>
                     <AntDesign name="edit" size={16} color="white" />
                     <Text style={[estilo.textoP16px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>SALVAR</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={[estilo.botao, estilo.corDanger, { width: '40%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => deleteExercicio(index)}>
+                  <TouchableOpacity style={[estilo.botao, estilo.corDanger, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => deleteExercicio(index)}>
                     <AntDesign name="delete" size={16} color="white" />
                     <Text style={[estilo.textoP16px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>EXCLUIR</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={[estilo.botao, estilo.corPrimaria, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => editarExercicio(index)}>
+                    <AntDesign name="edit" size={16} color="white" />
+                    <Text style={[estilo.textoP16px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>EDITAR</Text>
                   </TouchableOpacity>
                 </View>
               </View>

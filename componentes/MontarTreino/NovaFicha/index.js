@@ -42,8 +42,41 @@ export default ({ navigation, route }) => {
             width: '90%'
         },
     })
-    const [dataFim, setDataFim] = useState('')
+    const [dateError, setDateError] = useState('');
 
+    const [dataFim, setDataFim] = useState('')
+    const isValidDate = (text) => {
+        const datePattern = /^\d{2}\/\d{2}\/\d{4}$/;
+        if (datePattern.test(text)) {
+          return true;
+        }
+        return false;
+      };
+    
+      const handleInputChange = (text) => {
+        const unformattedText = text.replace(/\//g, '');
+    
+        if (/^\d{0,8}$/.test(unformattedText)) {
+          let formattedText = unformattedText;
+          if (unformattedText.length >= 2) {
+            formattedText = unformattedText.slice(0, 2) + '/' + unformattedText.slice(2);
+          }
+          if (unformattedText.length >= 4) {
+            formattedText = formattedText.slice(0, 5) + '/' + formattedText.slice(5);
+          }
+    
+          setDataFim(formattedText);
+        } else {
+          setDataFim(text);
+        }
+        console.log("data fim:", dataFim)
+        if (!isValidDate(unformattedText)) {
+          setDateError('Formato de data inválido. Use dd/mm/aaaa.');
+        } else {
+          setDateError('');
+        }
+        console.log(dataFim)
+      };
     const data = new Date()
     let dia = data.getDate()
     dia < 10 ? dia = `0${dia}` : dia = dia
@@ -51,63 +84,42 @@ export default ({ navigation, route }) => {
     mes < 10 ? mes = `0${mes}` : mes = mes
     const ano = data.getFullYear()
     const salvarFicha = async () => {
-        const bd = getFirestore();
+        if(dataFim !== ''){
+            const bd = getFirestore();
 
-        const documentos = exercicios.map((exercicio, index) => {
-
-            if (exercicio.tipo === 'força') {
-                return {
-                    Nome: exercicio.nomeExercicio,
-                    descanso: exercicio.descanso,
-                    repeticoes: exercicio.repeticoes,
-                    series: exercicio.series,
-                    tipo: exercicio.tipo
-                };
-            } else if (exercicio.tipo === 'aerobico') {
-                return {
-                    Nome: exercicio.nomeExercicio,
-                    velocidade: exercicio.velocidade,
-                    descanso: exercicio.descanso,
-                    series: exercicio.series,
-                    duracao: exercicio.duracao,
-                    tipo: exercicio.tipo
-                };
-            } else {
-                return {
-                    Nome: exercicio.nomeExercicio,
-                    descanso: exercicio.descanso,
-                    repeticoes: exercicio.repeticoes,
-                    series: exercicio.series,
-                    tipo: exercicio.tipo,
-                    imagem: exercicio.imagem
+            const documentos = exercicios.map((exercicio, index) => {
+    
+                if (exercicio.tipo === 'força') {
+                    return {
+                        Nome: exercicio.nomeExercicio,
+                        descanso: exercicio.descanso,
+                        repeticoes: exercicio.repeticoes,
+                        series: exercicio.series,
+                        tipo: exercicio.tipo
+                    };
+                } else if (exercicio.tipo === 'aerobico') {
+                    return {
+                        Nome: exercicio.nomeExercicio,
+                        velocidade: exercicio.velocidade,
+                        descanso: exercicio.descanso,
+                        series: exercicio.series,
+                        duracao: exercicio.duracao,
+                        tipo: exercicio.tipo
+                    };
+                } else {
+                    return {
+                        Nome: exercicio.nomeExercicio,
+                        descanso: exercicio.descanso,
+                        repeticoes: exercicio.repeticoes,
+                        series: exercicio.series,
+                        tipo: exercicio.tipo,
+                        imagem: exercicio.imagem
+                    }
                 }
-            }
-        });
-
-        try {
-            await setDoc(doc(
-                bd,
-                'Academias',
-                professorLogado.getAcademia(),
-                'Professores',
-                aluno.professorResponsavel,
-                'alunos',
-                `Aluno ${aluno.email}`,
-                'FichaDeExercicios',
-                `FichaDeExercicios${ano}|${mes}|${dia}`
-            ), {
-                dataFim: dataFim,
-                dataInicio: `${dia}/${mes}/${ano}`,
-                data: serverTimestamp(),
-                objetivoDoTreino: objetivo,
-                responsavel: professorLogado.getNome(),
             });
-
-            await Promise.all(documentos.map((element, index) => {
-                console.log('documentos', documentos)
-                console.log('elemnt', element)
-                console.log('index', index)
-                return setDoc(doc(
+    
+            try {
+                await setDoc(doc(
                     bd,
                     'Academias',
                     professorLogado.getAcademia(),
@@ -116,25 +128,51 @@ export default ({ navigation, route }) => {
                     'alunos',
                     `Aluno ${aluno.email}`,
                     'FichaDeExercicios',
-                    `FichaDeExercicios${ano}|${mes}|${dia}`,
-                    'Exercicios',
-                    `Exercicio ${index}`
-                ), element);
+                    `FichaDeExercicios${ano}|${mes}|${dia}`
+                ), {
+                    dataFim: dataFim,
+                    dataInicio: `${dia}/${mes}/${ano}`,
+                    data: serverTimestamp(),
+                    objetivoDoTreino: objetivo,
+                    responsavel: professorLogado.getNome(),
+                });
+    
+                await Promise.all(documentos.map((element, index) => {
+                    console.log('documentos', documentos)
+                    console.log('elemnt', element)
+                    console.log('index', index)
+                    return setDoc(doc(
+                        bd,
+                        'Academias',
+                        professorLogado.getAcademia(),
+                        'Professores',
+                        aluno.professorResponsavel,
+                        'alunos',
+                        `Aluno ${aluno.email}`,
+                        'FichaDeExercicios',
+                        `FichaDeExercicios${ano}|${mes}|${dia}`,
+                        'Exercicios',
+                        `Exercicio ${index}`
+                    ), element);
+                }
+                ));
+    
+                console.log('Ficha de exercícios salva com sucesso');
+            } catch (error) {
+                console.error('Erro ao salvar a ficha de exercícios:', error);
+            } finally {
+                if(conexao){
+                    Alert.alert("Ficha salva com sucesso!", "A ficha foi salva no banco de dados.")
+                    navigation.navigate("Principal")
+                } else{
+                    Alert.alert("Sem conexão.", "Não foi possível salvar sua ficha no momento devido a falta de conexão. Tente novamente.")
+    
+                }
             }
-            ));
-
-            console.log('Ficha de exercícios salva com sucesso');
-        } catch (error) {
-            console.error('Erro ao salvar a ficha de exercícios:', error);
-        } finally {
-            if(conexao){
-                Alert.alert("Ficha salva com sucesso!", "A ficha foi salva no banco de dados.")
-                navigation.navigate("Principal")
-            } else{
-                Alert.alert("Sem conexão.", "Não foi possível salvar sua ficha no momento devido a falta de conexão. Tente novamente.")
-
-            }
+        } else {
+            Alert.alert("Campos não preenchidos.", "Informe o vencimento da ficha.")
         }
+        
     };
 
     const transformedData = exercicios.map(item => ({
@@ -169,7 +207,7 @@ export default ({ navigation, route }) => {
                         />
                     ) : (
                         <ExerciciosAlongamento
-                            nomeDoExercicio={item.nomeExercicio.exercicio}
+                            nomeDoExercicio={item.nomeExercicio}
                             series={item.series}
                             repeticoes={item.repeticoes}
                             descanso={item.descanso}
@@ -184,10 +222,12 @@ export default ({ navigation, route }) => {
             <View style={[{ marginVertical: 10 }]}>
                 <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, { marginVertical: 10 }]}>Objetivo do treino: {objetivo}</Text>
 
-                <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, { marginVertical: 10 }]}>Data fim (opcional):</Text>
+                <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, { marginVertical: 10 }]}>Vencimento:</Text>
                 <TextInput style={[style.inputTexto, estilo.sombra]}
-                    onChangeText={(text) => setDataFim(text)}
-                    placeholder='Informe a data final dessa ficha'
+                    onChangeText={handleInputChange}
+                    placeholder='dd/mm/aaaa'
+                    keyboardType='numeric'
+                    value={dataFim}
                 />
                 <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={salvarFicha}>
                     <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>CONFIRMAR</Text>
