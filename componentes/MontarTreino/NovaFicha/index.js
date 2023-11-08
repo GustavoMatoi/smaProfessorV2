@@ -66,14 +66,6 @@ export default ({ navigation, route }) => {
           }
     
           setDataFim(formattedText);
-        } else {
-          setDataFim(text);
-        }
-        console.log("data fim:", dataFim)
-        if (!isValidDate(unformattedText)) {
-          setDateError('Formato de data inválido. Use dd/mm/aaaa.');
-        } else {
-          setDateError('');
         }
         console.log(dataFim)
       };

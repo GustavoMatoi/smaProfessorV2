@@ -60,7 +60,7 @@ export default ({ navigation, route }) => {
         setSelecionado(value)
         console.log(exercicioAux)
         console.log(tipoExercicio)
-        navigation.navigate('Adicionais exercício', { exercicio: exercicioAux, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo: tipoExercicio })
+        navigation.navigate('Adicionais exercício', { exercicio: exercicioAux, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo: tipoExercicio, index: indexPorParametro })
       }
     }
   }

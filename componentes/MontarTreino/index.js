@@ -70,7 +70,6 @@ export default ({ route, navigation }) => {
   };
 
   const adicionarExercicioNaFicha = (i, nomeExercicio, index, tipo, imagem) => {
-    console.log('imagem', imagem)
     if (validaExercicio(i, nomeExercicio)) {
       const listaDeExerciciosAux = [...listaFinal]
       if (tipo === 'força') listaDeExerciciosAux[index] = { index, tipo, nomeExercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series }
@@ -226,7 +225,7 @@ export default ({ route, navigation }) => {
           let textoAlerta = "Parâmetros: "
           !validarDescanso ? textoAlerta += " descanso, " : null
           !validarSeries ? textoAlerta += " séries," : null
-          !validarReps ? textoAlerta += " repetições" : null
+          !validarReps ? textoAlerta += " duração" : null
           Alert.alert("Há parâmetros não preenchidos!", textoAlerta)
         }
       }
@@ -236,11 +235,17 @@ export default ({ route, navigation }) => {
   }
 
   const handleValidacao = () => {
-    if (selected == '' || listaFinal.length === 0) {
-      Alert.alert("Há campos não preenchidos", "Preencha os campos e tente novamente")
+
+    if (listaFinal.length !== listaDeExercicios.length) {
+      Alert.alert("Há exercicios não salvos", "Parece que você não salvou todos os exercícios. Salve todos e tente novamente.")
     } else {
-      navigation.navigate('Nova Ficha', { exercicios: listaFinal, aluno: aluno, objetivo: selected })
+      if (selected == '' || listaFinal.length === 0) {
+        Alert.alert("Há campos não preenchidos", "Preencha os campos e tente novamente")
+      } else {
+        navigation.navigate('Nova Ficha', { exercicios: listaFinal, aluno: aluno, objetivo: selected })
+      }
     }
+
   }
 
   const editarExercicio = (i, nomeExercicio, index, tipo, imagem) => {
@@ -362,6 +367,7 @@ export default ({ route, navigation }) => {
                   i.tipo == 'força' ?
 
                     (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' && listaAux[index].exercicio && listaAux[index], !i.editando ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
+                      <Button title={"AAAAAAAAAAA"} onPress={() => { console.log('listaAux', listaAux); console.log('listaFinal', listaFinal) }} />
                       <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício força:</Text>
 
                       <View style={{ width: '100%' }}>
@@ -388,7 +394,6 @@ export default ({ route, navigation }) => {
                           >
                             <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>
                               Selecione o exercício
-                              {console.log('index', index)}
                             </Text>
                           </TouchableOpacity>
                         )}
@@ -422,10 +427,10 @@ export default ({ route, navigation }) => {
                       </View>
                     </View>)
                     : i.tipo == 'alongamento' ?
-                      (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
+                      (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' && listaAux[index].exercicio && listaAux[index], !i.editando ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
                         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício alongamento:</Text>
                         <View style={{ width: '100%' }}>
-                          {listaAux[index] && typeof listaAux[index] === 'object' ? (
+                          {listaAux.length > 0 && typeof listaAux[index] === 'object' && listaAux[index].exercicio ? (
                             <View style={style.inputTexto}>
                               <Text>{listaAux[index].exercicio}</Text>
                             </View>
