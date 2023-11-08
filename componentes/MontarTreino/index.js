@@ -243,8 +243,9 @@ export default ({ route, navigation }) => {
     }
   }
 
-  const editarExercicio = (index) => {
-    
+  const editarExercicio = (i, nomeExercicio, index, tipo, imagem) => {
+    listaAux[index] = ''
+    console.log(i)
   }
 
   return (
@@ -317,6 +318,8 @@ export default ({ route, navigation }) => {
                             receberExercicio: receberExercicio,
                             aluno: aluno,
                             tipo: 'aerobicos',
+                            index: index
+
                           })
                         }
                       >
@@ -437,6 +440,8 @@ export default ({ route, navigation }) => {
                                   receberExercicio: receberExercicio,
                                   aluno: aluno,
                                   tipo: 'alongamento',
+                                  index: index
+
                                 })
                               }
                               }
@@ -491,7 +496,7 @@ export default ({ route, navigation }) => {
                     <AntDesign name="delete" size={16} color="white" />
                     <Text style={[estilo.textoP16px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>EXCLUIR</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={[estilo.botao, estilo.corPrimaria, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => editarExercicio(index)}>
+                  <TouchableOpacity style={[estilo.botao, estilo.corPrimaria, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => editarExercicio(i, listaAux[index], index, i.tipo, listaAux[index].imagem)}>
                     <AntDesign name="edit" size={16} color="white" />
                     <Text style={[estilo.textoP16px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>EDITAR</Text>
                   </TouchableOpacity>
