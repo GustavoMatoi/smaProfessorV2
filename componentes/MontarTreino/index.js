@@ -73,9 +73,9 @@ export default ({ route, navigation }) => {
     console.log('imagem', imagem)
     if (validaExercicio(i, nomeExercicio)) {
       const listaDeExerciciosAux = [...listaFinal]
-      if (tipo === 'força') listaDeExerciciosAux.push({ index, tipo, nomeExercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series })
-      if (tipo === 'aerobico') listaDeExerciciosAux.push({ index, tipo, nomeExercicio, validado: true, descanso: i.descanso, velocidade: i.velocidade, duracao: i.duracao, series: i.series })
-      if (tipo === 'alongamento') listaDeExerciciosAux.push({ index, tipo, nomeExercicio: nomeExercicio.exercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series, imagem: nomeExercicio.imagem })
+      if (tipo === 'força') listaDeExerciciosAux[index] = { index, tipo, nomeExercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series }
+      if (tipo === 'aerobico') listaDeExerciciosAux[index] = { index, tipo, nomeExercicio, validado: true, descanso: i.descanso, velocidade: i.velocidade, duracao: i.duracao, series: i.series }
+      if (tipo === 'alongamento') listaDeExerciciosAux[index] = { index, tipo, nomeExercicio: nomeExercicio.exercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series, imagem: nomeExercicio.imagem }
       setListaFinal([...new Set(listaDeExerciciosAux)])
     }
 
@@ -244,7 +244,7 @@ export default ({ route, navigation }) => {
   }
 
   const editarExercicio = (i, nomeExercicio, index, tipo, imagem) => {
-    listaAux[index] = ''
+    listaAux[index] = {}
     console.log(i)
   }
 
