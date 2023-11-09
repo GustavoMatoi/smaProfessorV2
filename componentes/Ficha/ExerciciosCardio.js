@@ -10,22 +10,22 @@ export default props => {
                 <Text style={estilo.textoSmall12px}>{props.nomeDoExercicio || "Exercício cardio"}</Text>
             </View>
             
-            <View style={[style.parametroPequeno,estilo.corLight]}>
+            <View style={[style.parametroGrande,estilo.corLight]}>
                 <Text style={[ style.tituloParametro]}>Velocidade</Text>
                 <Text style={[estilo.textoSmall12px, style.textoParametro]}>{props.velocidadeDoExercicio || 'Reps.'}</Text>
             </View>
             
-            <View style={[style.parametroPequeno,estilo.corLight]}>
+            <View style={[style.parametroGrande,estilo.corLight]}>
                 <Text style={[style.tituloParametro]}>Séries</Text>
                 <Text style={[estilo.textoSmall12px, style.textoParametro]}>{props.seriesDoExercicio || 'Ser.'}</Text>
             </View>
 
-            <View style={[style.parametroPequeno,estilo.corLight]}>
+            <View style={[style.parametroGrande,estilo.corLight]}>
                 <Text style={[style.tituloParametro]}>Duração</Text>
                 <Text style={[estilo.textoSmall12px, style.textoParametro]}>{props.duracaoDoExercicio || 'Inten.'}</Text>
             </View>
 
-            <View style={[style.parametroPequeno,estilo.corLight]}>
+            <View style={[style.parametroGrande,estilo.corLight]}>
                 <Text style={[style.tituloParametro]}>Repouso</Text>
                 <Text style={[estilo.textoSmall12px, style.textoParametro]}>{props.descansoDoExercicio || 'Rep.'}</Text>
             </View>
@@ -44,14 +44,14 @@ const style = StyleSheet.create({
 
     },
     nomeDoExercicio: {
-        width: '55%',
+        width: '50%',
         minHeight: 60,
         justifyContent: 'center',
         alignItems: 'center'
     },
 
     parametroGrande: {
-        width: '14%',
+        width: '12%',
         height: '100%'
     },
     tituloParametro: {

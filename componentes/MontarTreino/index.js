@@ -69,10 +69,10 @@ export default ({ route, navigation }) => {
     });
   };
 
-  const adicionarExercicioNaFicha = (i, nomeExercicio, index, tipo, imagem) => {
+  const adicionarExercicioNaFicha = (i, nomeExercicio, index, tipo) => {
     if (validaExercicio(i, nomeExercicio)) {
       const listaDeExerciciosAux = [...listaFinal]
-      if (tipo === 'força') listaDeExerciciosAux[index] = { index, tipo, nomeExercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series }
+      if (tipo === 'força') listaDeExerciciosAux[index] = { index, tipo, nomeExercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series, cadencia: i.cadencia }
       if (tipo === 'aerobico') listaDeExerciciosAux[index] = { index, tipo, nomeExercicio, validado: true, descanso: i.descanso, velocidade: i.velocidade, duracao: i.duracao, series: i.series }
       if (tipo === 'alongamento') listaDeExerciciosAux[index] = { index, tipo, nomeExercicio: nomeExercicio.exercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series, imagem: nomeExercicio.imagem }
       setListaFinal([...new Set(listaDeExerciciosAux)])
@@ -123,8 +123,22 @@ export default ({ route, navigation }) => {
     });
     setListaDeExercicios(updatedExercicios);
     setModalVisible(false);
-
   };
+  const handleCadencia = (exercicio, cadencia) => {
+    const updatedExercicios = listaDeExercicios.map((ex) => {
+        if (ex === exercicio) {
+          return { ...ex, cadencia };
+        }
+        return ex;
+      });
+
+      setListaDeExercicios(updatedExercicios);
+      setModalVisible(false);
+
+    }
+
+
+
 
   const handleVelocidade = (exercicio, velocidade) => {
     const updatedExercicios = listaDeExercicios.map((ex) => {
@@ -155,6 +169,9 @@ export default ({ route, navigation }) => {
         let validarDescanso = false
         let validarReps = false
         let validarSeries = false
+        let validarCadencia = false
+
+
         if (exercicio.descanso) {
           validarDescanso = true
         }
@@ -164,13 +181,22 @@ export default ({ route, navigation }) => {
         if (exercicio.series) {
           validarSeries = true
         }
-        if (validarDescanso && validarReps && validarSeries) {
+        if (exercicio.cadencia){
+          if(exercicio.cadencia.includes(':')){
+
+            validarCadencia = true
+          } else {
+            Alert.alert("Cadência preenchida incorretamente", "A cadência deve ser preenchida no formato numero:numero")
+          }
+        }
+        if (validarDescanso && validarReps && validarSeries && validarCadencia) {
           return true;
         } else {
           let textoAlerta = "Parâmetros: "
           !validarDescanso ? textoAlerta += " descanso, " : null
           !validarSeries ? textoAlerta += " séries," : null
-          !validarReps ? textoAlerta += " repetições" : null
+          !validarReps ? textoAlerta += " repetições," : null
+          !validarCadencia ? textoAlerta += " cadencia" : null
           Alert.alert("Há parâmetros não preenchidos!", textoAlerta)
         }
       }
@@ -248,7 +274,7 @@ export default ({ route, navigation }) => {
 
   }
 
-  const editarExercicio = (i, nomeExercicio, index, tipo, imagem) => {
+  const editarExercicio = (i, nomeExercicio, index, tipo) => {
     listaDeExercicios[index].editando = true
     listaAux[index] = {}
     console.log(listaDeExercicios[index])
@@ -366,8 +392,8 @@ export default ({ route, navigation }) => {
 
                   i.tipo == 'força' ?
 
-                    (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' && listaAux[index].exercicio && listaAux[index], !i.editando ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
-                      <Button title={"AAAAAAAAAAA"} onPress={() => { console.log('listaAux', listaAux); console.log('listaFinal', listaFinal) }} />
+                    (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' && listaAux[index].exercicio && listaAux[index] && !i.editando ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
+                      <Button title={"AAAAAAAAAAA"} onPress={() => { console.log('listaAux', listaAux); console.log('listaFinal', listaFinal); console.log(i.editando) }} />
                       <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício força:</Text>
 
                       <View style={{ width: '100%' }}>
@@ -400,7 +426,7 @@ export default ({ route, navigation }) => {
                       </View>
 
                       <View style={style.areaPreenchimentoParametros}>
-                        <View style={[style.areaParametroPequeno]}>
+                        <View style={[style.areaParametroMedio]}>
                           <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
                           <TextInput style={[style.inputTextoPequeno]}
                             value={typeof listaFinal[index] !== 'undefined' ? i.series : 0}
@@ -408,7 +434,7 @@ export default ({ route, navigation }) => {
                             onChangeText={(text) => { handleSeries(i, text) }}
                           />
                         </View>
-                        <View style={[style.areaParametroPequeno]}>
+                        <View style={[style.areaParametroMedio]}>
                           <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Repetições:</Text>
                           <TextInput style={[style.inputTextoPequeno]} placeholder="Reps." keyboardType="numeric"
                             onChangeText={(text) => { handleReps(i, text) }}
@@ -416,18 +442,30 @@ export default ({ route, navigation }) => {
 
                           />
                         </View>
-                        <View style={[style.areaParametroPequeno]}>
+                      </View>
+                      <View style={style.areaPreenchimentoParametros}>
+                        <View style={[style.areaParametroMedio]}>
                           <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
                           <TextInput style={[style.inputTextoPequeno]} placeholder="Desc. (seg)" keyboardType="numeric"
                             onChangeText={(text) => { handleDescanso(i, text) }}
                             value={typeof listaFinal[index] !== 'undefined' ? i.descanso : 0}
-
                           />
+                        </View>
+                        <View style={[style.areaParametroMedio]}>
+                          <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Cadência:</Text>
+                          <TextInput
+                            style={[style.inputTextoPequeno]}
+                            placeholder="0:0"
+                            maxLength={3}
+                            onChangeText={(text) => handleCadencia(i, text)}
+                            value={typeof listaFinal[index] !== 'undefined' ? i.cadencia : 0}
+                          />
+
                         </View>
                       </View>
                     </View>)
                     : i.tipo == 'alongamento' ?
-                      (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' && listaAux[index].exercicio && listaAux[index], !i.editando ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
+                      (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' && listaAux[index].exercicio && listaAux[index] && !i.editando ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
                         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício alongamento:</Text>
                         <View style={{ width: '100%' }}>
                           {listaAux.length > 0 && typeof listaAux[index] === 'object' && listaAux[index].exercicio ? (
@@ -496,7 +534,7 @@ export default ({ route, navigation }) => {
                       </View>)
                 }
                 <View style={style.botoesCrud}>
-                  <TouchableOpacity style={[estilo.botao, estilo.corSuccess, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} disabled={!i.editando} onPress={() => adicionarExercicioNaFicha(i, listaAux[index], index, i.tipo, listaAux[index].imagem)}>
+                  <TouchableOpacity style={[estilo.botao, estilo.corSuccess, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]}  onPress={() => adicionarExercicioNaFicha(i, listaAux[index], index, i.tipo)}>
                     <AntDesign name="edit" size={16} color="white" />
                     <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>SALVAR</Text>
                   </TouchableOpacity>
@@ -504,7 +542,7 @@ export default ({ route, navigation }) => {
                     <AntDesign name="delete" size={16} color="white" />
                     <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>EXCLUIR</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={[estilo.botao, estilo.corPrimaria, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => editarExercicio(i, listaAux[index], index, i.tipo, listaAux[index].imagem)}>
+                  <TouchableOpacity style={[estilo.botao, estilo.corPrimaria, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => editarExercicio(i, listaAux[index], index, i.tipo)}>
                     <AntDesign name="edit" size={16} color="white" />
                     <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>EDITAR</Text>
                   </TouchableOpacity>

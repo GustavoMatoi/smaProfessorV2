@@ -45,14 +45,14 @@ const style = StyleSheet.create({
 
     },
     nomeDoExercicio: {
-        width: '55%',
+        width: '50%',
         minHeight: 60,
         justifyContent: 'center',
         alignItems: 'center'
     },
 
     parametroGrande: {
-        width: '14%',
+        width: '16%',
         height: '100%'
     },
     tituloParametro: {

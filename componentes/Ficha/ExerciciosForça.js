@@ -29,6 +29,11 @@ export default props => {
                 <Text style={[estilo.textoSmall12px, style.textoParametro]}>{ props.descanso|| "Desc."}</Text>
             </View>
 
+            <View style={[style.parametroGrande,estilo.corLight]}>
+                <Text style={[style.tituloParametro]}>Cadência</Text>
+                <Text style={[estilo.textoSmall12px, style.textoParametro]}>{ props.cadencia|| "Cad."}</Text>
+            </View>
+
         </View>
     )
 }
@@ -43,14 +48,14 @@ const style = StyleSheet.create({
 
     },
     nomeDoExercicio: {
-        width: '55%',
+        width: '50%',
         minHeight: 60,
         justifyContent: 'center',
         alignItems: 'center'
     },
 
     parametroGrande: {
-        width: '14%',
+        width: '12%',
         height: '100%'
     },
     tituloParametro: {

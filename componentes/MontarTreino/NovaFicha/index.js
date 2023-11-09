@@ -87,7 +87,8 @@ export default ({ navigation, route }) => {
                         descanso: exercicio.descanso,
                         repeticoes: exercicio.repeticoes,
                         series: exercicio.series,
-                        tipo: exercicio.tipo
+                        tipo: exercicio.tipo,
+                        cadencia: exercicio.cadencia
                     };
                 } else if (exercicio.tipo === 'aerobico') {
                     return {
@@ -188,6 +189,7 @@ export default ({ navigation, route }) => {
                             series={item.series}
                             repeticoes={item.repeticoes}
                             descanso={item.descanso}
+                            cadencia={item.cadencia}
                         />
                     ) : item.tipo === 'aerobico' ? (
                         <ExerciciosCardio

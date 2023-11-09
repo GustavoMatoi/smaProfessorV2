@@ -99,6 +99,7 @@ export default ({aluno, posicaoDoArray}) =>{
       series={exercicioNaFicha.series}
       repeticoes={exercicioNaFicha.repeticoes}
       descanso={exercicioNaFicha.descanso}
+      cadencia={exercicioNaFicha.cadencia}
       />
       ) : exercicioNaFicha.exercicio.tipo == 'aerobico' ? (
       <ExerciciosCardio
