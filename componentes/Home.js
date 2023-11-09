@@ -146,7 +146,7 @@ export default ({navigation}) => {
               <View style={[{transform: [{rotate: '-45deg'}]},  style.iconeBotao]}>
                   <Ionicons name="barbell-outline" size={120} color="white" />
               </View>
-                  <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.textoBotao]}>EXERCÍCIOS</Text>
+                  <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.textoBotao]}>DADOS DE TREINO</Text>
               </TouchableOpacity>
           </View>
               <View style={[style.containerBotao]} >
