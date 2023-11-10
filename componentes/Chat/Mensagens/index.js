@@ -102,7 +102,7 @@ export default ({route}) => {
       }, [recuperarMensagens]);
 
     return (
-        <View style={[estilo.corLightMenos1, {minHeight: altura}]}>
+        <View style={[estilo.corLightMenos1, {height: altura}]}>
             <Header aluno={aluno}/>
             <ScrollView>
                 <View style={[estilo.centralizado, estilo.corLightMenos1]}>
@@ -114,7 +114,7 @@ export default ({route}) => {
                 </View>
                 
             </ScrollView>
-            <View style={[style.blocoDeTexto, estilo.corLight, {bottom: keyboardHeight + 50}]}>
+            <View style={[style.blocoDeTexto, estilo.corLight, {bottom: keyboardHeight + 60}]}>
                     <TextInput placeholder='Digite sua mensagem' style={[style.digitarMensagem, estilo.corLightMenos1, estilo.centralizado, {padding: 5}]} value={mensagem} onChangeText={(text)=> setMensagem(text)}/>
                     <TouchableOpacity style={[estilo.centralizado, estilo.corPrimaria, style.botaoEnviarMensagem]} onPress={()=> enviarMensagem(mensagem)}>
                         <View style={[estilo.centralizado, {marginTop: 10}]}>

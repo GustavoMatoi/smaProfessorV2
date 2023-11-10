@@ -4,7 +4,7 @@ import estilo from "../estilo";
 import * as ImagePicker from 'expo-image-picker';
 import {firebase, firebaseBD} from '../configuracoes/firebaseconfig/config'
 import { collection,setDoc,doc, getDocs, getDoc,getFirestore, where , query , addDoc, updateDoc} from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from '@firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from '@firebase/storage';
 import { professorLogado } from "../Home";
 import NetInfo from "@react-native-community/netinfo"
 
@@ -26,7 +26,8 @@ export default ({navigation}) => {
     const getStoredImage = async () => {
         const storage = getStorage();
         const storeRef = ref(storage, `foto${professorLogado.getCpf()}.jpg`);
-        
+        console.log("Deu erro aqui")
+
         
 
         try {
@@ -45,30 +46,51 @@ export default ({navigation}) => {
 
 
 
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
-          aspect: [1,1],
-          quality: 1,
-
-        })
-        if (!result.canceled) {
-            const storage = getStorage(); //Storage
-            const storeRef = ref(storage, `foto${professorLogado.getCpf()}.jpg`) // Como a imagem é salva 
-            
-            //converter imagem em array de bytes
-            const img = await fetch(result.assets[0].uri)
-            const bytes = await img.blob();
+      const pickImage = async () => {
+        console.log("Deu erro aqui1");
     
-            await uploadBytes(storeRef, bytes)
+        try {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [1, 1],
+                quality: 1,
+            });
     
-            setImage(result.assets[0].uri)
+            if (!result.canceled) {
+                const storage = getStorage(); // Storage
+                const storeRef = ref(storage, `foto${professorLogado.getCpf()}.jpg`);
+    
+                console.log('result.assets', result.assets[0].uri);
+    
+                const imageBlob = await getBlobFromUri(result.assets[0].uri);
+                
+                // Corrigir a função uploadBytesResumable para aceitar apenas dois argumentos
+                await uploadBytesResumable(storeRef, imageBlob);
+    
+                setImage(result.assets[0].uri);
             }
-    }
-
-        
-
+        } catch (error) {
+            console.error("Error picking image:", error);
+        }
+    };
+    
+    const getBlobFromUri = async (uri) => {
+        const blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                resolve(xhr.response);
+            };
+            xhr.onerror = function (e) {
+                reject(new TypeError("Network request failed"));
+            };
+            xhr.responseType = "blob";
+            xhr.open("GET", uri, true);
+            xhr.send(null);
+        });
+    
+        return blob;
+    };
     return (
         <ScrollView>
         <SafeAreaView style={[style.container, estilo.corLightMenos1]}>

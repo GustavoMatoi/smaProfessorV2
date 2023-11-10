@@ -57,6 +57,7 @@ import * as Notification from "expo-notifications"
 import SelecaoDoExercicio from './componentes/MontarTreino/SelecaoDoExercicio';
 import AdicionaisExercicio from './componentes/MontarTreino/SelecaoDoExercicio/AdicionaisExercicio';
 import NovaFicha from './componentes/MontarTreino/NovaFicha';
+import ExportCSV from './componentes/ExportCSV/index.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -115,6 +116,7 @@ export default function App() {
         <Stack.Screen name="Seleção do Exercício" component={SelecaoDoExercicio}/>
         <Stack.Screen name="Adicionais exercício" component={AdicionaisExercicio}/>
         <Stack.Screen name="Nova Ficha" component={NovaFicha}/>
+        <Stack.Screen name="Exportar CSV" component={ExportCSV}/>
       </Stack.Navigator>
     </NavigationContainer> 
     );

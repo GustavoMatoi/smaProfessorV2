@@ -142,7 +142,7 @@ export default ({navigation}) => {
           <View style={style.areaBotoes}>
 
           <View style={style.containerBotao}  >
-              <TouchableOpacity style={[estilo.corPrimaria, style.botao]} >
+              <TouchableOpacity style={[estilo.corPrimaria, style.botao]}  onPress={() => navigation.navigate("Exportar CSV")}>
               <View style={[{transform: [{rotate: '-45deg'}]},  style.iconeBotao]}>
                   <Ionicons name="barbell-outline" size={120} color="white" />
               </View>
