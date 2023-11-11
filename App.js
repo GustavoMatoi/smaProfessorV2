@@ -58,6 +58,7 @@ import SelecaoDoExercicio from './componentes/MontarTreino/SelecaoDoExercicio';
 import AdicionaisExercicio from './componentes/MontarTreino/SelecaoDoExercicio/AdicionaisExercicio';
 import NovaFicha from './componentes/MontarTreino/NovaFicha';
 import ExportCSV from './componentes/ExportCSV/index.js';
+import SelecaoAlunoExport from './componentes/ExportCSV/SelecaoAlunoExport.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -117,6 +118,7 @@ export default function App() {
         <Stack.Screen name="Adicionais exercício" component={AdicionaisExercicio}/>
         <Stack.Screen name="Nova Ficha" component={NovaFicha}/>
         <Stack.Screen name="Exportar CSV" component={ExportCSV}/>
+        <Stack.Screen name="Seleção Aluno CSV" component={SelecaoAlunoExport}/>
       </Stack.Navigator>
     </NavigationContainer> 
     );
