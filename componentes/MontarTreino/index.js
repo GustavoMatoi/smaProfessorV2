@@ -9,6 +9,7 @@ import { professorLogado } from "../Home"
 import { Entypo } from '@expo/vector-icons';
 import Modal from "react-native-modal";
 import BotaoSelect from "../BotaoSelect"
+import { TextInputMasked } from "react-native-masked-text"
 export default ({ route, navigation }) => {
   const aluno = route.params.aluno
   const [selected, setSelected] = useState('')
@@ -393,7 +394,6 @@ export default ({ route, navigation }) => {
                   i.tipo == 'força' ?
 
                     (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' && listaAux[index].exercicio && listaAux[index] && !i.editando ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
-                      <Button title={"AAAAAAAAAAA"} onPress={() => { console.log('listaAux', listaAux); console.log('listaFinal', listaFinal); console.log(i.editando) }} />
                       <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício força:</Text>
 
                       <View style={{ width: '100%' }}>
@@ -454,12 +454,31 @@ export default ({ route, navigation }) => {
                         <View style={[style.areaParametroMedio]}>
                           <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Cadência:</Text>
                           <TextInput
-                            style={[style.inputTextoPequeno]}
-                            placeholder="0:0"
-                            maxLength={3}
-                            onChangeText={(text) => handleCadencia(i, text)}
-                            value={typeof listaFinal[index] !== 'undefined' ? i.cadencia : 0}
-                          />
+  style={[style.inputTextoPequeno]}
+  placeholder="0:0"
+  maxLength={3}
+  keyboardType="numeric"
+  onChangeText={(text) => {
+    let textAux = '';
+    if (text.length === 1) {
+      textAux += text.charAt(0) + ":";
+    } else if (text.length === 2 && text.charAt(1) !== ":") {
+      textAux = text.charAt(0) + ":" + text.charAt(1);
+      handleCadencia(i, textAux);
+    } else if (text.length === 3 && text.charAt(1) === ':') {
+      textAux = text;
+      handleCadencia(i, textAux);
+    }
+    i.cadencia = textAux;
+  }}
+  onKeyPress={(e) => {
+    if (e.nativeEvent.key === 'Backspace') {
+      i.cadencia = ''; // Reset the entire cadencia to an empty string
+      handleCadencia(i, i.cadencia);
+    }
+  }}
+  value={i.cadencia ? i.cadencia : 0}
+/>
 
                         </View>
                       </View>
