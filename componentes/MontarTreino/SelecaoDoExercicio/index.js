@@ -18,7 +18,7 @@ export default ({ navigation, route }) => {
   const [alongamentos, setAlongamentos] = useState([])
   const [selecionado, setSelecionado] = useState('')
   const [cardioSelecionado, setCardioSelecionado] = useState('')
-  const {tipo, index} = route.params
+  const { tipo, index } = route.params
   const indexPorParametro = index
   console.log('index pt 2', indexPorParametro)
   const handleSelecaoExercicio = (value, index, tipoExercicio) => {
@@ -30,6 +30,8 @@ export default ({ navigation, route }) => {
           exercicioAux = { ...i }
         }
       }
+      console.log(exercicioAux)
+
       if (Object.keys(exercicioAux).length === 0) {
         Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
       } else {
@@ -48,14 +50,16 @@ export default ({ navigation, route }) => {
         setSelecionado(value)
         navigation.navigate('Adicionais exercício', { exercicio: exercicioAux, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo: tipoExercicio, index: indexPorParametro })
       }
-    } else if (tipoExercicio === 'Alongamento'){
+    } else if (tipoExercicio === 'Alongamento') {
       for (i of Alongamentos[index].exercicios) {
-        if (i.nome === value) {
+        if (i.subnome === value) {
+          console.log('exercicioAux no if', exercicioAux)
           exercicioAux = { ...i }
         }
       }
+      console.log(exercicioAux)
       if (Object.keys(exercicioAux).length === 0) {
-        Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
+        Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.1");
       } else {
         setSelecionado(value)
         console.log(exercicioAux)
@@ -102,28 +106,32 @@ export default ({ navigation, route }) => {
 
   const multiarticular = MembrosInferores[0].exercicios.map((item) => item.nome)
   const uniarticular = MembrosInferores[1].exercicios.map((item) => item.nome)
-  
-  const alongamentoCadeiaAnteirior = Alongamentos[0].exercicios.map((item) => item.nome)
-  const alongamentoCadeiaPosterior = Alongamentos[1].exercicios.map((item) => item.nome)
-  const alongamentosAdutores = Alongamentos[2].exercicios.map((item) => item.nome)
-  const alongamentoManguitoRotadores = Alongamentos[3].exercicios.map((item) => item.nome)
-  const alongamentoAbdominalObliquo = Alongamentos[4].exercicios.map((item)=> item.nome)
-  const alongamentoGluteoMaximo = Alongamentos[5].exercicios.map((item) => item.nome)
-  const alongamentoGluteoMedio = Alongamentos[6].exercicios.map((item)=> item.nome)
-  const alongamentoIsquiotibiais = Alongamentos[7].exercicios.map((item) => item.nome)
-  const alongamentoPanturrilha = Alongamentos[8].exercicios.map((item)=>item.nome)
-  const alongamentoQuadriceps = Alongamentos[9].exercicios.map((item) => item.nome)
-  const alongamentoAntebraco = Alongamentos[10].exercicios.map((item) => item.nome)
-  const alongamentoGrandeDorsal = Alongamentos[11].exercicios.map((item) => item.nome)
-  const alongamentoRetoFemoral = Alongamentos[12].exercicios.map((item) => item.nome)
-  const alongamentoLinhaAnterior = Alongamentos[13].exercicios.map((item) => item.nome)
-  const alongamentoLinhaLateral = Alongamentos[14].exercicios.map((item) => item.nome)
-  const alongamentoLinhaPosterior = Alongamentos[15].exercicios.map((item) => item.nome)
-  const alongamentoParavertebrais = Alongamentos[16].exercicios.map((item) => item.nome)
-  const alongamentoTriceps = Alongamentos[17].exercicios.map((item) => item.nome)
-  const alongamentoDeltoide = Alongamentos[18].exercicios.map((item) => item.nome)
 
-  console.log(alongamentoDeltoide)
+  //const alongamentosAdutores = Alongamentos[2].exercicios.map((item) => item.nome)
+  //const alongamentoManguitoRotadores = Alongamentos[3].exercicios.map((item) => item.nome)
+  //const alongamentoAbdominalObliquo = Alongamentos[4].exercicios.map((item)=> item.nome)
+  // const alongamentoGluteoMaximo = Alongamentos[5].exercicios.map((item) => item.nome)
+  // const alongamentoGluteoMedio = Alongamentos[6].exercicios.map((item)=> item.nome)
+  //const alongamentoIsquiotibiais = Alongamentos[7].exercicios.map((item) => item.nome)
+  //const alongamentoPanturrilha = Alongamentos[8].exercicios.map((item)=>item.nome)
+  const alongamentoQuadriceps = Alongamentos[0].exercicios.map((item) => item.subnome)
+  const alongamentoCadeiaAnterior = Alongamentos[1].exercicios.map((item) => item.subnome)
+  const alongamentoCadeiaPosterior = Alongamentos[2].exercicios.map((item) => item.subnome)
+  const alongamentoParaPeitoral = Alongamentos[3].exercicios.map((item) => item.subnome)
+  const alongamentoFibularLongo = Alongamentos[4].exercicios.map((item) => item.subnome)
+  const alongamentosAdutores = Alongamentos[5].exercicios.map((item) => item.subnome)
+  const alongamentosManguitoRotadores = Alongamentos[6].exercicios.map((item) => item.subnome )
+  //const alongamentoAntebraco = Alongamentos[10].exercicios.map((item) => item.nome)
+  //const alongamentoGrandeDorsal = Alongamentos[11].exercicios.map((item) => item.nome)
+  // const alongamentoRetoFemoral = Alongamentos[12].exercicios.map((item) => item.nome)
+  // const alongamentoLinhaAnterior = Alongamentos[13].exercicios.map((item) => item.nome)
+  //const alongamentoLinhaLateral = Alongamentos[14].exercicios.map((item) => item.nome)
+  //const alongamentoLinhaPosterior = Alongamentos[15].exercicios.map((item) => item.nome)
+  //const alongamentoParavertebrais = Alongamentos[16].exercicios.map((item) => item.nome)
+  //const alongamentoTriceps = Alongamentos[17].exercicios.map((item) => item.nome)
+  //const alongamentoDeltoide = Alongamentos[18].exercicios.map((item) => item.nome)
+
+  //console.log(alongamentoDeltoide)
   return (
     <View>
       {carregandoDados ? (
@@ -141,7 +149,7 @@ export default ({ navigation, route }) => {
           <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Membros superiores:</Text>
 
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Peitoral:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Peitoral:</Text>
 
             <BotaoSelect
               selecionado={true}
@@ -155,7 +163,7 @@ export default ({ navigation, route }) => {
             />
           </View>
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Grande dorsal:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Grande dorsal:</Text>
 
             <BotaoSelect
               selecionado={true}
@@ -169,7 +177,7 @@ export default ({ navigation, route }) => {
             />
           </View>
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Bíceps:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Bíceps:</Text>
 
             <BotaoSelect
               selecionado={true}
@@ -183,7 +191,7 @@ export default ({ navigation, route }) => {
             />
           </View>
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Tríceps:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Tríceps:</Text>
             <BotaoSelect
               selecionado={true}
               titulo='Selecione um exercício'
@@ -196,7 +204,7 @@ export default ({ navigation, route }) => {
             />
           </View>
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Abdominais:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Abdominais:</Text>
 
             <BotaoSelect
               selecionado={true}
@@ -210,7 +218,7 @@ export default ({ navigation, route }) => {
             />
           </View>
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Deltóide:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Deltóide:</Text>
 
             <BotaoSelect
               selecionado={true}
@@ -224,7 +232,7 @@ export default ({ navigation, route }) => {
             />
           </View>
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Paravertebrais:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Paravertebrais:</Text>
 
             <BotaoSelect
               selecionado={true}
@@ -238,7 +246,7 @@ export default ({ navigation, route }) => {
             />
           </View>
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Antebraço:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Antebraço:</Text>
 
             <BotaoSelect
               selecionado={true}
@@ -252,7 +260,7 @@ export default ({ navigation, route }) => {
             />
           </View>
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Transverso abdominal:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Transverso abdominal:</Text>
 
             <BotaoSelect
               selecionado={true}
@@ -266,7 +274,7 @@ export default ({ navigation, route }) => {
             />
           </View>
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Trapézio:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Trapézio:</Text>
 
             <BotaoSelect
               selecionado={true}
@@ -280,7 +288,7 @@ export default ({ navigation, route }) => {
             />
           </View>
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Subescapular:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Subescapular:</Text>
 
             <BotaoSelect
               selecionado={true}
@@ -294,7 +302,7 @@ export default ({ navigation, route }) => {
             />
           </View>
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Manguito rotador:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Manguito rotador:</Text>
 
             <BotaoSelect
               selecionado={true}
@@ -308,7 +316,7 @@ export default ({ navigation, route }) => {
             />
           </View>
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Latissimo do dorso:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Latissimo do dorso:</Text>
 
             <BotaoSelect
               selecionado={true}
@@ -325,7 +333,7 @@ export default ({ navigation, route }) => {
           <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Membros inferiores:</Text>
 
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Multiarticular:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Multiarticular:</Text>
 
             <BotaoSelect
               selecionado={true}
@@ -339,7 +347,7 @@ export default ({ navigation, route }) => {
             />
           </View>
           <View style={{ marginBottom: '3%' }}>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, {marginVertical: '2%'}]}>Uniarticular:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Uniarticular:</Text>
 
             <BotaoSelect
               selecionado={true}
@@ -371,9 +379,109 @@ export default ({ navigation, route }) => {
             </View>
 
           </> :
-              tipo === 'alongamento' ? 
-           <ScrollView>
-           <View style={{ padding: 10 }}>
+            tipo === 'alongamento' ?
+              <ScrollView>
+                <View style={{ padding: 10 }}>
+                  <Text style={[estilo.textoCorSecundaria, estilo.tituloH427px, estilo.centralizado]}>Selecione um exercício</Text>
+
+                </View>
+                <View style={{ marginBottom: '3%' }}>
+                  <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Quadríceps:</Text>
+                  <BotaoSelect
+                    selecionado={true}
+                    titulo='Selecione um exercício'
+                    max={1}
+                    onChange={(value) =>
+                      handleSelecaoExercicio(value, 0, 'Alongamento')
+                    }
+                    options={alongamentoQuadriceps}
+                    select={'Quadríceps'}
+                  />
+                </View>
+
+
+                <View style={{ marginBottom: '3%' }}>
+                  <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Cadeia anterior:</Text>
+                  <BotaoSelect
+                    selecionado={true}
+                    titulo='Selecione um exercício'
+                    max={1}
+                    onChange={(value) =>
+                      handleSelecaoExercicio(value, 1, 'Alongamento')
+                    }
+                    options={alongamentoCadeiaAnterior}
+                    select={'Cadeia anterior'}
+                  />
+                </View>
+                <View style={{ marginBottom: '3%' }}>
+                  <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Cadeia posterior:</Text>
+                  <BotaoSelect
+                    selecionado={true}
+                    titulo='Selecione um exercício'
+                    max={1}
+                    onChange={(value) =>
+                      handleSelecaoExercicio(value, 2, 'Alongamento')
+                    }
+                    options={alongamentoCadeiaPosterior}
+                    select={'Cadeia posterior'}
+                  />
+                </View>
+                <View style={{ marginBottom: '3%' }}>
+                  <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Peitoral:</Text>
+                  <BotaoSelect
+                    selecionado={true}
+                    titulo='Selecione um exercício'
+                    max={1}
+                    onChange={(value) =>
+                      handleSelecaoExercicio(value, 3, 'Alongamento')
+                    }
+                    options={alongamentoParaPeitoral}
+                    select={'Peitoral'}
+                  />
+                </View>
+                <View style={{ marginBottom: '3%' }}>
+                  <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Fibular longo:</Text>
+                  <BotaoSelect
+                    selecionado={true}
+                    titulo='Selecione um exercício'
+                    max={1}
+                    onChange={(value) =>
+                      handleSelecaoExercicio(value, 4, 'Alongamento')
+                    }
+                    options={alongamentoFibularLongo}
+                    select={'Fibular longo'}
+                  />
+                </View>
+                <View style={{ marginBottom: '3%' }}>
+                  <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Adutores do quadril:</Text>
+                  <BotaoSelect
+                    selecionado={true}
+                    titulo='Selecione um exercício'
+                    max={1}
+                    onChange={(value) =>
+                      handleSelecaoExercicio(value, 5, 'Alongamento')
+                    }
+                    options={alongamentosAdutores}
+                    select={'Adutores do quadril'}
+                  />
+                </View>
+                <View style={{ marginBottom: '3%' }}>
+                  <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Manguito Rotadores:</Text>
+                  <BotaoSelect
+                    selecionado={true}
+                    titulo='Selecione um exercício'
+                    max={1}
+                    onChange={(value) =>
+                      handleSelecaoExercicio(value, 6, 'Alongamento')
+                    }
+                    options={alongamentosManguitoRotadores}
+                    select={'Manguito rotadores'}
+                  />
+                </View>
+
+                {/*
+                
+                           <View style={{ padding: 10 }}>
           <Text style={[estilo.textoCorSecundaria, estilo.tituloH427px, estilo.centralizado]}>Selecione um exercício</Text>
 
         </View>
@@ -386,7 +494,7 @@ export default ({ navigation, route }) => {
             onChange={(value) =>
               handleSelecaoExercicio(value,0, 'Alongamento')
             }
-            options={alongamentoCadeiaAnteirior}
+            options={alongamentoCadeiaAnterior}
             select={'Exercícios cadeia anterior'}
           />
         </View>
@@ -635,11 +743,11 @@ export default ({ navigation, route }) => {
           options={alongamentoDeltoide}
           select={'Exercícios deltóide'}
         />
-      </View>
+      </View>*/ }
 
-        </ScrollView> : null
+              </ScrollView> : null
 
-       
+
       )}
     </View>
   );

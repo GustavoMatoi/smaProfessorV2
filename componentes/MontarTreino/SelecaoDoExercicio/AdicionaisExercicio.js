@@ -28,6 +28,7 @@ export default ({ navigation, route }) => {
     const [posicaoDosJoelhosSelecionada, setPosicaoDosJoelhosSelecionada] = useState(-1)
     const [apoioDosPesSelecionado, setApoioDosPesSelecionado] = useState(-1)
 
+
     const [posicaoDosPesString, setPosicaoDosPesString] = useState('')
     const [quadrilString, setQuadrilString] = useState('')
     const [amplitudeString, setAmplitudeString] = useState('')
@@ -46,6 +47,9 @@ export default ({ navigation, route }) => {
     const [execucaoSelecionada, setExecucaoSelecionada] = useState(-1)
     const [execucaoString, setExecucaoString] = useState('')
 
+    const[sentidoDoMovimentoString, setSentidoDoMovimentoString] = useState('')
+    const[sentidoDoMovimentoSelecionado, setSentidoDoMovimentoSelecionado] = useState(-1)
+    
 
     console.log('index pt 3', index)
     const [imagem, setImagem] = useState('')
@@ -101,7 +105,9 @@ export default ({ navigation, route }) => {
                 setDataExercicio(exercicio || {});
 
                 if ("sentidoDoMovimento" in exercicio) {
+
                     setSentidoDoMovimento(Object.values(exercicio.sentidoDoMovimento));
+                    
                 }
 
                 if ("execucao" in exercicio) {
@@ -128,7 +134,7 @@ export default ({ navigation, route }) => {
         }
     })
 
-    const montarExercicio = (nome, variacao, implemento, postura, pegada, execucao, posicaoDosPes, posicaoDosJoelhos, quadril, amplitude, apoioDosPes) => {
+    const montarExercicio = (nome, variacao, implemento, postura, pegada, execucao, posicaoDosPes, posicaoDosJoelhos, quadril, amplitude, apoioDosPes, sentidoDoMovimento) => {
         let exercicioAux = nome;
         if (variacao) {
             exercicioAux += ` | ${variacao}`
@@ -158,7 +164,10 @@ export default ({ navigation, route }) => {
         if (apoioDosPes) {
             exercicioAux += ` | ${apoioDosPes}`
         }
-
+        if(sentidoDoMovimento){
+            exercicioAux += ` | ${sentidoDoMovimento}`
+        }
+        console.log(sentidoDoMovimento)
         setExercicioString(exercicioAux)
         route.params.receberExercicio(exercicioAux, imagem, index)
         navigation.navigate('Montar treino', { aluno: route.params.aluno })
@@ -195,6 +204,15 @@ export default ({ navigation, route }) => {
                                     options={implementosExercicio}
                                     onChangeSelect={(opt, i) => { setImplementoSelecionado(i); setImplementoString(opt) }}
                                     selected={implementoSelecionado}
+                                />
+                            </View>}
+                        {sentidoDoMovimento.length === 0 ? null :
+                            <View style={style.areaSelecao}>
+                                <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Sentido do movimento: </Text>
+                                <RadioBotao
+                                    options={sentidoDoMovimento}
+                                    onChangeSelect={(opt, i) => { setSentidoDoMovimentoSelecionado(i); setSentidoDoMovimentoString(opt) }}
+                                    selected={sentidoDoMovimentoSelecionado}
                                 />
                             </View>}
 
@@ -295,11 +313,11 @@ export default ({ navigation, route }) => {
                     </View>
                 )}
                 <View style={[estilo.centralizado, { width: '80%' }]}>
-                    <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Exercício: {nomeExercicioString[0].trim()} {posturaString} {implementoString} {variacaoString} {pegadaString} {execucaoString} {posicaoDosPesString} {quadrilString} {amplitudeString} {posicaoString} {posicaoDosJoelhosString} {apoioDosPesString}</Text>
+                    <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Exercício: {nomeExercicioString[0].trim()} {posturaString} {implementoString} {variacaoString} {pegadaString} {execucaoString} {posicaoDosPesString} {quadrilString} {amplitudeString} {posicaoString} {posicaoDosJoelhosString} {apoioDosPesString} {sentidoDoMovimentoString}</Text>
 
                 </View>
                 <View style={[{ marginVertical: '5%' }]}>
-                    <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => montarExercicio(nomeExercicioString[0].trim(), variacaoString, implementoString, posturaString, pegadaString, execucaoString, posicaoDosPesString, posicaoDosJoelhosString, quadrilString, amplitudeString, apoioDosPesString, imagem)}>
+                    <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => montarExercicio(nomeExercicioString[0].trim(), variacaoString, implementoString, posturaString, pegadaString, execucaoString, posicaoDosPesString, posicaoDosJoelhosString, quadrilString, amplitudeString, apoioDosPesString, sentidoDoMovimentoString)}>
                         <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>SALVAR EXERCÍCIO</Text>
                     </TouchableOpacity>
                 </View>

@@ -127,16 +127,16 @@ export default ({ route, navigation }) => {
   };
   const handleCadencia = (exercicio, cadencia) => {
     const updatedExercicios = listaDeExercicios.map((ex) => {
-        if (ex === exercicio) {
-          return { ...ex, cadencia };
-        }
-        return ex;
-      });
+      if (ex === exercicio) {
+        return { ...ex, cadencia };
+      }
+      return ex;
+    });
 
-      setListaDeExercicios(updatedExercicios);
-      setModalVisible(false);
+    setListaDeExercicios(updatedExercicios);
+    setModalVisible(false);
 
-    }
+  }
 
 
 
@@ -182,8 +182,8 @@ export default ({ route, navigation }) => {
         if (exercicio.series) {
           validarSeries = true
         }
-        if (exercicio.cadencia){
-          if(exercicio.cadencia.includes(':')){
+        if (exercicio.cadencia) {
+          if (exercicio.cadencia.includes(':')) {
 
             validarCadencia = true
           } else {
@@ -454,31 +454,31 @@ export default ({ route, navigation }) => {
                         <View style={[style.areaParametroMedio]}>
                           <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Cadência:</Text>
                           <TextInput
-  style={[style.inputTextoPequeno]}
-  placeholder="0:0"
-  maxLength={3}
-  keyboardType="numeric"
-  onChangeText={(text) => {
-    let textAux = '';
-    if (text.length === 1) {
-      textAux += text.charAt(0) + ":";
-    } else if (text.length === 2 && text.charAt(1) !== ":") {
-      textAux = text.charAt(0) + ":" + text.charAt(1);
-      handleCadencia(i, textAux);
-    } else if (text.length === 3 && text.charAt(1) === ':') {
-      textAux = text;
-      handleCadencia(i, textAux);
-    }
-    i.cadencia = textAux;
-  }}
-  onKeyPress={(e) => {
-    if (e.nativeEvent.key === 'Backspace') {
-      i.cadencia = ''; // Reset the entire cadencia to an empty string
-      handleCadencia(i, i.cadencia);
-    }
-  }}
-  value={i.cadencia ? i.cadencia : 0}
-/>
+                            style={[style.inputTextoPequeno]}
+                            placeholder="0:0"
+                            maxLength={3}
+                            keyboardType="numeric"
+                            onChangeText={(text) => {
+                              let textAux = '';
+                              if (text.length === 1) {
+                                textAux += text.charAt(0) + ":";
+                              } else if (text.length === 2 && text.charAt(1) !== ":") {
+                                textAux = text.charAt(0) + ":" + text.charAt(1);
+                                handleCadencia(i, textAux);
+                              } else if (text.length === 3 && text.charAt(1) === ':') {
+                                textAux = text;
+                                handleCadencia(i, textAux);
+                              }
+                              i.cadencia = textAux;
+                            }}
+                            onKeyPress={(e) => {
+                              if (e.nativeEvent.key === 'Backspace') {
+                                i.cadencia = ''; // Reset the entire cadencia to an empty string
+                                handleCadencia(i, i.cadencia);
+                              }
+                            }}
+                            value={i.cadencia ? i.cadencia : 0}
+                          />
 
                         </View>
                       </View>
@@ -553,7 +553,7 @@ export default ({ route, navigation }) => {
                       </View>)
                 }
                 <View style={style.botoesCrud}>
-                  <TouchableOpacity style={[estilo.botao, estilo.corSuccess, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]}  onPress={() => adicionarExercicioNaFicha(i, listaAux[index], index, i.tipo)}>
+                  <TouchableOpacity style={[estilo.botao, estilo.corSuccess, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => adicionarExercicioNaFicha(i, listaAux[index], index, i.tipo)}>
                     <AntDesign name="edit" size={16} color="white" />
                     <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>SALVAR</Text>
                   </TouchableOpacity>

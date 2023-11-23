@@ -1,18 +1,64 @@
 export default [
     {
-        grupoMuscular: 'Cadeia anterior',
+        grupoMuscular: 'Quadríceps',
         exercicios: [
             {
-                nome: 'Super-homem (Cadeia anterior)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/superHomemCadeiaAnterior.png?alt=media&token=87042812-515b-4d9d-90ba-39453e9f10ec&_gl=1*14ssnfa*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkxMTA2LjQ2LjAuMA..'
+                nome: 'Alongamento Quadríceps',
+                subnome: 'Em pé com o joelho apoiado no step ou banco',
+                imagem:  'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/quadricepsEmPeComoJoelhoApoiadoNoStepOuBanco.png?alt=media&token=9ba6e887-18f2-4ad6-9cc9-4c53c7c868e3'
             },
             {
-                nome: 'Ponte 4 apoios (Cadeia anterior)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/ponte4ApoiosCadeiaAnterior.png?alt=media&token=f42423be-fe92-4d48-a564-fa9b6245bbf4&_gl=1*aw1e72*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkxMTcwLjYwLjAuMA..'
+                nome: 'Alongamento Quadríceps',
+                subnome: 'Unilateral com o pé no espaldar',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/quadricepsUnilateralComOPeNoEspaldar.png?alt=media&token=25eeb9c8-8707-468c-b8f2-0662adf93e9f'
             },
             {
-                nome: 'Cadeia anterior',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaAnterior.png?alt=media&token=f3d37b9f-a203-4ba5-ab4c-620c23278a00&_gl=1*ljfc74*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkxMjMxLjYwLjAuMA..'
+                nome: 'Alongamento Quadríceps',
+                subnome: 'Unilateral, segurando o pé com as mãos',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/quadricepsUnilateralSegundandoOsPescomAsMaos.png?alt=media&token=a1c9b3e3-4f79-45f0-9ddf-d48a7295608a'
+            }
+        ]
+    },
+    {
+        grupoMuscular: 'Cadeia Anterior',
+        exercicios: [
+            {
+                nome: 'Alongamento Cadeia anterior',
+                subnome: 'Super-homem',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaAnteirorSuperHomem.png?alt=media&token=aee6f630-b753-4766-993d-906c30dbafbd'
+            },
+            {
+                nome: 'Alongamento Cadeia anterior',
+                subnome: 'Ponte 4 apoios',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaAnteriorPonte4Apoios.png?alt=media&token=5bc2e71e-77f4-439f-871d-308df52b48bf',
+                execucao: [' estático ', ' dinâmico ']
+            },
+            {
+                nome: 'Alongamento Cadeia anterior',
+                subnome: 'ajoelhado',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaAnteriorAjoelhado.png?alt=media&token=20cc7d89-948d-46ec-a726-051022a62f67',
+                execucao: [' estático ', ' dinâmico ']
+            },
+            {
+                nome: 'Alongamento Cadeia anterior no banco romano',
+                subnome: 'No banco romano',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaAnteriorNoBancoRomano.png?alt=media&token=e376e43f-a0ed-45e1-b16d-02f6ebbc7d48',
+            },
+            {
+                nome: 'Alongamento Cadeia anterior',
+                subnome: 'Deitado em decúbito dorsal sobre a bola',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaAnteriorDeitadoEmDecubitoDorsalSobreABola.png?alt=media&token=9a936ade-42ab-4c03-bbf5-0dbbf56024de'
+            },
+            {
+                nome: 'Alongamento Cobra',
+                subnome: 'Cobra',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaAnteriorCobra.png?alt=media&token=c7f827c4-45db-4c85-b47c-cd5b772bdfef',
+                execucao: [' estático ', ' dinâmico '],
+            },
+            {
+                nome: 'Alongamento cadeia anterior',
+                subnome: 'Arco',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaAnteriorArco.png?alt=media&token=d5210193-2cc6-47e3-803f-d9528c7c4123'
             }
         ]
     },
@@ -20,44 +66,106 @@ export default [
         grupoMuscular: 'Cadeia posterior',
         exercicios: [
             {
-                nome: 'Avião (Cadeia posterior)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/aviaoCadeiaPosterior.png?alt=media&token=c56a7958-7d7e-4bf2-9d05-e796f12f98dd&_gl=1*6y45r0*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkxMzUxLjYwLjAuMA..'
+                nome: 'Alongamento Avião',
+                subnome: 'Avião',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaPosteriorAviao.png?alt=media&token=1b8eba14-06c5-4857-b6aa-76944f0cc88d',
+                execucao: [' estático ', ' dinâmico ']
+            },
+            {
+                nome: 'Alongamento Cadeia posterior',
+                subnome: 'Sentado com as duas pernas estendidas',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaPosteriorSentadoComAsDuasPernasEstendidas.png?alt=media&token=8b7321d9-634b-4f7f-9c18-11f8a9b8aef3',
+                execucao: [' estático ', ' dinâmico ']
+            },
+            {
+                nome: 'Alongamento Cadeia posterior',
+                subnome: 'Sentado na bola com apenas uma das pernas estendida',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaPosteriorSentadoNaBolaComApenasUmaDasPernasEstendida.png?alt=media&token=4b938c7f-6da4-4872-ad7a-81afe062616b',
+                execucao: [' estático ', ' dinâmico ']
+            },
+            {
+                nome: 'Alongamento Cadeia posterior',
+                subnome: 'Em pé',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaPosteriorEmPe.png?alt=media&token=0f7d1bbb-4e73-4e65-9369-3d7ca14e2bbe',
+                execucao: [' estático ', ' dinâmico ']
+            },
+            {
+                nome: 'Alongamento Cadeia posterior espaldar',
+                subnome: 'Espaldar',
+                imagem: "https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaPosteriorEspaldar.png?alt=media&token=fc91a167-6d5f-4f71-8e28-5131494a136c"
+            },
+            {
+                nome: 'Alongamento Cadeia posterior',
+                subnome: 'Com o peso do corpo para trás',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaPosteriorComPesoDoCorpoParaTras.png?alt=media&token=16b62dfa-1a72-4966-ba67-0caddf287631'
             }
         ]
     },
     {
-        grupoMuscular: 'Adutores',
+        grupoMuscular: 'Peitoral',
+        exercicios: [{
+            nome: 'Alongamento para peitoral',
+            subnome: 'Alongamento para peitoral',
+            imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/alongamentoParaPeitoral.png?alt=media&token=4f401de3-bea5-41c3-8ba2-03cf25e12b47'
+        }]
+    },
+    {
+        grupoMuscular: 'Fibular longo',
         exercicios: [
             {
-                nome: 'Adutores',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/adutores.png?alt=media&token=caf8c0df-74a7-4350-9a4a-9e3ae8bf53d6&_gl=1*wvvvpy*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkyNzczLjYwLjAuMA..',
+                nome: 'Alongamento Fibular longo',
+                subnome: 'Ajoelhado',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/fibularLongo.png?alt=media&token=8d3e702d-6197-4947-893e-d443ad4c15c5'
+            }
+        ]
+    },
+    {
+        grupoMuscular: 'Adutores do Quadril',
+        exercicios: [
+            {
+                nome: 'Alongamento Adutores do quadril',
+                subnome: 'Em pé, apoio bipodal com rotação do quadril',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/adutoresDoQaudrilEmPeApoioBipodalComRotacaoDoQuadril.png?alt=media&token=582955a9-0dca-478a-a7b1-b9165cf5f8e1',
+                execucao: [' estático ', ' dinâmico ']
             },
             {
-                nome: 'Adutores do quadril (em pé unilateral)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/adutoresDoQuadrilEmPeUnilateral.png?alt=media&token=1b3812c4-f21a-49ce-a07f-2160fd96e12b&_gl=1*2e2yt8*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkzMDExLjYwLjAuMA..',
+                nome: 'Alongamento Adutores do quadril',
+                subnome: 'Em pé, apoio bipodal',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/adutoresDoQuadrilEmPeApoioBipodal.png?alt=media&token=b6b0d2f6-0f6c-436b-b7c4-18411c854f1f'
             },
             {
-                nome: 'Adutores do quadril (sentado)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/adutoresDoQuadrilSentado.png?alt=media&token=dc86f6e1-37e9-4e52-bb7e-049bd246c427&_gl=1*my5j63*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkzMDMyLjM5LjAuMA..',
+                nome: 'Alongamento Adutores do quadril',
+                subnome: 'Em pé unilateral',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/adutoresDoQuadrilEmPeUnilateral.png?alt=media&token=913c1b19-5401-4da4-b0e0-5e0c2168950f',
+                execucao: [' estático ', ' dinâmico ']
             },
             {
-                nome: 'Adutores do quadril (sentado com as mãos apoiadas)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/adutoresDoQuadrilSentadoComAsMaosApoiadas.png?alt=media&token=08d130d8-ddad-4f61-9de2-208447d9c28c&_gl=1*qepzij*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkzMDc4LjYwLjAuMA..',
+                nome: 'Alongamento Adutores do quadril',
+                subnome: 'sentado',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/adutoresDoQuadrilSentado.png?alt=media&token=09c897e9-029e-48ca-bf9c-4dc68c324478',
+                execucao: [' estático ', ' dinâmico ']
             },
             {
-                nome: 'Adutores (unilateral no espaldar)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/adutoresUnilateralNoEspaldar.png?alt=media&token=2239913e-c4d8-440a-a09b-0f405f51ad7d&_gl=1*1ptv16u*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkzMTIwLjE4LjAuMA..',
+                nome: 'Alongamento Adutores do quadril',
+                subnome: 'Unilateral no espaldar',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/adutoresDoQuadrilUnilateralNoEspaldar.png?alt=media&token=a97b3783-3327-458e-b677-fdc0ff472f34'
             },
-            
+            {
+                nome: 'Alongamento Adutores do quadril',
+                subnome: 'Sentado com pernas estendidas',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/adutoresDoQuadrilSentadoCOmPernasEstendidas.png?alt=media&token=dc852f18-be1f-47fb-9572-a56420c2335a'
+            }
         ]
     },
     {
         grupoMuscular: 'Manguito rotadores',
         exercicios: [
             {
-                nome: 'Rotação de ombros (Manguito rotadores)',
+                nome: 'Manguito rotadores',
+                subnome: 'Rotação de ombros',
                 sentidoDoMovimento: [' horário ', ' anti-horário '],
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/rotacaoDeOmbrosManguitoRotadores.png?alt=media&token=ba1eddb4-ed03-46d2-8ee8-80670ee88b51&_gl=1*14m9a45*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkzMjA2LjYwLjAuMA..', 
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/manguitoRotadoresRotacaoDeOmbros.png?alt=media&token=af71b56b-2ea7-4e85-9199-cd27e8a2881c'
             }
         ]
     },
@@ -65,9 +173,10 @@ export default [
         grupoMuscular: 'Abdominal oblíquo',
         exercicios: [
             {
-                nome: 'Rotação de tronco (Abdominal oblíquo)',
+                nome: 'Abdominal oblíquo',
+                subnome: 'Rotação de tronco',
                 execucao: [' estático ', ' dinâmico '],
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/rotacaoDeTroncoAbdominalObliquo.png?alt=media&token=ce67bcb6-854b-4a28-bb96-38a67ecbafab&_gl=1*13dp32m*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkzMjg1LjU4LjAuMA..',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/abdominalObliquo.png?alt=media&token=2faa5b4b-e645-4e73-8229-31734b35c26f'
             }
         ]
     },
@@ -75,16 +184,52 @@ export default [
         grupoMuscular: 'Glúteo máximo',
         exercicios: [
             {
-                nome: 'Glúteo máximo (em pé)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/gluteoMaximo.png?alt=media&token=932e31d4-d501-4632-965b-2038e06c84fd&_gl=1*1uklnp*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkzMzgyLjYwLjAuMA..',
+                nome: 'Alongamento Glúteo máximo',
+                subnome: 'Em pé',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/gluteoMaximoEmPe.png?alt=media&token=e0ad1828-ad5e-43b3-b26b-3ac1105e76d8'
             },
             {
-                nome: 'Glúteo máximo, reto femoral, e iliopsoas',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/gluteoMaximoRetoFemoralEiliopsoas.png?alt=media&token=ed6f878a-52c3-4dcd-9dcd-d8c01302df73&_gl=1*5x8s60*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkzNDQ3LjYwLjAuMA..',
+                nome: 'Alongamento Isquiotibiais e glúteo máximo',
+                subnome: 'Deitado unilateral',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/isquiotibiaisEGluteoMaximoDeitadoUnilateral.png?alt=media&token=4a25edbc-07a7-4ed1-954e-1b6b14887e1d'
             },
             {
-                nome: 'Glúteo máximo (deitado)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/gluteoMaximoDeitado.png?alt=media&token=c7233653-c130-423b-b3b6-64027c453734&_gl=1*88iedk*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkzNDk0LjEzLjAuMA..',
+                nome: 'Alongamento Isquiotibiais e glúteo máximo',
+                subnome: 'Sentado bilateral',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/isquiotibiaisEGluteoMaximoSentadoBilateral.png?alt=media&token=86365042-c81c-4d2c-a6c6-483cd68dfb96'
+            },
+            {
+                nome: 'Alongamento Isquiotibiais e glúteo máximo',
+                subnome: 'Sentado unilateral',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/isquiotibiaisEGluteoMaximoSentadoUnilateral.png?alt=media&token=bd1f7f46-92a4-46b6-89d8-bb8d12152e50'
+            },
+            {
+                nome: 'Alongamento Isquiotibiais e glúteo máximo',
+                subnome: 'Em pé bilateral',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/isquiotibiaisEGluteoMaximoEmPeBilateral.png?alt=media&token=d9594baf-ab6b-4d86-a107-a18c5c0a6f85'
+            },
+            {
+                nome: 'Alongamento panturrilha, isquiotibiais e glúteo máximo',
+                subnome: 'Sentado unilateral',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilhaIsquiotibiaisEGluteoMaximoSentadoUnilateral.png?alt=media&token=86914eba-09f1-4b84-baca-474c24cde1fb',
+            },
+            {
+                nome: 'Alongamento glúteo máximo, reto femoral e iliopsoas',
+                subnome: 'em pé unilateral',
+                execucao: [' estático ', ' dinâmico '],
+                nome: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/gluteoMaximoRetoFemoralEIliopsoasEmPeUnilateral.png?alt=media&token=d58af973-343f-4058-8f8f-c0e4e66aa067'
+            },
+            {
+                nome: 'Alongamento glúteo máximo',
+                subnome: 'Deitado',
+                execucao: [' estático ', ' dinâmico '],
+                nome: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/gluteoMaximoDeitado.png?alt=media&token=008e3a68-bc79-41d2-bff1-d5cb4b14944e'
             }
         ]
     },
@@ -92,114 +237,92 @@ export default [
         grupoMuscular: 'Glúteo médio',
         exercicios: [
             {
-                nome: 'Rotadores externos do quadril (Glúteo médio)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/rotadoresExternosDoQuadril.png?alt=media&token=3d586964-bd16-4205-9bb8-35162b2c53b8&_gl=1*1acxye6*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkzNTkxLjYwLjAuMA..'
-            },
-        ]
-    },
-    {
-        grupoMuscular: 'Isquiotibiais',
-        exercicios: [
-            {
-                nome: 'Isquiotibiais e glúteo máximo (deitado unilateral)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/isquiotibiaisEGluteoMaximoDeitadoUnilateralComElevacaoDePernas.png?alt=media&token=09806f4c-2fda-45ed-a13e-9dee6b1fb991&_gl=1*ekeuor*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkzNjgyLjYwLjAuMA..'
-            },
-            {
-               nome: 'Isquiotibiais e glúteo máximo (sentado)',
-               imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/isquiotibiaisEGluteoMaximoSentadoComAsPernasEstendidas.png?alt=media&token=651d1bae-eaf2-4d0e-b4b3-370b38c4b332&_gl=1*1yfve3p*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkzODU4LjE5LjAuMA..' 
-            },
-            {
-                nome: 'squiotibiais e glúteo máximo (em pé)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/isquiotibiaisEGluteoMaximoEmPeComAsPernasExtendidas.png?alt=media&token=e2fc65ab-2a63-4a4f-a30e-0dcea6970272&_gl=1*dtkft8*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkzODEyLjEuMC4w'
+                nome: 'Alongamento glúteo médio',
+                subnome: 'Rotadores externos do quadril',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/gluteoMedioRotadoresExternosDoQuadril.png?alt=media&token=961b3670-a628-4dd9-8bb5-0db3dcd13ef9'
             }
         ]
     },
     {
         grupoMuscular: 'Panturrilha',
-        exercicios: [
+        exercicios: [ 
             {
-                nome: 'Panturrilha ( apenas com calcanhar no step)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilha.png?alt=media&token=40732984-e6ca-4928-a9cd-3b261a98ad86&_gl=1*dab9cg*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4NzkzOTcwLjU1LjAuMA..',
+                nome: 'Alongamento panturrilha',
+                subnome: 'Calcanhar apoiado a frente do step',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilhaCalcanhaApoiadoAFrenteDoStep.png?alt=media&token=4c89bf13-1f8c-4e14-9560-14c9c3518b6e'
+            },
+            {
+                nome: 'Alongamento panturrilha, isquiotibiais e glúteo máximo',
+                subnome: 'Sentado unilateral',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilhaIsquiotibiaisEGluteoMaximoSentadoUnilateral.png?alt=media&token=86914eba-09f1-4b84-baca-474c24cde1fb'
+            },
+            {
+                nome: 'Alongamento panturrilha',
+                subnome: 'Com calcanhar sobre o step',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilhaComCalcanharSobreOStep.png?alt=media&token=9968819f-a237-43d2-8c43-2d743b56c390'
+            },
+            {
+                nome: 'Alongamento panturrilha',
+                subnome: 'unilateral com apoio',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilhaUnilateralComApoio.png?alt=media&token=0db629d2-dfba-45c2-9285-a227fa15fdf6'
 
             },
             {
-                nome: 'Panturrilha, isquiotibiais e glúteo máximo',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilhaIsquiotibiaisEGluteoMaximo.png?alt=media&token=0c1e8590-3bd3-4759-8d90-8c6f08c70404&_gl=1*n3m4sf*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0MTA0LjYwLjAuMA..'
-            },
-            {
-                nome: 'Panturrilha (com calcanhar sobre o step)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilhaComCalcanharSobreStep.png?alt=media&token=c1bd5cdc-773b-4b1f-811c-31c5b8849827&_gl=1*f7pab4*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0MTQ3LjE3LjAuMA..'
-            },
-            {
-                nome: 'Panturrilha (com as pontas dos dedos no step)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilhaComAPontaDosDedosNoStep.png?alt=media&token=4178d378-dd4e-43b8-a2d2-b29354fbed1c&_gl=1*1oe6ko8*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0MTg0LjYwLjAuMA..'
+                nome: 'Alongamento panturrilha',
+                subnome: 'Com as pontas dos dedos no step',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilhaComAsPontasDosDedosNoStep.png?alt=media&token=b8fdab92-7972-4881-aa46-4107f014a82b'
             }
         ]
     },
     {
-        grupoMuscular: 'quadríceps',
+        grupoMuscular: 'Antebraço',
         exercicios: [
             {
-                nome: 'Quadríceps (em pé com o joelho apoiado no step ou banco',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/quadriceps.png?alt=media&token=04366a00-7aa6-43d2-96bd-aa13e5b7b5eb&_gl=1*1c70hnv*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0MjkyLjYwLjAuMA..'
+                nome: 'Alongamento antebraço',
+                subnome: 'na parede',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/antebracoNaParede.png?alt=media&token=7b9460cb-d78f-4538-b183-44b12cf7691b'
+                
             },
             {
-                nome: 'Quadríceps (com o pé no espaldar)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/quadricepsComoPeNoEspaldar.png?alt=media&token=71a275f2-b4ad-4eef-8920-0263249a3a93&_gl=1*1oev17l*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0MzIwLjMyLjAuMA..'
+                nome: 'Alongamento antebraço',
+                subnome: 'em pé unilateral com a mão apontando para baixo',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/antebracoEmPeUnilateralComMaoApontandoParaBaixo.png?alt=media&token=455fff7d-02f3-4505-acf8-8c398dc2048b'
             },
             {
-                nome: 'Quadríceps (segurando o pé com as mãos)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/quadricepsSegurandoOPeComAsMaos.png?alt=media&token=dfd847a0-4a95-498e-85cb-c42574b7e0f8&_gl=1*gw7s19*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0MzM0LjE4LjAuMA..'
-            },
+                nome: 'Alongamento antebraço',
+                subnome: 'em pé unilateral com a mão apontando para cima',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/antebracoEmPeUnilateralComAMaoApontadaParaCima.png?alt=media&token=1e1bcd02-deea-43b1-8239-7168ffdaf48c'
+            }
         ]
     },
     {
-        grupoMuscular: 'antebraço',
+        grupoMuscular: 'Cadeia lateral',
         exercicios: [
             {
-                nome: 'Antebraço (no step mais avançado)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/antebracoNoStepMaisAvancado.png?alt=media&token=16085631-1f4e-47bd-a51c-867abc263821&_gl=1*zdqsh6*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0NDQyLjU0LjAuMA..'
+                nome: 'Alongamento cadeia lateral',
+                subnome: 'no step',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaLateralStep.png?alt=media&token=bd90349d-8985-4c21-8951-1c4e771c6fab'
             },
             {
-                nome: 'Antebraço (no step)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/antebracoNoStep.png?alt=media&token=f1c663a4-920f-42f1-bbb5-201e1cedad23&_gl=1*161t7pc*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0NDgzLjEzLjAuMA..',
+                nome: 'Alongamento cadeia lateral',
+                subnome: 'espaldar',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaLateralEspaldar.png?alt=media&token=6cd3e691-1e2b-41a0-8208-62472eeb7be8'
             },
             {
-                nome: 'Antebraço (em pé unilateral com mão apontando para baixo)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/antebracoEmPeUnilateralComMaoApontandoParaBaixo.png?alt=media&token=87dabc95-b02e-49dd-9f29-e824b1b0e096&_gl=1*iiiwnj*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0NTI3LjM5LjAuMA..'
+                nome: 'Alongamento cadeia lateral',
+                subnome: 'banco romano',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaLateralBancoRomano.png?alt=media&token=6ffdcc92-23b0-47af-ac33-21edd71e40b5'
             },
             {
-                nome: 'Antebraço (em pé unilateral com mão apontando para cima)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/antebracoEmPeUnilateralComMaoApontandoPara%20cima.png?alt=media&token=2eb651af-37ff-4c5e-92c8-200a87f64ade&_gl=1*9i2glc*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0NTYwLjYuMC4w'
-            },
-        ]
-    },
-    {
-        grupoMuscular: 'Grande dorsal',
-        exercicios: [
-            {
-                nome: 'Grande dorsal, tensor da fáscia lata e quadrado lombar (linha lateral)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/grandeDorsalTensorDaFasciaLataEQuadradoLombarLinhaLateral.png?alt=media&token=6607552b-a9c0-433e-ab37-577da0cb2649&_gl=1*1bftchj*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0NjI4LjYwLjAuMA..'
-            },
-            {
-                nome: 'Grande dorsal , deltóide e isquiotibiais (com o peso do corpo para baixo)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/grandeDorsalDeltoideEIsquiotibiaisComOPesoDoCorpoParaBaixo.png?alt=media&token=83961b04-14ac-434a-aea5-634d2469ed13&_gl=1*171nib7*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0NzEyLjYwLjAuMA..'
-            },
-            {
-                nome: 'Grande dorsal (em pé inclinando para frente)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/grandeDorsalEmPeInclinandoParaFrente.png?alt=media&token=3c6b8723-1403-4319-9430-a660c669c47f&_gl=1*19rnnas*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0NzU1LjE3LjAuMA..'
-            },
-            {
-                nome: 'Grande dorsal (sentado inclinando para baixo)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/grandeDorsalSentadoInclinandoParaBaixo.png?alt=media&token=5c8303ca-db23-4719-b150-89f1c2e91947&_gl=1*15f8n3o*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0ODA5LjYwLjAuMA..'
-            },
-            {
-                nome: 'Grande dorsal (sentado de costas para o espaldar resistindo a gravidade)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/grandeDorsalSentadoDeCostasParaOEspaldarResistindoAGravidade.png?alt=media&token=015e88ea-c914-4c18-b509-5dfc3ece8212&_gl=1*70n1t5*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0ODUyLjE3LjAuMA..',
-            },
-            {
-                nome: 'Grande dorsal , deltóide e isquiotibiais (com o peso do corpo para trás)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/grandeDorsalDeltoideEIsquiotibiaisComOPesoDoCorpoParatras.png?alt=media&token=4c18be64-324e-429e-962f-5dca9adf228d&_gl=1*56kdyz*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk0ODk4LjYwLjAuMA..'
+                nome: 'Alongamento cadeia lateral',
+                subnome: 'na bola',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/cadeiaLateralNaBola.png?alt=media&token=0b862379-3d22-4754-bc34-648c2761f51b'
             }
         ]
     },
@@ -207,52 +330,21 @@ export default [
         grupoMuscular: 'Reto femoral',
         exercicios: [
             {
-                nome: 'Reto femoral e iliopsoas (deitado com os pés sobre a bola)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/retoFemoral%20IliopsoasDeitadoComOsPesSobreA%20Bola.png?alt=media&token=fc61b6a7-0974-4320-b3e2-a662e46fc21a&_gl=1*12zghgc*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1MjI3LjYwLjAuMA..',
+                nome: 'Alongamento glúteo máximo, reto femoral e iliopsoas',
+                subnome: 'Em pé, unilateral',
+                execucao: [' estático ', ' dinâmico'],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/gluteoMaximoRetoFemoralEIliopsoasEmPeUnilateral.png?alt=media&token=d58af973-343f-4058-8f8f-c0e4e66aa067'
             },
             {
-                nome: '(Reto femoral e iliopsoas) (sentado sobre a bola, unilateral)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/retoFemoralEIliopsoasSentadoSobreABolaUnilateral.png?alt=media&token=b9d51d67-1404-43ed-84fa-af19c5630ef5&_gl=1*qhdy25*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1MjY5LjE4LjAuMA..'
-            },
-
-        ]
-    },
-    {
-        grupoMuscular: 'Linha anterior',
-        exercicios: [
-            {
-                nome: 'Linha anterior (deitado em decúbito dorsal sobre a bola)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/linhaAnteriorDeitadoEmDecubitoDorsalSobreABola.png?alt=media&token=12bd0a1c-297c-4dde-80c8-d03e64178346&_gl=1*1vjot9y*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1MzMyLjYwLjAuMA..'
+                nome: 'Alongamento Reto femoral e iliopsoas',
+                subnome: 'Deitado com os pés sobre a bola',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/retoFemoralEIliopsoasDeitadoComOsPesSobreABol.png?alt=media&token=da8634a9-0262-4061-bb74-50d8b4170048'
             },
             {
-                nome: 'Linha anterior (deitado em decúbito ventral)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/linhaAnteriorDeitadoEmDecubitoVentral.png?alt=media&token=caadb663-e2c5-49b4-9a8a-0d4c89ae5694&_gl=1*1bfbuwa*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1NDExLjYwLjAuMA..'
-            }
-        ]
-    },
-    {
-        grupoMuscular: 'Linha lateral',
-        exercicios: [
-            {
-                nome: 'linha lateral',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/linhaLateral.png?alt=media&token=00354129-9256-4c68-a1a2-07f7112da83c&_gl=1*k5hzc2*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1NTA5LjYwLjAuMA..'
-            }
-        ]
-    },
-    {
-        grupoMuscular: 'Linha posterior',
-        exercicios: [
-            {
-                nome: 'Linha posterior (sentado com as duas pernas estendidas)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/linhaPosteriorSentadoComAsDuasPernasEstendidas.png?alt=media&token=b487c775-e385-449b-b1f6-4699ecfdbf45&_gl=1*dsvj5j*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1NTY4LjEuMC4w'
-            },
-            {
-                nome: 'Linha posterior (sentado com apenas uma das pernas estendida)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/linhaPosteriorSentadoComApenas%20UmaDasPernas%20Estendida.png?alt=media&token=dba24066-d963-4d6e-bf91-dc10c5ba8afc&_gl=1*vb6443*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1NjEzLjE3LjAuMA..'
-            },
-            {
-                nome: 'Linha posterior (em pé)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/linhaPosteriorEm%20Pe.png?alt=media&token=defa1778-647c-46d6-acbc-4a39818bda47&_gl=1*1wbrqz6*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1NjQ4LjYwLjAuMA..'
+                nome: 'Alongamento reto femoral e iliopsoas',
+                subnome: 'Sentado sobre a bola, unilateral',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/retoFemoralEIliopsoasSentadoSobreABolaUnilateral.png?alt=media&token=c6161093-6140-460b-a695-b2c14b51b2c3'
             }
         ]
     },
@@ -260,35 +352,146 @@ export default [
         grupoMuscular: 'Paravertebrais',
         exercicios: [
             {
-                nome: 'Paravertebrais (sentado sobre a bola)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/ParavertebraisSentadoSobreABola).png?alt=media&token=c3120564-3c05-4132-8908-6fc7f8a04382&_gl=1*17kljza*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1NzQyLjYwLjAuMA..'
+                nome: 'Alongamento paravertebrais',
+                subnome: 'sentado sobre a bola',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/paravertebraisSentadoSobreABola.png?alt=media&token=79c1eade-3d87-45d8-8eb7-760c70726fc1'
+
             },
             {
-                nome: 'Paravertebrais (sentado apoiando as mãos na bola)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/ParavertebraisSentadoApoiandoAsMaosNaBola.png?alt=media&token=53254bc3-e249-4928-83a0-b0094d42a7af&_gl=1*hayymv*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1Nzc2LjI2LjAuMA..'
+                nome: 'Alongamento paravertebrais',
+                subnome: 'Sentado apoiando as mãos na bola',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/paravertebraisSentadoApioandoAsMaosNaBola.png?alt=media&token=84ba1dd1-539f-4f20-8788-4d37adc6dc9a'
             }
         ]
     },
     {
-        grupoMuscular: 'tríceps',
+        grupoMuscular: 'Tríceps',
         exercicios: [
             {
-                nome: 'Tríceps',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/triceps.png?alt=media&token=5996a929-9cc3-46a3-a19b-bf1c9fd14853&_gl=1*1gq7jl6*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1ODg2LjYwLjAuMA..'
+                nome: 'Alongamento tríceps',
+                subnome: 'Em pé, unilateral',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/triceps.png?alt=media&token=461790a0-ad9a-4372-8bc7-ade1d44a2c8d'
             }
         ]
     },
     {
-        grupoMuscular: 'deltóide',
+        grupoMuscular: 'Deltóide',
         exercicios: [
             {
-                nome: 'Deltóide (livre)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/deltoideLivre.png?alt=media&token=0cd7d32d-710a-4ded-9446-9b9795a13661&_gl=1*y1o6kz*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1OTUwLjYwLjAuMA..'
+                nome: 'Alongamento deltóide',
+                subnome: 'Em pé, livre',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/deltoideEmPeLivre.png?alt=media&token=65fbc1f0-9800-4185-b38f-d3ab248c2e3e'
+
             },
             {
-                nome: 'Deltóide (no espaldar)',
-                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/deltoideNoEspaldar.png?alt=media&token=2e715a4f-f0de-48c2-ab2d-22a969231969&_gl=1*1xy34kg*_ga*MTA4NzYyNTMwLjE2ODIwNDE5MjA.*_ga_CW55HF8NVT*MTY5ODc5MTA5Mi4xNzQuMS4xNjk4Nzk1OTg0LjI2LjAuMA..'
+                nome: 'Alongamento deltóide',
+                subnome: 'No espaldar',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/deltoideNoEspaldar.png?alt=media&token=0ef506f6-78aa-4ce5-b865-db3a4ddf10ba'
+
+            },
+            {
+                nome: 'Alongamento grande dorsal, deltóide e isquiotibiais',
+                subnome: 'Com o peso do corpo para baixo',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/grandeDorsalDeltoideEIsquiotibiaisComOPesoDoCorpoParaBaixo.png?alt=media&token=52618efa-86e6-4e62-865a-724437af5698'
+            }
+        ]
+    },
+    {
+        grupoMuscular: 'Grande dorsal',
+        exercicios: [
+            {
+                nome: 'Alongamento Grande dorsal',
+                subnome: 'Sentado inclinado para baixo',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/grandeDorsalSentadoInclinandoParaBaixo.png?alt=media&token=64c5acb9-8b2c-4782-894c-9c2bdeeb2875'
+            },
+            {
+                nome: 'Alongamento grande dorsal, deltóide e isquiotibiais',
+                subnome: 'Com o peso do corpo para baixo',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/grandeDorsalDeltoideEIsquiotibiaisComOPesoDoCorpoParaBaixo.png?alt=media&token=52618efa-86e6-4e62-865a-724437af5698'
+            },
+            {
+                nome: 'Alongamento grande dorsal',
+                subnome: 'sentado de costas para o espaldar resistindo a gravidade',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/grandeDorsalSentadoDeCostasParaOEspaldarResistindoAGravidade.png?alt=media&token=c4aed643-7de2-40da-9ad5-a0729929e613'
+
+            },
+            {
+                nome: 'Alongamento grande dorsal',
+                subnome: 'Pendurado no espaldar',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/grandeDorsalPenduradoNoEspaldar.png?alt=media&token=857a7812-04ec-4b25-9fd8-111489ba9ff9'
+            }
+
+        ]
+    },
+    {
+        grupoMuscular: 'Isquiotibiais',
+        exercicios: [
+            {
+                nome: 'Alongamento isquiotibiais e glúteo máximo',
+                subnome: 'deitaod unilateral',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/isquiotibiaisEGluteoMaximoDeitadoUnilateral.png?alt=media&token=4a25edbc-07a7-4ed1-954e-1b6b14887e1d'
+            },
+            {
+                nome: 'Alongamento Isquiotibiais e glúteo máximo',
+                subnome: 'Sentado, bilateral',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/isquiotibiaisEGluteoMaximoSentadoBilateral.png?alt=media&token=86365042-c81c-4d2c-a6c6-483cd68dfb96'
+            },
+            {
+                nome: 'Alongamento isquiotibiais e glúteo máximo',
+                subnome: 'sentado, unilateral',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/isquiotibiaisEGluteoMaximoSentadoUnilateral.png?alt=media&token=bd1f7f46-92a4-46b6-89d8-bb8d12152e50'
+            },
+            {
+                nome: 'Alongamento isquiotibiais e glúteo máximo',
+                subnome: 'em pé, bilateral',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/isquiotibiaisEGluteoMaximoEmPeBilateral.png?alt=media&token=d9594baf-ab6b-4d86-a107-a18c5c0a6f85'
+            },
+            {
+                nome: 'Alongamento panturrilha, isquiotibiais e glúteo máximo',
+                subnome: 'Sentado unilateral',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/panturrilhaIsquiotibiaisEGluteoMaximoSentadoUnilateral.png?alt=media&token=86914eba-09f1-4b84-baca-474c24cde1fb'
+            },
+            {
+                nome: 'Alongamento grande dorsal, deltóide e isquiotibiais',
+                subnome: 'Com o peso do corpo para baixo',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/grandeDorsalDeltoideEIsquiotibiaisComOPesoDoCorpoParaBaixo.png?alt=media&token=52618efa-86e6-4e62-865a-724437af5698'
+            }
+        ]
+    },
+    {
+        grupoMuscular: 'Músculos do pescoço',
+        exercicios: [
+            {
+                nome: 'Alongamento músculos do pescoço',
+                subnome: 'Flexores do pescoço',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/musculosDoPescocoFlexoresDoPescoco.png?alt=media&token=647ed5c6-7d7d-4914-83e0-bf4a52ebec06'
+            },
+            {
+                nome: 'Alongamento músculos do pescoço',
+                subnome: 'Extensores do pescoço',
+                execucao: [' estático ', ' dinâmico '],
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/musculosDoPescocoExtensoresDoPescoco.png?alt=media&token=92f1fd54-555a-466f-929a-335e3eb7aa08'
+            },
+            {
+                nome: 'Alongamento músculos do pescoço',
+                subnome: 'Inclinadores do pescoço',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/musculosDoPescocoInclinadoresDoPescoco.png?alt=media&token=cc9093ad-04fe-4fbd-89cf-f710118f9cb5'
+            },
+            {
+                nome: 'Alongamento músculos do pescoço',
+                subnome: 'Esternocleidomastoideo',
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/musculosDoPescocoEsternocleidomastoideo.png?alt=media&token=b19a9d7b-ab96-4338-89cf-479d594fc34d'
             }
         ]
     }
+
 ]

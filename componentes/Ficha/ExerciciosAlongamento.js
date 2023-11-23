@@ -14,7 +14,7 @@ export default props => {
                 source={{uri: props.imagem || ''}}>
 
                 </Image>
-                <Text style={estilo.textoSmall12px}>{props.nomeDoExercicio || "Exercício Alongamento"}</Text>
+                <Text style={[estilo.textoSmall12px, style.nomeEx]}>{props.nomeDoExercicio || "Exercício Alongamento"}</Text>
             </View>
             
             <View style={[style.parametroGrande,estilo.corLight]}>
@@ -43,6 +43,9 @@ const style = StyleSheet.create({
         justifyContent: 'space-between',
         marginTop: '8%'
 
+    },
+    nomeEx: {
+        width: '70%'
     },
     nomeDoExercicio: {
         width: '50%',
