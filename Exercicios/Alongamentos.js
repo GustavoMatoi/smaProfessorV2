@@ -375,7 +375,7 @@ export default [
                 imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/triceps.png?alt=media&token=461790a0-ad9a-4372-8bc7-ade1d44a2c8d'
             }
         ]
-    },
+    }, 
     {
         grupoMuscular: 'Deltóide',
         exercicios: [
@@ -474,7 +474,7 @@ export default [
                 subnome: 'Flexores do pescoço',
                 execucao: [' estático ', ' dinâmico '],
                 imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/musculosDoPescocoFlexoresDoPescoco.png?alt=media&token=647ed5c6-7d7d-4914-83e0-bf4a52ebec06'
-            },
+            }, 
             {
                 nome: 'Alongamento músculos do pescoço',
                 subnome: 'Extensores do pescoço',
@@ -490,8 +490,7 @@ export default [
                 nome: 'Alongamento músculos do pescoço',
                 subnome: 'Esternocleidomastoideo',
                 imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/musculosDoPescocoEsternocleidomastoideo.png?alt=media&token=b19a9d7b-ab96-4338-89cf-479d594fc34d'
-            }
+            }] }] /*
         ]
     }
-
-]
+] */
