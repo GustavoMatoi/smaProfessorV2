@@ -4,7 +4,7 @@ import estilo from "../../estilo"
 import { doc, setDoc, collection, getDocs, query, where, addDoc, getFirestore, getDoc } from "firebase/firestore";
 import { firebase } from "../../configuracoes/firebaseconfig/config"
 import { Exercicio } from "../../../classes/Exercicio"
-import { professorLogado } from "../../Home"
+import { professorLogado } from "../../LoginScreen"
 import { Entypo } from '@expo/vector-icons';
 import Spinner from "react-native-loading-spinner-overlay";
 import NetInfo from "@react-native-community/netinfo"

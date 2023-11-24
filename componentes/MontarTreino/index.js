@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef, cloneElement } from "react"
 import { Text, View, StyleSheet, TextInput, ScrollView, TouchableOpacity, Button, Alert } from "react-native"
 import estilo from "../estilo"
 import { useFonts } from 'expo-font'
-import QuadradoExercicio from "./QuadradoExercicio"
-import BotaoAddExercicio from "./BotaoAddExercicio"
 import { AntDesign } from '@expo/vector-icons';
-import { professorLogado } from "../Home"
+import { professorLogado } from "../LoginScreen"
 import { Entypo } from '@expo/vector-icons';
 import Modal from "react-native-modal";
 import BotaoSelect from "../BotaoSelect"
 import { TextInputMasked } from "react-native-masked-text"
+import NetInfo from "@react-native-community/netinfo"
+
 export default ({ route, navigation }) => {
   const aluno = route.params.aluno
   const [selected, setSelected] = useState('')
@@ -21,6 +21,18 @@ export default ({ route, navigation }) => {
   const [listaFinal, setListaFinal] = useState([])
   const [modoEdicao, setModoEdicao] = useState(false);
   const [indicesEmEdicao, setIndicesEmEdicao] = useState([]);
+  const [conexao, setConexao] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setConexao(state.type === 'wifi' || state.type === 'cellular')
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -285,6 +297,17 @@ export default ({ route, navigation }) => {
 
   return (
     <ScrollView style={[style.container, estilo.corLightMenos1]}>
+      {!conexao ?
+        <TouchableOpacity onPress={() => {
+          Alert.alert(
+            "Modo Offline",
+            "Atualmente, o seu dispositivo está sem conexão com a internet. Por motivos de segurança, o aplicativo oferece funcionalidades limitadas nesse estado. Durante o período offline, os dados são armazenados localmente e serão sincronizados com o banco de dados assim que uma conexão estiver disponível."
+          );
+        }} style={[estilo.centralizado, { marginVertical: '2%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }]}>
+          <Text style={[estilo.textoP16px, estilo.textoCorDisabled]}>MODO OFFLINE - </Text>
+          <AntDesign name="infocirlce" size={20} color="#CFCDCD" />
+        </TouchableOpacity>
+        : null}
       <View style={style.areaTextos}>
         <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Nome:</Text>
         <Text style={[estilo.textoCorSecundaria, estilo.textoP16px, style.textos, style.Montserrat]}>{aluno.nome}</Text>

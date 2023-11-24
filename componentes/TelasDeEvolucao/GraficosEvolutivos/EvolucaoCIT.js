@@ -6,7 +6,7 @@ import {VictoryChart, VictoryLine, VictoryTheme, VictoryVoronoiContainer, Victor
 import {useFonts} from 'expo-font'
 import { doc, setDoc, collection,getDocs, query,where ,addDoc, getFirestore, getDoc } from "firebase/firestore"; 
 import { firebase, firebaseBD } from "../../configuracoes/firebaseconfig/config"
-import { professorLogado } from "../../Home"
+import { professorLogado } from "../../LoginScreen"
 import moment from 'moment';
 import Spinner from "react-native-loading-spinner-overlay"
 import { Entypo } from '@expo/vector-icons'; 

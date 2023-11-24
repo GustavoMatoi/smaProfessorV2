@@ -5,7 +5,8 @@ import ResistenciaAbdominal18anos from './Tabelas/ResistenciaAbdominal18anos'
 import ResistenciaAbdominal from './Tabelas/ResistenciaAbdominal'
 import {useFonts} from 'expo-font'
 import { novaAvalicao } from '../DadosCorporais'
-
+import NetInfo from "@react-native-community/netinfo"
+import { AntDesign } from '@expo/vector-icons';
 export default ({route, navigation}) => {
     const [fontsLoaded] = useFonts({
         'Montserrat': require('../../../assets/Montserrat-Regular.ttf'),
@@ -14,7 +15,17 @@ export default ({route, navigation}) => {
 
     const [resistenciaAbdominal, setResistenciaAbdominal] = useState(0)
     const [resistenciaAbdominalInvalido, setResistenciaAbdominalInvalido] = useState(false)
+    const [conexao, setConexao] = useState(true);
 
+    useEffect(() => {
+        const unsubscribe = NetInfo.addEventListener(state => {
+            setConexao(state.type === 'wifi' || state.type === 'cellular')
+        })
+
+        return () => {
+            unsubscribe()
+        }
+    }, [])
     const validaCampos = () => {
         if(resistenciaAbdominal == 0){
             Alert.alert("O campo do resultado não foi preenchido!", "Preencha o campo de resultado e tente novamente.")
@@ -31,6 +42,17 @@ export default ({route, navigation}) => {
 
     return (
         <ScrollView style={estilo.corLightMenos1}>
+               {!conexao ?
+                <TouchableOpacity onPress={() => {
+                    Alert.alert(
+                        "Modo Offline",
+                        "Atualmente, o seu dispositivo está sem conexão com a internet. Por motivos de segurança, o aplicativo oferece funcionalidades limitadas nesse estado. Durante o período offline, os dados são armazenados localmente e serão sincronizados com o banco de dados assim que uma conexão estiver disponível."
+                    );
+                }} style={[estilo.centralizado, { marginVertical: '2%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }]}>
+                    <Text style={[estilo.textoP16px, estilo.textoCorDisabled]}>MODO OFFLINE - </Text>
+                    <AntDesign name="infocirlce" size={20} color="#CFCDCD" />
+                </TouchableOpacity>
+                : null}
             <SafeAreaView style={[{marginTop: '3%', marginLeft: '3%'}]}>
                 <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, style.Montserrat]}>Preencha os campos abaixo:</Text>
                 <Text style={[estilo.centralizado, estilo.textoCorSecundaria, estilo.textoP16px, {textAlign: 'center', marginVertical: '3%'}, style.Montserrat]}>

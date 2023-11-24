@@ -1,11 +1,14 @@
-import React, {useEffect, useState} from 'react'
-import {Text, View, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, TextInput, Alert} from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Text, View, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native'
 import estilo from '../../estilo'
 import SentarAlcancar from './Tabelas/SentarAlcancar'
 import DinamometriaMembrosInferiores from './Tabelas/DinamometriaMembrosInferiores'
-import {useFonts} from 'expo-font'
+import { useFonts } from 'expo-font'
+import NetInfo from "@react-native-community/netinfo"
+import { AntDesign } from '@expo/vector-icons';
+
 import { novaAvalicao } from '../DadosCorporais'
-export default ({route, navigation}) => {
+export default ({ route, navigation }) => {
     const [resultadoSentarAlcancar1, setResultadoSentarAlcancar1] = useState(0)
     const [resultadoSentarAlcancar2, setResultadoSentarAlcancar2] = useState(0)
     const [resultadoSentarAlcancar3, setResultadoSentarAlcancar3] = useState(0)
@@ -16,13 +19,23 @@ export default ({route, navigation}) => {
     const [resultadoDinamometria1Invalido, setResultadoDinamometria1Invalido] = useState(false)
     const [fontsLoaded] = useFonts({
         'Montserrat':
-         require('../../../assets/Montserrat-Regular.ttf'),
+            require('../../../assets/Montserrat-Regular.ttf'),
     })
+    const [conexao, setConexao] = useState(true);
 
-    const {aluno} = route.params
+    useEffect(() => {
+        const unsubscribe = NetInfo.addEventListener(state => {
+            setConexao(state.type === 'wifi' || state.type === 'cellular')
+        })
+
+        return () => {
+            unsubscribe()
+        }
+    }, [])
+    const { aluno } = route.params
 
     const validaCampos = () => {
-        if(resultadoDinamometria1 == 0 || resultadoSentarAlcancar1 == 0 ){
+        if (resultadoDinamometria1 == 0 || resultadoSentarAlcancar1 == 0) {
             Alert.alert("Campos não preenchidos", "Há campos não preenchidos, preencha-os e tente novamente.")
             resultadoDinamometria1 == 0 ? setResultadoDinamometria1Invalido(true) : setResultadoDinamometria1Invalido(false)
             resultadoSentarAlcancar1 == 0 ? setResultadoSentarAlcancar1Invalido(true) : setResultadoSentarAlcancar1Invalido(false)
@@ -40,64 +53,75 @@ export default ({route, navigation}) => {
     }
 
     const handleNavigation = () => {
-        navigation.navigate('Testes parte 2',{aluno: aluno})
+        navigation.navigate('Testes parte 2', { aluno: aluno })
     }
 
     return (
         <ScrollView style={estilo.corLightMenos1}>
-            <SafeAreaView style={[{marginTop: '3%', marginLeft: '3%'}]}>
+            {!conexao ?
+                <TouchableOpacity onPress={() => {
+                    Alert.alert(
+                        "Modo Offline",
+                        "Atualmente, o seu dispositivo está sem conexão com a internet. Por motivos de segurança, o aplicativo oferece funcionalidades limitadas nesse estado. Durante o período offline, os dados são armazenados localmente e serão sincronizados com o banco de dados assim que uma conexão estiver disponível."
+                    );
+                }} style={[estilo.centralizado, { marginVertical: '2%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }]}>
+                    <Text style={[estilo.textoP16px, estilo.textoCorDisabled]}>MODO OFFLINE - </Text>
+                    <AntDesign name="infocirlce" size={20} color="#CFCDCD" />
+                </TouchableOpacity>
+                : null}
+            <SafeAreaView style={[{ marginTop: '3%', marginLeft: '3%' }]}>
                 <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, style.Montserrat]}>Preencha os campos abaixo:</Text>
             </SafeAreaView>
-            <View style={{marginVertical: '5%'}}>
+            <View style={{ marginVertical: '5%' }}>
                 <SentarAlcancar sexoDoAluno={aluno.sexo}></SentarAlcancar>
-                <View style={[{marginTop: '5%', width: '100%'}]}>
+                <View style={[{ marginTop: '5%', width: '100%' }]}>
                     <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, style.Montserrat, estilo.centralizado]}>Resultado sentar e alcançar:</Text>
-                    <TextInput 
-                    placeholder='Medida 1' 
-                    style={[estilo.sombra, style.textInput, estilo.centralizado, 
-                    resultadoSentarAlcancar1Invalido ? {borderWidth: 1, borderColor: 'red'} : {}]}
-                    onChangeText={(text)=> setResultadoSentarAlcancar1(parseFloat(text))}
-                    keyboardType='numeric'
+                    <TextInput
+                        placeholder='Medida 1'
+                        style={[estilo.sombra, style.textInput, estilo.centralizado,
+                        resultadoSentarAlcancar1Invalido ? { borderWidth: 1, borderColor: 'red' } : {}]}
+                        onChangeText={(text) => setResultadoSentarAlcancar1(parseFloat(text))}
+                        keyboardType='numeric'
                     />
-                    <TextInput 
-                    placeholder='Medida 2' 
-                    style={[estilo.sombra, style.textInput, estilo.centralizado]}
-                    onChangeText={(text)=> setResultadoSentarAlcancar2(parseFloat(text))}
-                    keyboardType='numeric'
+                    <TextInput
+                        placeholder='Medida 2 - Opcional'
+                        style={[estilo.sombra, style.textInput, estilo.centralizado]}
+                        onChangeText={(text) => setResultadoSentarAlcancar2(parseFloat(text))}
+                        keyboardType='numeric'
                     />
-                    <TextInput 
-                    placeholder='Medida 3' 
-                    style={[estilo.sombra, style.textInput, estilo.centralizado]}
-                    onChangeText={(text)=> setResultadoSentarAlcancar3(parseFloat(text))}
-                    keyboardType='numeric'
+                    <TextInput
+                        placeholder='Medida 3 - Opcional'
+                        style={[estilo.sombra, style.textInput, estilo.centralizado]}
+                        onChangeText={(text) => setResultadoSentarAlcancar3(parseFloat(text))}
+                        keyboardType='numeric'
                     />
                 </View>
             </View>
             <DinamometriaMembrosInferiores sexoDoAluno={aluno.sexo}></DinamometriaMembrosInferiores>
-            <View style={[{marginTop: '5%', width: '100%'}]}>
-                <Text style={[estilo.centralizado, estilo.textoCorSecundaria, estilo.textoP16px, {textAlign: 'center', marginBottom: '3%'}]}>Para pessoas com mais de 50 anos, reduza as pontuações em 10% para ajustar a perda de tecido muscular devido ao envelhecimento.</Text>
-                <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, style.Montserrat, estilo.centralizado, {textAlign: 'center'}]}>Resultado dinamometria:</Text>
-                <TextInput 
-                placeholder='Medida 1' 
-                style={[estilo.sombra, style.textInput, estilo.centralizado, 
-                resultadoDinamometria1Invalido ? {borderWidth: 1, borderColor: 'red'}: {}]}
-                onChangeText={(text)=> setResultadoDinamometria1(parseFloat(text))}
-                keyboardType='numeric'
+            <View style={[{ marginTop: '5%', width: '100%' }]}>
+                <Text style={[estilo.centralizado, estilo.textoCorSecundaria, estilo.textoP16px, { textAlign: 'center', marginBottom: '3%' }]}>Para pessoas com mais de 50 anos, reduza as pontuações em 10% para ajustar a perda de tecido muscular devido ao envelhecimento.</Text>
+                <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, style.Montserrat, estilo.centralizado, { textAlign: 'center' }]}>Resultado dinamometria:</Text>
+                <TextInput
+                    placeholder='Medida 1'
+                    style={[estilo.sombra, style.textInput, estilo.centralizado,
+                    resultadoDinamometria1Invalido ? { borderWidth: 1, borderColor: 'red' } : {}]}
+                    onChangeText={(text) => setResultadoDinamometria1(parseFloat(text))}
+                    keyboardType='numeric'
                 />
-                <TextInput 
-                placeholder='Medida 2' 
-                style={[estilo.sombra, style.textInput, estilo.centralizado]}
-                onChangeText={(text)=> setResultadoDinamometria2(parseFloat(text))}
-                keyboardType='numeric'
+                <TextInput
+                    placeholder='Medida 2 - Opcional'
+                    style={[estilo.sombra, style.textInput, estilo.centralizado]}
+                    onChangeText={(text) => setResultadoDinamometria2(parseFloat(text))}
+                    keyboardType='numeric'
                 />
-                <TextInput 
-                placeholder='Medida 3' 
-                style={[estilo.sombra, style.textInput, estilo.centralizado]}
-                onChangeText={(text)=> setResultadoDinamometria3(parseFloat(text))}
-                keyboardType='numeric'
+                <TextInput
+                    placeholder='Medida 3 - Opcional'
+                    style={[estilo.sombra, style.textInput, estilo.centralizado]}
+                    onChangeText={(text) => setResultadoDinamometria3(parseFloat(text))}
+                    keyboardType='numeric'
                 />
             </View>
-            <View style={{marginVertical: '10%'}}>
+            <View style={{ marginVertical: '10%' }}>
                 <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={validaCampos}>
                     <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>PROSSEGUIR</Text>
                 </TouchableOpacity>
@@ -107,6 +131,6 @@ export default ({route, navigation}) => {
     )
 }
 
-const style= StyleSheet.create({
-    textInput: {width: '80%', backgroundColor: '#FFFF', height: 50 ,borderRadius: 5, paddingLeft: 15, marginTop: '3%'}
+const style = StyleSheet.create({
+    textInput: { width: '80%', backgroundColor: '#FFFF', height: 50, borderRadius: 5, paddingLeft: 15, marginTop: '3%' }
 })

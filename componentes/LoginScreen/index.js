@@ -10,7 +10,14 @@ import NetInfo from '@react-native-community/netinfo';
 import ModalSemConexao from '../ModalSemConexao'
 import Modal from "react-native-modal";
 import { FontAwesome5 } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Professor } from '../../classes/Professor';
+import { Endereco } from '../../classes/Endereco';
+let professorLogado = new Professor()
+let enderecoProfessor = new Endereco()
 
+
+export { professorLogado, enderecoProfessor }
 
 export default ({ navigation }) => {
     const [email, setEmail] = useState('')
@@ -18,6 +25,8 @@ export default ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false)
     const [conexao, setConexao] = useState(true)
     const [emailRecuperacao, setEmailRecuperacao] = useState('')
+    const [professorData, setProfessorData] = useState()
+
 
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
@@ -27,6 +36,24 @@ export default ({ navigation }) => {
         return () => {
             unsubscribe()
         }
+    }, [])
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const keys = await AsyncStorage.getAllKeys();
+    
+            for (const key of keys) {
+              const value = await AsyncStorage.getItem(key);
+              console.log(`Chave: ${key}, Valor: ${value}`);
+            }
+          } catch (error) {
+            console.error('Erro ao obter dados do AsyncStorage:', error);
+          }
+        };
+    
+        fetchData();
+        getValueFunction()
     }, [])
 
     const checkWifiConnection = () => {
@@ -44,34 +71,108 @@ export default ({ navigation }) => {
         checkWifiConnection();
     }, []);
 
-
-    const handleLogin = () => {
-        if (conexao) {
-            firebase.auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
-                navigation.navigate('Principal')
-            }).catch((error) => {
-                let mensagemDeErro = ''
-                switch (error.code) {
-                    case 'auth/invalid-email':
-                        mensagemDeErro = "Email inválido. Tente novamente"
-                        break
-                    case 'auth/wrong-password':
-                        mensagemDeErro = "Senha incorreta"
-                        break;
-                    case 'auth/user-not-found':
-                        mensagemDeErro = "Usuário não encontrado. Tente novamente"
-                        break;
-                    default:
-                        mensagemDeErro = "Erro desconhecido. Tente novamente mais tarde."
-                }
-                Alert.alert("Erro em seu cadastro", mensagemDeErro)
-            })
-        } else {
-            navigation.navigate('Modal sem conexão')
+    const saveValueFunction = async () => {
+        try {
+          if (email) {
+            await AsyncStorage.setItem('email', email);
+            setEmail('');
+          }
+      
+          if (password) {
+            await AsyncStorage.setItem('senha', password);
+            setPassword('');
+          }
+              await getValueFunction();
+        } catch (error) {
+          console.error('Erro ao salvar dados no AsyncStorage:', error);
         }
-    }
+      };
+      
+      const getValueFunction = async () => {
+        const professorLocalTeste = await AsyncStorage.getItem('professorLocal')
+        const profOjb = JSON.parse(professorLocalTeste)
+        
+        if(profOjb !== null){
+            try {
+                const storedEmail = await AsyncStorage.getItem('professorLocal');
+                const dadosProfessor = JSON.parse(storedEmail)
+                console.log(dadosProfessor)
+                professorLogado.setNome(dadosProfessor.nome);
+                professorLogado.setEmail(dadosProfessor.email);
+                professorLogado.setSenha(dadosProfessor.senha)
+                professorLogado.setDataNascimento(dadosProfessor.dataNascimento);
+                professorLogado.setSexo(dadosProfessor.sexo);
+                professorLogado.setProfissao(dadosProfessor.profissao);
+                professorLogado.setCpf(dadosProfessor.cpf);
+                professorLogado.setTelefone(dadosProfessor.telefone);
+                enderecoProfessor.setBairro(dadosProfessor.endereco.bairro)
+                enderecoProfessor.setCep(dadosProfessor.endereco.cep)
+                enderecoProfessor.setCidade(dadosProfessor.endereco.cidade)
+                enderecoProfessor.setEstado(dadosProfessor.endereco.estado)
+                enderecoProfessor.setRua(dadosProfessor.endereco.rua)
+                enderecoProfessor.setNumero(dadosProfessor.endereco.numero)
+                professorLogado.setAcademia(dadosProfessor.academia)
+                const emailProf = dadosProfessor.email
+              setEmail(emailProf || ''); 
+                
+              const senhaProf = dadosProfessor.senha
+              setPassword(senhaProf || '');
+          
+              if (emailProf && senhaProf) {
+                await firebase.auth().signInWithEmailAndPassword(emailProf, senhaProf);
+                navigation.navigate('Principal', {professor: dadosProfessor});
+              } 
+            } catch (error) {
+              console.error('Erro ao obter dados do AsyncStorage ou fazer login:', error);
+            }
+        }
+      };
 
-    const handleCadastro = () => {
+      
+        const fetchProfessorData = async () => {
+          if(conexao){
+            try {
+                const academiaRef = collection(firebaseBD, "Academias");
+                const querySnapshot = await getDocs(academiaRef);
+                for (const academiaDoc of querySnapshot.docs) {
+                  const academiaNome = academiaDoc.get("nome");
+                  const professoresRef = collection(firebaseBD, "Academias", academiaNome, "Professores");
+        
+                  const professoresSnapshot = await getDocs(professoresRef);
+                  for (const professorDoc of professoresSnapshot.docs) {
+                    if (email == professorDoc.get("email")) {
+                      const professorData = professorDoc.data();
+                      setProfessorData(professorDoc.data())
+                      professorLogado.setNome(professorData.nome);
+                      professorLogado.setEmail(professorData.email);
+                      professorLogado.setSenha(professorData.senha)
+                      professorLogado.setDataNascimento(professorData.dataNascimento);
+                      professorLogado.setSexo(professorData.sexo);
+                      professorLogado.setProfissao(professorData.profissao);
+                      professorLogado.setCpf(professorData.cpf);
+                      professorLogado.setTelefone(professorData.telefone);
+                      enderecoProfessor.setBairro(professorData.endereco.bairro)
+                      enderecoProfessor.setCep(professorData.endereco.cep)
+                      enderecoProfessor.setCidade(professorData.endereco.cidade)
+                      enderecoProfessor.setEstado(professorData.endereco.estado)
+                      enderecoProfessor.setRua(professorData.endereco.rua)
+                      enderecoProfessor.setNumero(professorData.endereco.numero)
+                      professorLogado.setAcademia(professorData.academia)
+
+                      const professorString = JSON.stringify(professorDoc.data())
+                      AsyncStorage.setItem('professorLocal', professorString)
+                    }
+                  }
+                }
+              } catch (error) {
+                console.log(error);
+              } finally {
+                saveValueFunction()
+              }
+            };
+          }
+
+      const handleCadastro = () => {
         navigation.navigate('Cadastro')
     }
 
@@ -116,7 +217,7 @@ export default ({ navigation }) => {
                     >
                     </TextInput>
 
-                    <TouchableOpacity onPress={handleLogin}
+                    <TouchableOpacity onPress={() => fetchProfessorData()}
                         style={[Estilo.corPrimaria, style.botao, Estilo.sombra, Estilo.botao]}>
                         <Text
                             style={[Estilo.tituloH523px, Estilo.textoCorLight]}>ENTRAR</Text>
@@ -139,7 +240,7 @@ export default ({ navigation }) => {
                                 Estilo.textoCorPrimaria,
                                 Estilo.textoSmall12px,
                             ]}
-                            onPress={() => //{ mudarSenha()}}
+                            onPress={() => 
                                 setModalVisible(true)
                             }
                         >

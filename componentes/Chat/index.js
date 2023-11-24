@@ -6,7 +6,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { firebase, firebaseBD } from '../configuracoes/firebaseconfig/config'
 import { collection, setDoc, doc, getDocs, getDoc, getFirestore, where, query, addDoc, updateDoc, orderBy } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from '@firebase/storage';
-import { professorLogado } from "../Home";
+import { professorLogado } from "../LoginScreen";
 import Conversas from "./Conversas";
 import Spinner from "react-native-loading-spinner-overlay";
 import NetInfo from "@react-native-community/netinfo"

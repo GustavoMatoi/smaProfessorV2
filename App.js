@@ -12,7 +12,6 @@ import Anamnese from './componentes/Anamnese';
 import DadosCorporais from './componentes/NovaAvaliacao/DadosCorporais';
 import SentarAlcancar from './componentes/NovaAvaliacao/Testes/Tabelas/SentarAlcancar';
 import Avaliacoes from './componentes/Avaliacoes';
-import Exercicios from './componentes/Exercicios';
 import TestesParte1 from './componentes/NovaAvaliacao/Testes/TestesParte1';
 import ResistenciaAbdominal from './componentes/NovaAvaliacao/Testes/Tabelas/ResistenciaAbdominal';
 import ResistenciaAbdominal18anos from './componentes/NovaAvaliacao/Testes/Tabelas/ResistenciaAbdominal18anos';

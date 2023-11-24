@@ -6,7 +6,7 @@ import {VictoryChart, VictoryLine, VictoryTheme, VictoryVoronoiContainer, Victor
 import { doc, setDoc, collection,getDocs, query,where ,addDoc, getFirestore, getDoc } from "firebase/firestore"; 
 import { firebase, firebaseBD } from "../../configuracoes/firebaseconfig/config"
 import { Entypo } from '@expo/vector-icons'; 
-import { professorLogado } from "../../Home"
+import { professorLogado } from "../../LoginScreen"
 import Spinner from "react-native-loading-spinner-overlay"
 import NetInfo from '@react-native-community/netinfo'
 import ModalSemConexao from "../../ModalSemConexao"

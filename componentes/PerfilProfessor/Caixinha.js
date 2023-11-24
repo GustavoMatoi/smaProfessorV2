@@ -3,7 +3,7 @@ import {Text, View, StyleSheet, SafeAreaView, ScrollView, Image} from 'react-nat
 import estilo from "../estilo"
 import {useFonts} from 'expo-font'
 import { getStorage, ref, getDownloadURL } from '@firebase/storage';
-import { professorLogado } from "../Home"
+import { professorLogado } from "../LoginScreen"
 import NetInfo from '@react-native-community/netinfo'
 
 export default props => {

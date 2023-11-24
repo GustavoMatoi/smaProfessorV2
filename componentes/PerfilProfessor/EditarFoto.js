@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import {firebase, firebaseBD} from '../configuracoes/firebaseconfig/config'
 import { collection,setDoc,doc, getDocs, getDoc,getFirestore, where , query , addDoc, updateDoc} from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from '@firebase/storage';
-import { professorLogado } from "../Home";
+import { professorLogado } from "../LoginScreen";
 import NetInfo from "@react-native-community/netinfo"
 
 const altura = Dimensions.get('window').height

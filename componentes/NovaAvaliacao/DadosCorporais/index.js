@@ -1,23 +1,35 @@
-import React, {useState, useEffect} from 'react'
-import {Text, SafeAreaView, View, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { Text, SafeAreaView, View, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native'
 import estilo from '../../estilo'
-import {useFonts} from 'expo-font'
-import { professorLogado } from '../../Home'
+import { useFonts } from 'expo-font'
+import { professorLogado } from '../../LoginScreen'
 import { Avaliacao } from '../../../classes/Avaliacao'
-
+import NetInfo from "@react-native-community/netinfo"
+import { AntDesign } from '@expo/vector-icons';
 let novaAvalicao = new Avaliacao()
 
-export default ({navigation, route}) => {
+export default ({ navigation, route }) => {
     const [fontsLoaded] = useFonts({
         'Montserrat': require('../../../assets/Montserrat.ttf'),
     })
 
     const handleNavigation = () => {
-        navigation.navigate("Testes parte 1", {aluno: aluno})
+        navigation.navigate("Testes parte 1", { aluno: aluno })
     }
 
+    const [conexao, setConexao] = useState(true);
 
-    const {aluno}  = route.params
+    useEffect(() => {
+        const unsubscribe = NetInfo.addEventListener(state => {
+            setConexao(state.type === 'wifi' || state.type === 'cellular')
+        })
+
+        return () => {
+            unsubscribe()
+        }
+    }, [])
+
+    const { aluno } = route.params
     const data = new Date()
     const dia = data.getDate()
     const mes = data.getMonth() + 1
@@ -61,7 +73,7 @@ export default ({navigation, route}) => {
     const [dCCristaIliacaMedida1, setdCCristaIliacaMedida1] = useState(0)
     const [dCCristaIliacaMedida2, setdCCristaIliacaMedida2] = useState(0)
     const [dCCristaIliacaMedida3, setdCCristaIliacaMedida3] = useState(0)
-   
+
     const [massaCorporalInvalido, setMassaCorporalInvalido] = useState(false)
     const [estaturaInvalido, setEsturaInvalido] = useState(false)
     const [bracoRelaxadoMedida1Invalido, setBracoRelaxadoMedida1Invalido] = useState(false)
@@ -80,114 +92,114 @@ export default ({navigation, route}) => {
 
 
     const validaCampos = () => {
-        if (massaCorporal === 0 || estatura === 0 || bracoRelaxadoMedida1 === 0 || 
-             bracoContraidoMedida1 === 0 ||
+        if (massaCorporal === 0 || estatura === 0 || bracoRelaxadoMedida1 === 0 ||
+            bracoContraidoMedida1 === 0 ||
             cinturaMedida1 === 0 || abdomenMedida1 === 0 ||
             quadrilMedida1 === 0 || coxaMedida1 === 0 ||
             pernaMedida1 === 0 || dCPeitoralMedida1 === 0 ||
-             dCAbdomenMedida1 === 0 || 
-            dCCoxaMedida1 === 0  || dCTricepsMedida1 === 0 || dCCristaIliacaMedida1 === 0){
-                Alert.alert('Campos inválidos', "Há campos não preenchidos. Preencha-os e tente novamente.")
-                if(massaCorporal === 0) {
-                    setMassaCorporalInvalido(true)
-                } else {
-                    setMassaCorporalInvalido(false)
-                }
-                if(estatura === 0) {
-                    setEsturaInvalido(true)
-                } else {
-                    setEsturaInvalido(false)
-                }
-                if(bracoRelaxadoMedida1 === 0) {
-                    setBracoRelaxadoMedida1Invalido(true)                
-                } else {
-                    setBracoRelaxadoMedida1Invalido(false)
-                }
+            dCAbdomenMedida1 === 0 ||
+            dCCoxaMedida1 === 0 || dCTricepsMedida1 === 0 || dCCristaIliacaMedida1 === 0) {
+            Alert.alert('Campos inválidos', "Há campos não preenchidos. Preencha-os e tente novamente.")
+            if (massaCorporal === 0) {
+                setMassaCorporalInvalido(true)
+            } else {
+                setMassaCorporalInvalido(false)
+            }
+            if (estatura === 0) {
+                setEsturaInvalido(true)
+            } else {
+                setEsturaInvalido(false)
+            }
+            if (bracoRelaxadoMedida1 === 0) {
+                setBracoRelaxadoMedida1Invalido(true)
+            } else {
+                setBracoRelaxadoMedida1Invalido(false)
+            }
 
-                if(bracoContraidoMedida1 === 0) {
-                    setBracoContraidoMedida1Invalido(true)
-                } else {
-                    setBracoContraidoMedida1Invalido(false)
-                }
+            if (bracoContraidoMedida1 === 0) {
+                setBracoContraidoMedida1Invalido(true)
+            } else {
+                setBracoContraidoMedida1Invalido(false)
+            }
 
-                if(cinturaMedida1 === 0) {
-                    setCinturaMedida1Invalido(true)
-                } else {
-                    setCinturaMedida1Invalido(false)
-                }
+            if (cinturaMedida1 === 0) {
+                setCinturaMedida1Invalido(true)
+            } else {
+                setCinturaMedida1Invalido(false)
+            }
 
-                if(abdomenMedida1 === 0) {
-                    setAbdomenMedida1Invalido(true)
-                } else {
-                    setAbdomenMedida1Invalido(false)
-                }
-              
-               
-                if(quadrilMedida1 === 0) {
-                    setQuadrilMedida1Invalido(true)
-                } else {
-                    setQuadrilMedida1Invalido(false)
-                }
-                
-                if(coxaMedida1 === 0) {
-                    setCoxaMedida1Invalido(true)
-                } else {
-                    setCoxaMedida1Invalido(false)
-                }
-                
-                if(pernaMedida1 === 0) {
-                    setPernaMedida1Invalido(true)
-                } else {
-                    setPernaMedida1Invalido(false)
-                }
-                
-                if(dCPeitoralMedida1 === 0) {
-                    setdCPeitoralMedida1Invalido(true)
-                } else {
-                    setdCPeitoralMedida1Invalido(false)
-                }
-               
-                if(dCAbdomenMedida1 === 0) {
-                    setdCAbdomenMedida1Invalido(true)
-                } else {
-                    setdCAbdomenMedida1Invalido(false)
-               
-                }
-                if(dCCoxaMedida1 === 0) {
-                    setdCCoxaMedida1Invalido(true)
-                } else {
-                    setdCCoxaMedida1Invalido(false)
-                }
-                
-                if(dCTricepsMedida1 === 0) {
-                    setdCTricepsMedida1Invalido(true)
-                } else {
-                    setdCTricepsMedida1Invalido(false)
-                }
-                
-                if(dCCristaIliacaMedida1 === 0) {
-                    setdCCristaIliacaMedida1Invalido(true)
-                } else {
-                    setdCCristaIliacaMedida1Invalido(false)
-                }
-                
-       
-                
-                
+            if (abdomenMedida1 === 0) {
+                setAbdomenMedida1Invalido(true)
+            } else {
+                setAbdomenMedida1Invalido(false)
+            }
+
+
+            if (quadrilMedida1 === 0) {
+                setQuadrilMedida1Invalido(true)
+            } else {
+                setQuadrilMedida1Invalido(false)
+            }
+
+            if (coxaMedida1 === 0) {
+                setCoxaMedida1Invalido(true)
+            } else {
+                setCoxaMedida1Invalido(false)
+            }
+
+            if (pernaMedida1 === 0) {
+                setPernaMedida1Invalido(true)
+            } else {
+                setPernaMedida1Invalido(false)
+            }
+
+            if (dCPeitoralMedida1 === 0) {
+                setdCPeitoralMedida1Invalido(true)
+            } else {
+                setdCPeitoralMedida1Invalido(false)
+            }
+
+            if (dCAbdomenMedida1 === 0) {
+                setdCAbdomenMedida1Invalido(true)
+            } else {
+                setdCAbdomenMedida1Invalido(false)
+
+            }
+            if (dCCoxaMedida1 === 0) {
+                setdCCoxaMedida1Invalido(true)
+            } else {
+                setdCCoxaMedida1Invalido(false)
+            }
+
+            if (dCTricepsMedida1 === 0) {
+                setdCTricepsMedida1Invalido(true)
+            } else {
+                setdCTricepsMedida1Invalido(false)
+            }
+
+            if (dCCristaIliacaMedida1 === 0) {
+                setdCCristaIliacaMedida1Invalido(true)
+            } else {
+                setdCCristaIliacaMedida1Invalido(false)
+            }
+
+
+
+
         } else {
             //novaAvalicao.setDia(dia)
             novaAvalicao.setMes(mes)
             novaAvalicao.setAno(ano)
             //Setar o prof responsável na hora de salvar
             novaAvalicao.setMassaCorporal(massaCorporal)
-            novaAvalicao.setEstatura(estatura/100)
+            novaAvalicao.setEstatura(estatura / 100)
             console.log("ESTATURA ", novaAvalicao.getEstatura)
             novaAvalicao.setBracoRelaxadoMedida1(bracoRelaxadoMedida1)
-            novaAvalicao.setBracoRelaxadoMedida2(bracoRelaxadoMedida2)            
-            novaAvalicao.setBracoRelaxadoMedida3(bracoRelaxadoMedida3)       
-            novaAvalicao.setBracoContraidoMedida1(bracoContraidoMedida1)     
-            novaAvalicao.setBracoContraidoMedida2(bracoContraidoMedida2)     
-            novaAvalicao.setBracoContraidoMedida3(bracoContraidoMedida3)     
+            novaAvalicao.setBracoRelaxadoMedida2(bracoRelaxadoMedida2)
+            novaAvalicao.setBracoRelaxadoMedida3(bracoRelaxadoMedida3)
+            novaAvalicao.setBracoContraidoMedida1(bracoContraidoMedida1)
+            novaAvalicao.setBracoContraidoMedida2(bracoContraidoMedida2)
+            novaAvalicao.setBracoContraidoMedida3(bracoContraidoMedida3)
             novaAvalicao.setCinturaMedida1(cinturaMedida1)
             novaAvalicao.setCinturaMedida2(cinturaMedida2)
             novaAvalicao.setCinturaMedida3(cinturaMedida3)
@@ -225,39 +237,54 @@ export default ({navigation, route}) => {
     }
 
 
-    return( 
+    return (
         <ScrollView style={[style.container, estilo.corLightMenos1]}>
             <View style={[style.conteudos]}>
+
+                {!conexao ?
+                    <TouchableOpacity onPress={() => {
+                        Alert.alert(
+                            "Modo Offline",
+                            "Atualmente, o seu dispositivo está sem conexão com a internet. Por motivos de segurança, o aplicativo oferece funcionalidades limitadas nesse estado. Durante o período offline, os dados são armazenados localmente e serão sincronizados com o banco de dados assim que uma conexão estiver disponível."
+                        );
+                    }} style={[estilo.centralizado, { marginVertical: '2%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }]}>
+                        <Text style={[estilo.textoP16px, estilo.textoCorDisabled]}>MODO OFFLINE - </Text>
+                        <AntDesign name="infocirlce" size={20} color="#CFCDCD" />
+                    </TouchableOpacity>
+
+
+
+                    : null}
                 <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria]}>NOME DO ALUNO:</Text>
-                <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.espacamentoTexto, {fontWeight: 'bold'}]}>{aluno.nome}</Text>
+                <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.espacamentoTexto, { fontWeight: 'bold' }]}>{aluno.nome}</Text>
 
                 <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria]}>AVALIADOR:</Text>
-                <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.espacamentoTexto, {fontWeight: 'bold'}]}>{professorLogado.getNome()}</Text>
+                <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.espacamentoTexto, { fontWeight: 'bold' }]}>{professorLogado.getNome()}</Text>
 
                 <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria]}>DATA:</Text>
                 <View style={style.areaDePreenchimento}>
-                    <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, {fontWeight: 'bold'}]}>{dia}/{mes}/{ano}</Text>
+                    <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, { fontWeight: 'bold' }]}>{dia}/{mes}/{ano}</Text>
                 </View>
-                    <View style={style.areaDePreenchimento}>
+                <View style={style.areaDePreenchimento}>
                     <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria]}>MASSA CORPORAL (KG):</Text>
-                        <View style={[style.areaBotoes]}>
-                        <TextInput 
-                                onChangeText={(text)=>setMassaCorporal(parseFloat(text))}
-                                keyboardType='numeric'
-                                style={[
-                                    style.inputText, 
-                                    estilo.sombra, 
-                                    estilo.corLight,
-                                    massaCorporalInvalido ? {borderWidth: 1, borderColor: 'red'} : {}
-                                ]}
-                                placeholder="Massa corporal"
-                                ></TextInput>
-                        </View>
+                    <View style={[style.areaBotoes]}>
+                        <TextInput
+                            onChangeText={(text) => setMassaCorporal(parseFloat(text))}
+                            keyboardType='numeric'
+                            style={[
+                                style.inputText,
+                                estilo.sombra,
+                                estilo.corLight,
+                                massaCorporalInvalido ? { borderWidth: 1, borderColor: 'red' } : {}
+                            ]}
+                            placeholder="Massa corporal"
+                        ></TextInput>
                     </View>
-                    <View style={style.areaDePreenchimento}>
+                </View>
+                <View style={style.areaDePreenchimento}>
                     <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria]}>ESTATURA (CM):</Text>
-                        <View style={[style.areaBotoes]}>
-                        <TextInput 
+                    <View style={[style.areaBotoes]}>
+                        <TextInput
                             onChangeText={(text) => {
                                 const inputValue = parseFloat(text);
                                 const estatura = isNaN(inputValue) ? '' : inputValue <= 299 ? inputValue : 299;
@@ -265,332 +292,332 @@ export default ({navigation, route}) => {
                             }}
                             keyboardType='numeric'
                             style={[
-                                style.inputText, 
-                                estilo.sombra, 
+                                style.inputText,
+                                estilo.sombra,
                                 estilo.corLight,
                                 estaturaInvalido ? { borderWidth: 1, borderColor: 'red' } : {}
                             ]}
                             placeholder="Estatura"
                             value={estatura.toString()}
-                            />
-                        </View>
+                        />
                     </View>
-
-                
-                    <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, {marginTop: '5%'}]}>BRAÇO RELAXADO (CM):</Text>
-                    <View style={[style.areaDePreenchimento]}>
-                        <View style={[style.areaBotoes]}>
-                        <TextInput 
-                                        onChangeText={(text)=>setBracoRelaxadoMedida1(parseFloat(text))}
-                                        style={
-                                            [style.textosAvaliacao,
-                                            bracoRelaxadoMedida1Invalido ? {borderWidth: 1, borderColor: 'red'} : {}
-                                            ]} 
-                                        placeholder="Medida 1"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-
-                                        <TextInput 
-                                        onChangeText={(text)=>setBracoRelaxadoMedida2(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 2"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-                                        <TextInput
-                                        onChangeText={(text)=>setBracoRelaxadoMedida3(parseFloat(text))} 
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 3"
-                                        keyboardType='numeric'
-                                        />
-                        </View>
-                </View>
-                    <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, {marginTop: '10%'}]}>BRAÇO CONTRAÍDO (CM):</Text>
-                    <View style={[style.areaDePreenchimento]}>
-                        <View style={[style.areaBotoes]}>
-                        <TextInput 
-                                        onChangeText={(text)=> setBracoContraidoMedida1(parseFloat(text))}
-                                        style={[style.textosAvaliacao,
-                                                bracoContraidoMedida1Invalido ? {borderWidth: 1, borderColor: 'red'}: {}]} 
-                                        placeholder="Medida 1"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-
-                                        <TextInput 
-                                        onChangeText={(text)=> setBracoContraidoMedida2(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 2"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-                                        <TextInput
-                                        onChangeText={(text)=> setBracoContraidoMedida3(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 3"
-                                        keyboardType='numeric'
-                                        />
-                        </View>
-                </View>
-   
-                    <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, {marginTop: '10%'}]}>CINTURA (CM):</Text>
-                    <View style={[style.areaDePreenchimento]}>
-                        <View style={[style.areaBotoes]}>
-                        <TextInput 
-                                        onChangeText={(text)=>setCinturaMedida1(parseFloat(text))}
-                                        style={[style.textosAvaliacao,
-                                         cinturaMedida1Invalido ? {borderWidth: 1, borderColor: 'red'}: {}]} 
-                                        placeholder="Medida 1"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-
-                                        <TextInput 
-                                        onChangeText={(text)=>setCinturaMedida2(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 2"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-                                        <TextInput 
-                                        onChangeText={(text)=>setCinturaMedida3(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 3"
-                                        keyboardType='numeric'
-                                        />
-                        </View>
                 </View>
 
-                    <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, {marginTop: '10%'}]}>ABDÔMEN (CM):</Text>
-                    <View style={[style.areaDePreenchimento]}>
-                        <View style={[style.areaBotoes]}>
-                        <TextInput 
-                                        onChangeText={(text)=> setAbdomenMedida1(parseFloat(text))}
-                                        style={[style.textosAvaliacao,
-                                        abdomenMedida1Invalido ? {borderWidth: 1, borderColor: 'red'}: {}]} 
-                                        placeholder="Medida 1"
-                                        keyboardType='numeric'
-                                        ></TextInput>
 
-                                        <TextInput 
-                                        onChangeText={(text)=> setAbdomenMedida2(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 2"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-                                        <TextInput
-                                        onChangeText={(text)=> setAbdomenMedida3(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 3"
-                                        keyboardType='numeric'
-                                        />
-                        </View>
+                <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, { marginTop: '5%' }]}>BRAÇO RELAXADO (CM):</Text>
+                <View style={[style.areaDePreenchimento]}>
+                    <View style={[style.areaBotoes]}>
+                        <TextInput
+                            onChangeText={(text) => setBracoRelaxadoMedida1(parseFloat(text))}
+                            style={
+                                [style.textosAvaliacao,
+                                bracoRelaxadoMedida1Invalido ? { borderWidth: 1, borderColor: 'red' } : {}
+                                ]}
+                            placeholder="Medida 1"
+                            keyboardType='numeric'
+                        ></TextInput>
+
+                        <TextInput
+                            onChangeText={(text) => setBracoRelaxadoMedida2(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        ></TextInput>
+                        <TextInput
+                            onChangeText={(text) => setBracoRelaxadoMedida3(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        />
+                    </View>
+                </View>
+                <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, { marginTop: '10%' }]}>BRAÇO CONTRAÍDO (CM):</Text>
+                <View style={[style.areaDePreenchimento]}>
+                    <View style={[style.areaBotoes]}>
+                        <TextInput
+                            onChangeText={(text) => setBracoContraidoMedida1(parseFloat(text))}
+                            style={[style.textosAvaliacao,
+                            bracoContraidoMedida1Invalido ? { borderWidth: 1, borderColor: 'red' } : {}]}
+                            placeholder="Medida 1"
+                            keyboardType='numeric'
+                        ></TextInput>
+
+                        <TextInput
+                            onChangeText={(text) => setBracoContraidoMedida2(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        ></TextInput>
+                        <TextInput
+                            onChangeText={(text) => setBracoContraidoMedida3(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        />
+                    </View>
                 </View>
 
-                    <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, {marginTop: '10%'}]}>QUADRIL (CM):</Text>
-                    <View style={[style.areaDePreenchimento]}>
-                        <View style={[style.areaBotoes]}>
-                        <TextInput 
-                                        onChangeText={(text)=> setQuadrilMedida1(parseFloat(text))}
-                                        style={[style.textosAvaliacao,
-                                            quadrilMedida1Invalido ? {borderWidth: 1, borderColor: 'red'}: {}]} 
-                                        placeholder="Medida 1"
-                                        keyboardType='numeric'
-                                        ></TextInput>
+                <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, { marginTop: '10%' }]}>CINTURA (CM):</Text>
+                <View style={[style.areaDePreenchimento]}>
+                    <View style={[style.areaBotoes]}>
+                        <TextInput
+                            onChangeText={(text) => setCinturaMedida1(parseFloat(text))}
+                            style={[style.textosAvaliacao,
+                            cinturaMedida1Invalido ? { borderWidth: 1, borderColor: 'red' } : {}]}
+                            placeholder="Medida 1"
+                            keyboardType='numeric'
+                        ></TextInput>
 
-                                        <TextInput 
-                                        onChangeText={(text)=> setQuadrilMedida2(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 2"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-                                        <TextInput 
-                                        onChangeText={(text)=> setQuadrilMedida3(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 3"
-                                        keyboardType='numeric'
-                                        />
-                        </View>
+                        <TextInput
+                            onChangeText={(text) => setCinturaMedida2(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        ></TextInput>
+                        <TextInput
+                            onChangeText={(text) => setCinturaMedida3(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        />
+                    </View>
                 </View>
 
-                    <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, {marginTop: '10%'}]}>COXA (CM):</Text>
-                    <View style={[style.areaDePreenchimento]}>
-                        <View style={[style.areaBotoes]}>
-                        <TextInput 
-                                        onChangeText={(text)=> {setCoxaMedida1(parseFloat(text))}}
-                                        style={[style.textosAvaliacao,
-                                        coxaMedida1Invalido? {borderWidth: 1, borderColor: 'red'}: {}]} 
-                                        placeholder="Medida 1"
-                                        keyboardType='numeric'
-                                        ></TextInput>
+                <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, { marginTop: '10%' }]}>ABDÔMEN (CM):</Text>
+                <View style={[style.areaDePreenchimento]}>
+                    <View style={[style.areaBotoes]}>
+                        <TextInput
+                            onChangeText={(text) => setAbdomenMedida1(parseFloat(text))}
+                            style={[style.textosAvaliacao,
+                            abdomenMedida1Invalido ? { borderWidth: 1, borderColor: 'red' } : {}]}
+                            placeholder="Medida 1"
+                            keyboardType='numeric'
+                        ></TextInput>
 
-                                        <TextInput 
-                                        onChangeText={(text)=> {setCoxaMedida2(parseFloat(text))}}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 2"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-                                        <TextInput
-                                        onChangeText={(text)=> {setCoxaMedida3(parseFloat(text))}}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 3"
-                                        keyboardType='numeric'
-                                        />
-                        </View>
+                        <TextInput
+                            onChangeText={(text) => setAbdomenMedida2(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        ></TextInput>
+                        <TextInput
+                            onChangeText={(text) => setAbdomenMedida3(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        />
+                    </View>
                 </View>
 
-                    <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, {marginTop: '10%'}]}>PERNA (CM):</Text>
-                    <View style={[style.areaDePreenchimento]}>
-                        <View style={[style.areaBotoes]}>
-                        <TextInput 
-                                        onChangeText={(text)=> setPernaMedida1(parseFloat(text))}
-                                        style={[style.textosAvaliacao,
-                                                pernaMedida1Invalido? {borderWidth: 1, borderColor: 'red'}: {}]} 
-                                        placeholder="Medida 1"
-                                        keyboardType='numeric'
-                                        ></TextInput>
+                <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, { marginTop: '10%' }]}>QUADRIL (CM):</Text>
+                <View style={[style.areaDePreenchimento]}>
+                    <View style={[style.areaBotoes]}>
+                        <TextInput
+                            onChangeText={(text) => setQuadrilMedida1(parseFloat(text))}
+                            style={[style.textosAvaliacao,
+                            quadrilMedida1Invalido ? { borderWidth: 1, borderColor: 'red' } : {}]}
+                            placeholder="Medida 1"
+                            keyboardType='numeric'
+                        ></TextInput>
 
-                                        <TextInput 
-                                        onChangeText={(text)=> setPernaMedida2(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 2"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-                                        <TextInput
-                                        onChangeText={(text)=> setPernaMedida3(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 3"
-                                        keyboardType='numeric'
-                                        />
-                        </View>
+                        <TextInput
+                            onChangeText={(text) => setQuadrilMedida2(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        ></TextInput>
+                        <TextInput
+                            onChangeText={(text) => setQuadrilMedida3(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        />
+                    </View>
                 </View>
 
-                    <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, {marginTop: '10%'}]}>DC PEITORAL (MM):</Text>
-                    <View style={[style.areaDePreenchimento]}>
-                        <View style={[style.areaBotoes]}>
-                        <TextInput 
-                                        onChangeText={(text)=>setdCPeitoralMedida1(parseFloat(text))}
-                                        style={[style.textosAvaliacao, 
-                                            dCPeitoralMedida1Invalido? {borderWidth: 1, borderColor: 'red'}: {}]} 
-                                        placeholder="Medida 1"
-                                        keyboardType='numeric'
-                                        ></TextInput>
+                <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, { marginTop: '10%' }]}>COXA (CM):</Text>
+                <View style={[style.areaDePreenchimento]}>
+                    <View style={[style.areaBotoes]}>
+                        <TextInput
+                            onChangeText={(text) => { setCoxaMedida1(parseFloat(text)) }}
+                            style={[style.textosAvaliacao,
+                            coxaMedida1Invalido ? { borderWidth: 1, borderColor: 'red' } : {}]}
+                            placeholder="Medida 1"
+                            keyboardType='numeric'
+                        ></TextInput>
 
-                                        <TextInput 
-                                        onChangeText={(text)=>setdCPeitoralMedida2(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 2"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-                                        <TextInput
-                                        onChangeText={(text)=>setdCPeitoralMedida3(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 3"
-                                        keyboardType='numeric'
-                                        />
-                        </View>
+                        <TextInput
+                            onChangeText={(text) => { setCoxaMedida2(parseFloat(text)) }}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        ></TextInput>
+                        <TextInput
+                            onChangeText={(text) => { setCoxaMedida3(parseFloat(text)) }}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        />
+                    </View>
                 </View>
 
-                    <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, {marginTop: '10%'}]}>DC ABDÔMEN (MM):</Text>
-                    <View style={[style.areaDePreenchimento]}>
-                        <View style={[style.areaBotoes]}>
-                        <TextInput 
-                                        onChangeText={(text)=> setdCAbdomenMedida1(parseFloat(text))}
-                                        style={[style.textosAvaliacao,
-                                        dCAbdomenMedida1Invalido? {borderWidth: 1, borderColor: 'red'}: {}]} 
-                                        placeholder="Medida 1"
-                                        keyboardType='numeric'
-                                        ></TextInput>
+                <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, { marginTop: '10%' }]}>PERNA (CM):</Text>
+                <View style={[style.areaDePreenchimento]}>
+                    <View style={[style.areaBotoes]}>
+                        <TextInput
+                            onChangeText={(text) => setPernaMedida1(parseFloat(text))}
+                            style={[style.textosAvaliacao,
+                            pernaMedida1Invalido ? { borderWidth: 1, borderColor: 'red' } : {}]}
+                            placeholder="Medida 1"
+                            keyboardType='numeric'
+                        ></TextInput>
 
-                                        <TextInput 
-                                        onChangeText={(text)=> setdCAbdomenMedida2(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 2"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-                                        <TextInput 
-                                        onChangeText={(text)=> setdCAbdomenMedida3(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 3"
-                                        keyboardType='numeric'
-                                        />
-                        </View>
+                        <TextInput
+                            onChangeText={(text) => setPernaMedida2(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        ></TextInput>
+                        <TextInput
+                            onChangeText={(text) => setPernaMedida3(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        />
+                    </View>
                 </View>
 
-                    <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, {marginTop: '10%'}]}>DC COXA (MM):</Text>
-                    <View style={[style.areaDePreenchimento]}>
-                        <View style={[style.areaBotoes]}>
-                        <TextInput 
-                                        onChangeText={(text)=> setdCCoxaMedida1(parseFloat(text))}
-                                        style={[style.textosAvaliacao,
-                                        dCCoxaMedida1Invalido? {borderWidth: 1, borderColor: 'red'}: {}]} 
-                                        placeholder="Medida 1"
-                                        keyboardType='numeric'
-                                        ></TextInput>
+                <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, { marginTop: '10%' }]}>DC PEITORAL (MM):</Text>
+                <View style={[style.areaDePreenchimento]}>
+                    <View style={[style.areaBotoes]}>
+                        <TextInput
+                            onChangeText={(text) => setdCPeitoralMedida1(parseFloat(text))}
+                            style={[style.textosAvaliacao,
+                            dCPeitoralMedida1Invalido ? { borderWidth: 1, borderColor: 'red' } : {}]}
+                            placeholder="Medida 1"
+                            keyboardType='numeric'
+                        ></TextInput>
 
-                                        <TextInput
-                                        onChangeText={(text)=> setdCCoxaMedida2(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 2"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-                                        <TextInput 
-                                        onChangeText={(text)=> setdCCoxaMedida3(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 3"
-                                        keyboardType='numeric'
-                                        />
-                        </View>
+                        <TextInput
+                            onChangeText={(text) => setdCPeitoralMedida2(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        ></TextInput>
+                        <TextInput
+                            onChangeText={(text) => setdCPeitoralMedida3(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        />
+                    </View>
                 </View>
 
-                    <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, {marginTop: '10%'}]}>DC TRÍCEPS (MM):</Text>
-                    <View style={[style.areaDePreenchimento]}>
-                        <View style={[style.areaBotoes]}>
-                        <TextInput 
-                                        onChangeText={(text)=> setdCTricepsMedida1(parseFloat(text))}
-                                        style={[style.textosAvaliacao,
-                                        dCTricepsMedida1Invalido? {borderWidth: 1, borderColor: 'red'}: {}]} 
-                                        placeholder="Medida 1"
-                                        keyboardType='numeric'
-                                        ></TextInput>
+                <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, { marginTop: '10%' }]}>DC ABDÔMEN (MM):</Text>
+                <View style={[style.areaDePreenchimento]}>
+                    <View style={[style.areaBotoes]}>
+                        <TextInput
+                            onChangeText={(text) => setdCAbdomenMedida1(parseFloat(text))}
+                            style={[style.textosAvaliacao,
+                            dCAbdomenMedida1Invalido ? { borderWidth: 1, borderColor: 'red' } : {}]}
+                            placeholder="Medida 1"
+                            keyboardType='numeric'
+                        ></TextInput>
 
-                                        <TextInput 
-                                        onChangeText={(text)=> setdCTricepsMedida2(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 2"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-                                        <TextInput 
-                                        onChangeText={(text)=> setdCTricepsMedida3(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 3"
-                                        keyboardType='numeric'
-                                        />
-                        </View>
+                        <TextInput
+                            onChangeText={(text) => setdCAbdomenMedida2(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        ></TextInput>
+                        <TextInput
+                            onChangeText={(text) => setdCAbdomenMedida3(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        />
+                    </View>
                 </View>
 
-                    <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, {marginTop: '10%'}]}>DC CRISTA ILÍACA (MM):</Text>
-                    <View style={[style.areaDePreenchimento]}>
-                        <View style={[style.areaBotoes]}>
-                        <TextInput 
-                                        onChangeText={(text)=> setdCCristaIliacaMedida1(parseFloat(text))}
-                                        style={[style.textosAvaliacao,
-                                            dCCristaIliacaMedida1Invalido? {borderWidth: 1, borderColor: 'red'}: {}]} 
-                                        placeholder="Medida 1"
-                                        keyboardType='numeric'
-                                        ></TextInput>
+                <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, { marginTop: '10%' }]}>DC COXA (MM):</Text>
+                <View style={[style.areaDePreenchimento]}>
+                    <View style={[style.areaBotoes]}>
+                        <TextInput
+                            onChangeText={(text) => setdCCoxaMedida1(parseFloat(text))}
+                            style={[style.textosAvaliacao,
+                            dCCoxaMedida1Invalido ? { borderWidth: 1, borderColor: 'red' } : {}]}
+                            placeholder="Medida 1"
+                            keyboardType='numeric'
+                        ></TextInput>
 
-                                        <TextInput
-                                        onChangeText={(text)=> setdCCristaIliacaMedida2(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 2"
-                                        keyboardType='numeric'
-                                        ></TextInput>
-                                        <TextInput
-                                        onChangeText={(text)=> setdCCristaIliacaMedida3(parseFloat(text))}
-                                        style={[style.textosAvaliacao]} 
-                                        placeholder="Medida 3"
-                                        keyboardType='numeric'
-                                        />
-                        </View>
+                        <TextInput
+                            onChangeText={(text) => setdCCoxaMedida2(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        ></TextInput>
+                        <TextInput
+                            onChangeText={(text) => setdCCoxaMedida3(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        />
+                    </View>
                 </View>
 
-                <TouchableOpacity style={[estilo.botao, estilo.corPrimaria, {marginTop: '10%'}]} onPress={()=> validaCampos()}>
+                <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, { marginTop: '10%' }]}>DC TRÍCEPS (MM):</Text>
+                <View style={[style.areaDePreenchimento]}>
+                    <View style={[style.areaBotoes]}>
+                        <TextInput
+                            onChangeText={(text) => setdCTricepsMedida1(parseFloat(text))}
+                            style={[style.textosAvaliacao,
+                            dCTricepsMedida1Invalido ? { borderWidth: 1, borderColor: 'red' } : {}]}
+                            placeholder="Medida 1"
+                            keyboardType='numeric'
+                        ></TextInput>
+
+                        <TextInput
+                            onChangeText={(text) => setdCTricepsMedida2(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        ></TextInput>
+                        <TextInput
+                            onChangeText={(text) => setdCTricepsMedida3(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        />
+                    </View>
+                </View>
+
+                <Text style={[estilo.textoP16px, estilo.Mont, estilo.textoCorSecundaria, { marginTop: '10%' }]}>DC CRISTA ILÍACA (MM):</Text>
+                <View style={[style.areaDePreenchimento]}>
+                    <View style={[style.areaBotoes]}>
+                        <TextInput
+                            onChangeText={(text) => setdCCristaIliacaMedida1(parseFloat(text))}
+                            style={[style.textosAvaliacao,
+                            dCCristaIliacaMedida1Invalido ? { borderWidth: 1, borderColor: 'red' } : {}]}
+                            placeholder="Medida 1"
+                            keyboardType='numeric'
+                        ></TextInput>
+
+                        <TextInput
+                            onChangeText={(text) => setdCCristaIliacaMedida2(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        ></TextInput>
+                        <TextInput
+                            onChangeText={(text) => setdCCristaIliacaMedida3(parseFloat(text))}
+                            style={[style.textosAvaliacao]}
+                            placeholder="opcional"
+                            keyboardType='numeric'
+                        />
+                    </View>
+                </View>
+
+                <TouchableOpacity style={[estilo.botao, estilo.corPrimaria, { marginTop: '10%' }]} onPress={() => validaCampos()}>
                     <Text style={[estilo.tituloH619px, estilo.textoCorLight, estilo.sombra]}>AVANÇAR</Text>
                 </TouchableOpacity>
             </View>
@@ -599,27 +626,27 @@ export default ({navigation, route}) => {
 }
 
 const style = StyleSheet.create({
-    container:{
+    container: {
         width: '100%',
     },
-    conteudos:{
+    conteudos: {
         marginLeft: '5%',
         marginTop: '5%',
         marginBottom: '15%'
 
-    }, 
-    areaDePreenchimento:{
+    },
+    areaDePreenchimento: {
         marginVertical: '5%'
     },
     Montserrat: {
         fontFamily: 'Montserrat'
-    }, 
+    },
     espacamentoTexto: {
         marginVertical: '3%'
-    }, 
+    },
     areaBotoes: {
         width: '90%',
-    }, 
+    },
     botaoInput: {
         width: '25%',
         height: 60,
@@ -628,7 +655,7 @@ const style = StyleSheet.create({
         borderWidth: 1
     },
     botaoInputDataNascimento: {
-        width:'30%',
+        width: '30%',
         padding: 10,
         backgroundColor: 'white',
         elevation: 10,
@@ -652,7 +679,7 @@ const style = StyleSheet.create({
         paddingHorizontal: 20,
     },
     textosAvaliacao: {
-        width:'30%',
+        width: '30%',
         height: 70,
         padding: 10,
         backgroundColor: 'white',
@@ -663,4 +690,4 @@ const style = StyleSheet.create({
 
 })
 
-export {novaAvalicao}
+export { novaAvalicao }

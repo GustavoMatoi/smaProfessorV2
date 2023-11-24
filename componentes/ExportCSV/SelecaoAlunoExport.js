@@ -3,7 +3,7 @@ import { Text, SafeAreaView, StyleSheet, TouchableOpacity } from "react-native"
 import estilo from "../estilo";
 import {firebase, firebaseBD} from '../configuracoes/firebaseconfig/config'
 import { collection, getDocs} from "firebase/firestore";
-import { professorLogado } from "../Home";
+import { professorLogado } from "../LoginScreen";
 import Spinner from 'react-native-loading-spinner-overlay';
 
 

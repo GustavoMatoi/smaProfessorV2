@@ -3,7 +3,7 @@ import { Text, View, Button, TouchableOpacity } from 'react-native'
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { collection, doc, getDocs, getFirestore } from "firebase/firestore";
-import { professorLogado } from "../Home";
+import { professorLogado } from "../LoginScreen";
 import NetInfo from "@react-native-community/netinfo"
 import ModalSemConexao from "../ModalSemConexao";
 import { FontAwesome5 } from '@expo/vector-icons';

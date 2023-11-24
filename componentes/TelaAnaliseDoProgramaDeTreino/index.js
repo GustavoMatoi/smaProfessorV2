@@ -57,19 +57,15 @@ export default function TelaAnaliseDoProgramaDeTreino(props) {
           unsubscribe()
         }
       }, [])
-      console.log('avaliacaoAnterior', avaliacaoAnterior)
     const [conexao, setConexao] = useState(true)
     const posicaoArrayFichas = props.route.params.posicaoDoArray;
     const avaliacaoAnterior = props.route.params.avaliacaoAnterior;
     const aluno = props.route.params.aluno
-    console.log(aluno)
-    console.log(posicaoArrayFichas)
-    console.log("Avaliação anterior: ", avaliacaoAnterior)
-    console.log('props:', props);
-    console.log('props.posicaoDoArray:', props.route.params.posicaoDoArray);
-console.log(avaliacao)
-    console.log("FREQ CARD DE REP" + avaliacao.frequenciaCardiacaRepouso)
-    console.log(avaliacao.DCPeitoralMedida1)
+      const alunoFilhas = [...aluno.fichas]
+    console.log('alunoFilhas.length ', alunoFilhas.length)
+    console.log('posicaoArrayFichas', posicaoArrayFichas)
+    console.log("Testre2")
+    console.log('aluno.fichas[props.route.params.posicaoDoArray].exercicios', aluno.fichas[props.route.params.posicaoDoArray].exercicios)
     return (
                 <SafeAreaView style={[estilo.corLightMenos1, style.container]}>
                     {conexao ? (posicaoArrayFichas == 0?
@@ -295,8 +291,8 @@ console.log(avaliacao)
     
                         </TabelaResultados>
                         <Text style={[estilo.textoCorSecundaria, estilo.tituloH427px, estilo.centralizado, {marginVertical: '5%'}]}>Programa de Treino</Text>
-                        <FichaDeTreinoAnalise posicaoDoArray={props.route.params.posicaoDoArray} aluno={aluno}></FichaDeTreinoAnalise>
-    
+
+                             <FichaDeTreinoAnalise exercicios={aluno.fichas[props.route.params.posicaoDoArray].exercicios} aluno={aluno}></FichaDeTreinoAnalise>
                         </ScrollView> ): <ModalSemConexao ondeNavegar={'Home'} navigation={props.navigation}/> }
                 </SafeAreaView>
             )   

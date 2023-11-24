@@ -5,7 +5,7 @@ import { firebase, firebaseBD } from '../configuracoes/firebaseconfig/config'
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { Entypo } from '@expo/vector-icons';
 import estilo from "../estilo"
-import { professorLogado } from "../Home";
+import { professorLogado } from "../LoginScreen";
 export default props => {
     const [isLoading, setIsLoading] = useState(true);
     const [notificacoes, setNotificacoes] = useState([]);

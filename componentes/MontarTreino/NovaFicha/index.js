@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { Text, View, SafeAreaView, FlatList, TouchableOpacity, StyleSheet, TextInput, Alert } from 'react-native'
 import ExerciciosForça from '../../Ficha/ExerciciosForça'
 import estilo from '../../estilo'
-import { professorLogado } from '../../Home'
+import { professorLogado } from '../../LoginScreen'
 import { getFirestore, setDoc, doc, serverTimestamp } from 'firebase/firestore'
 import BotaoSelect from '../../BotaoSelect'
 import ExerciciosCardio from '../../Ficha/ExerciciosCardio'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AntDesign } from '@expo/vector-icons';
 
 import NetInfo from "@react-native-community/netinfo"
 import ExerciciosAlongamento from '../../Ficha/ExerciciosAlongamento'
@@ -48,27 +50,27 @@ export default ({ navigation, route }) => {
     const isValidDate = (text) => {
         const datePattern = /^\d{2}\/\d{2}\/\d{4}$/;
         if (datePattern.test(text)) {
-          return true;
+            return true;
         }
         return false;
-      };
-    
-      const handleInputChange = (text) => {
+    };
+
+    const handleInputChange = (text) => {
         const unformattedText = text.replace(/\//g, '');
-    
+
         if (/^\d{0,8}$/.test(unformattedText)) {
-          let formattedText = unformattedText;
-          if (unformattedText.length >= 2) {
-            formattedText = unformattedText.slice(0, 2) + '/' + unformattedText.slice(2);
-          }
-          if (unformattedText.length >= 4) {
-            formattedText = formattedText.slice(0, 5) + '/' + formattedText.slice(5);
-          }
-    
-          setDataFim(formattedText);
+            let formattedText = unformattedText;
+            if (unformattedText.length >= 2) {
+                formattedText = unformattedText.slice(0, 2) + '/' + unformattedText.slice(2);
+            }
+            if (unformattedText.length >= 4) {
+                formattedText = formattedText.slice(0, 5) + '/' + formattedText.slice(5);
+            }
+
+            setDataFim(formattedText);
         }
         console.log(dataFim)
-      };
+    };
     const data = new Date()
     let dia = data.getDate()
     dia < 10 ? dia = `0${dia}` : dia = dia
@@ -76,11 +78,11 @@ export default ({ navigation, route }) => {
     mes < 10 ? mes = `0${mes}` : mes = mes
     const ano = data.getFullYear()
     const salvarFicha = async () => {
-        if(dataFim !== ''){
+        if (dataFim !== '') {
             const bd = getFirestore();
 
             const documentos = exercicios.map((exercicio, index) => {
-    
+
                 if (exercicio.tipo === 'força') {
                     return {
                         Nome: exercicio.nomeExercicio,
@@ -110,31 +112,9 @@ export default ({ navigation, route }) => {
                     }
                 }
             });
-    
-            try {
-                await setDoc(doc(
-                    bd,
-                    'Academias',
-                    professorLogado.getAcademia(),
-                    'Professores',
-                    aluno.professorResponsavel,
-                    'alunos',
-                    `Aluno ${aluno.email}`,
-                    'FichaDeExercicios',
-                    `FichaDeExercicios${ano}|${mes}|${dia}`
-                ), {
-                    dataFim: dataFim,
-                    dataInicio: `${dia}/${mes}/${ano}`,
-                    data: serverTimestamp(),
-                    objetivoDoTreino: objetivo,
-                    responsavel: professorLogado.getNome(),
-                });
-    
-                await Promise.all(documentos.map((element, index) => {
-                    console.log('documentos', documentos)
-                    console.log('elemnt', element)
-                    console.log('index', index)
-                    return setDoc(doc(
+            if (conexao) {
+                try {
+                    await setDoc(doc(
                         bd,
                         'Academias',
                         professorLogado.getAcademia(),
@@ -143,29 +123,88 @@ export default ({ navigation, route }) => {
                         'alunos',
                         `Aluno ${aluno.email}`,
                         'FichaDeExercicios',
-                        `FichaDeExercicios${ano}|${mes}|${dia}`,
-                        'Exercicios',
-                        `Exercicio ${index}`
-                    ), element);
+                        `FichaDeExercicios${ano}|${mes}|${dia}`
+                    ), {
+                        dataFim: dataFim,
+                        dataInicio: `${dia}/${mes}/${ano}`,
+                        data: serverTimestamp(),
+                        objetivoDoTreino: objetivo,
+                        responsavel: professorLogado.getNome(),
+                    });
+
+                    await Promise.all(documentos.map((element, index) => {
+                        console.log('documentos', documentos)
+                        console.log('elemnt', element)
+                        console.log('index', index)
+                        console.log('Ficha de exercícios salva com sucesso');
+
+                        return setDoc(doc(
+                            bd,
+                            'Academias',
+                            professorLogado.getAcademia(),
+                            'Professores',
+                            aluno.professorResponsavel,
+                            'alunos',
+                            `Aluno ${aluno.email}`,
+                            'FichaDeExercicios',
+                            `FichaDeExercicios${ano}|${mes}|${dia}`,
+                            'Exercicios',
+                            `Exercicio ${index}`
+                        ), element);
+
+                    }
+
+
+                    ));
+
+                } catch (error) {
+                    console.error('Erro ao salvar a ficha de exercícios:', error);
+
+
+                } finally {
+                    if (conexao) {
+                        Alert.alert("Ficha salva com sucesso!", "A ficha foi salva no banco de dados.")
+                        navigation.navigate("Principal")
+                    } else {
+                        Alert.alert("Ficha salva com sucesso!", "A ficha foi salva localmente. Assim que o dispositivo possuir conexão com a intenet,a ficha será enviada para o Banco de Dados")
+                        navigation.navigate("Principal")
+                    }
+
+                }
+            } else {
+                const avaliacaoData = {
+                    dataFim: dataFim,
+                    dataInicio: `${dia}/${mes}/${ano}`,
+                    data: serverTimestamp(),
+                    objetivoDoTreino: objetivo,
+                    responsavel: professorLogado.getNome(),
+                }
+
+                const avaliacaoString = JSON.stringify(avaliacaoData)
+                try {
+                    AsyncStorage.setItem(`Aluno ${aluno.email}-FichaDeExercicios${ano}|${mes}|${dia}-Atributos`, avaliacaoString);
+                } catch (error) {
+                    console.log("Não foi possível salvar os arquivos no Async Storage")
+                }
+                await Promise.all(documentos.map((element, index) => {
+                    console.log('documentos', documentos)
+                    console.log('elemnt', element)
+                    console.log('index', index)
+                    try {
+                        const elementString = JSON.stringify(element);
+                        AsyncStorage.setItem(`Aluno ${aluno.email}-FichaDeExercicios${ano}|${mes}|${dia}-Exercicio${index}`, elementString);
+                    } catch (error) {
+                        console.log('Erro ao salvar dados no AsyncStorage:', error);
+                    }
                 }
                 ));
-    
-                console.log('Ficha de exercícios salva com sucesso');
-            } catch (error) {
-                console.error('Erro ao salvar a ficha de exercícios:', error);
-            } finally {
-                if(conexao){
-                    Alert.alert("Ficha salva com sucesso!", "A ficha foi salva no banco de dados.")
-                    navigation.navigate("Principal")
-                } else{
-                    Alert.alert("Sem conexão.", "Não foi possível salvar sua ficha no momento devido a falta de conexão. Tente novamente.")
-    
-                }
             }
+
         } else {
             Alert.alert("Campos não preenchidos.", "Informe o vencimento da ficha.")
         }
-        
+        Alert.alert("Ficha salva com sucesso!", "A ficha foi salva localmente. Assim que o dispositivo possuir conexão com a intenet,a ficha será enviada para o Banco de Dados")
+        navigation.navigate("Principal")
     };
 
     const transformedData = exercicios.map(item => ({
@@ -174,6 +213,17 @@ export default ({ navigation, route }) => {
     }));
     return (
         <SafeAreaView style={[style.container, estilo.centralizado, estilo.corLightMenos1]}>
+            {!conexao ?
+                <TouchableOpacity onPress={() => {
+                    Alert.alert(
+                        "Modo Offline",
+                        "Atualmente, o seu dispositivo está sem conexão com a internet. Por motivos de segurança, o aplicativo oferece funcionalidades limitadas nesse estado. Durante o período offline, os dados são armazenados localmente e serão sincronizados com o banco de dados assim que uma conexão estiver disponível."
+                    );
+                }} style={[estilo.centralizado, { marginVertical: '2%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }]}>
+                    <Text style={[estilo.textoP16px, estilo.textoCorDisabled]}>MODO OFFLINE - </Text>
+                    <AntDesign name="infocirlce" size={20} color="#CFCDCD" />
+                </TouchableOpacity>
+                : null}
             <Text style={[estilo.tituloH427px, estilo.textoCorSecundaria, estilo.centralizado]}>NOVA FICHA</Text>
             <View>
                 <Text style={[estilo.textoP16px, estilo.textoCorSecundaria]}>Responsável: {professorLogado.getNome()}</Text>

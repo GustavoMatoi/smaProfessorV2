@@ -6,12 +6,12 @@ import ExerciciosCardio from "./ExerciciosCardio"
 import ExerciciosForça from "./ExerciciosForça"
 import { collection,setDoc,doc, getDocs, getFirestore, where , query, addDoc} from "firebase/firestore";
 import {firebase, firebaseBD} from '../configuracoes/firebaseconfig/config'
-import { alunoLogado, professorLogado } from "../Home"
+import { alunoLogado, professorLogado } from "../LoginScreen"
 import { FichaDeExercicios } from "../../classes/FichaDeExercicios"
 import { ExercicioNaFicha } from "../../classes/ExercicioNaFicha"
 import { Exercicio } from "../../classes/Exercicio"
 import { Entypo } from '@expo/vector-icons'; 
-import { professorLogado } from "../Home"
+import { professorLogado } from "../LoginScreen"
 export default props => {
 
   const [isLoading, setIsLoading] = useState(true);
