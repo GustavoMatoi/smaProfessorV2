@@ -1,70 +1,92 @@
-import React, {useState, useEffect} from "react"
-import {Text, View, SafeAreaView, Dimensions, StyleSheet, ScrollView, ActivityIndicator} from 'react-native'
+import React, { useState, useEffect } from "react"
+import { Text, View, SafeAreaView, Dimensions, StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
 import estilo from "../estilo"
 import ExerciciosAlongamento from "./ExerciciosAlongamento"
 import ExerciciosCardio from "./ExerciciosCardio"
 import ExerciciosForça from "./ExerciciosForça"
-import { collection,setDoc,doc, getDocs, getFirestore, where , query, addDoc} from "firebase/firestore";
-import {firebase, firebaseBD} from '../configuracoes/firebaseconfig/config'
+import { collection, setDoc, doc, getDocs, getFirestore, where, query, addDoc } from "firebase/firestore";
+import { firebase, firebaseBD } from '../configuracoes/firebaseconfig/config'
 import { FichaDeExercicios } from "../../classes/FichaDeExercicios"
 import { ExercicioNaFicha } from "../../classes/ExercicioNaFicha"
 import { Exercicio } from "../../classes/Exercicio"
 import { professorLogado } from "../LoginScreen"
-import {Aluno} from '../../classes/Aluno'
-export default ({exercicios}) =>{
-  const alunoLogado = new Aluno()
+export default ({ posicaoDoArray = 0, aluno }) => {
+  let posicao = posicaoDoArray
+  const [fichaValida, setFichaValida] = useState(false)
+  const [verificando, setVerificando] = useState(true)
+  const [exercicios, setExercicios] = useState([])
+  console.log('posicaoDoArray na ficha ', posicaoDoArray)
 
-  const [ultimaFicha, setUltimaFicha] = useState([]);
-  exercicios.length > 0 ? console.log("Maior que 0") : console.log("Menor que 0")
+  useEffect(() => {
+    if (typeof posicaoDoArray === undefined) {
+      posicao = 0
+    }
+    if('fichas' in aluno){
+      console.log(posicao)
+      setExercicios(aluno.fichas[posicao].exercicios)
+      setFichaValida(true)
+      setVerificando(false)
+      exercicios.map((item) => console.log(item.Nome))      
+      }
+  }, [])
 
-  exercicios.map((exercicio) => console.log(exercicio.Nome))
+//  exercicios.map((item) => console.log(item))
+
+
+  //console.log('exercicios ', exercicios)
+
+  //exercicios.map((item) => console.log(item.tipo))
+  //console.log('posicaoArrayFichas ' , posicaoArrayFichas)
+  //console.log('aluno.nome ', aluno.nome)
+  //console.log('aluno.fichas[posicaoArrayFichas].exercicios ', aluno.fichas[posicaoArrayFichas].exercicios)
+  exercicios.map((item) => console.log(item.Nome))      
+
   return (
     <ScrollView style={style.container}>
-    {
-      console.log(exercicios)
-    /*exercicios.length > 0 ? (
-      exercicios.map((exercicioNaFicha, index) => (
-        <View key={index} style={{ width: largura }}>
-          {exercicioNaFicha.exercicio.tipo === 'força' ? (
-            <ExerciciosForça
-              nomeDoExercicio={exercicioNaFicha.exercicio.nome.exercicio}
-              series={exercicioNaFicha.series}
-              repeticoes={exercicioNaFicha.repeticoes}
-              descanso={exercicioNaFicha.descanso}
-              cadencia={exercicioNaFicha.cadencia}
-            />
-          ) : exercicioNaFicha.exercicio.tipo === 'aerobico' ? (
-            <ExerciciosCardio
-              nomeDoExercicio={exercicioNaFicha.exercicio.nome.exercicio}
-              velocidadeDoExercicio={exercicioNaFicha.velocidade}
-              duracaoDoExercicio={exercicioNaFicha.duracao}
-              seriesDoExercicio={exercicioNaFicha.series}
-              descansoDoExercicio={exercicioNaFicha.descanso}
-            />
-          ) : exercicioNaFicha.exercicio.tipo === 'alongamento' ? (
-            <ExerciciosAlongamento
-              nomeDoExercicio={exercicioNaFicha.exercicio.nome}
-              duracaoDoExercicio={exercicioNaFicha.duracao}
-              repeticoesDoExercicio={exercicioNaFicha.repeticoes}
-              duracao={exercicioNaFicha.duracao}
-              descansoDoExercicio={exercicioNaFicha.descanso}
-              imagem={exercicioNaFicha.imagem}
-            />
-          ) : null}
-        </View>
-      ))
-    ) : (
-      <Text style={[{ marginHorizontal: 15, textAlign: 'justify' }, estilo.textoP16px, estilo.textoCorSecundaria]}>
-        A última ficha ainda não foi lançada. Solicite ao professor responsável para lançá-la e tente novamente mais tarde.
-      </Text>
-    )*/}
-  </ScrollView>
+      {
+      
+      fichaValida && !verificando ?  (
+          exercicios.map((item, index) => (
+            <View key={index} style={{ width: '100%' }}>
+              {item.tipo === 'força' ? (
+                <ExerciciosForça
+                  nomeDoExercicio={item.Nome.exercicio}
+                  series={item.series}
+                  repeticoes={item.repeticoes}
+                  descanso={item.descanso}
+                  cadencia={item.cadencia}
+                />
+              ) : item.tipo === 'aerobico' ? (
+                <ExerciciosCardio
+                  nomeDoExercicio={item.Nome.exercicio}
+                  velocidadeDoExercicio={item.velocidade}
+                  duracaoDoExercicio={item.duracao}
+                  seriesDoExercicio={item.series}
+                  descansoDoExercicio={item.descanso}
+                />
+              ) : item.tipo === 'alongamento' ? (
+                <ExerciciosAlongamento
+                  nomeDoExercicio={item.Nome}
+                  series={item.series}
+                  descanso={item.descanso}
+                  repeticoes={item.repeticoes}
+                  imagem={item.imagem}
+                />
+              ) : null}
+            </View>
+          ))
+        ) : (
+          <Text style={[{ marginHorizontal: 15, textAlign: 'justify' }, estilo.textoP16px, estilo.textoCorSecundaria]}>
+            A última ficha ainda não foi lançada. Solicite ao professor responsável para lançá-la e tente novamente mais tarde.
+          </Text>
+        )  }
+    </ScrollView>
   );
-      }
+}
 
 const style = StyleSheet.create({
-    container: {
-        width: '100%',
+  container: {
+    width: '100%',
 
-    }
+  }
 })

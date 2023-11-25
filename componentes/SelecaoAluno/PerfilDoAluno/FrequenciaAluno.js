@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, SafeAreaView, ScrollView, FlatList } from 'reac
 import estilo from '../../estilo'
 import { doc, setDoc, collection, getDocs, query, where, addDoc, getFirestore } from "firebase/firestore";
 import { firebase, firebaseBD } from "../../configuracoes/firebaseconfig/config"
-import { professorLogado } from '../../Home';
+import { professorLogado } from '../../LoginScreen';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import RadioBotao from '../../RadioBotao'
 

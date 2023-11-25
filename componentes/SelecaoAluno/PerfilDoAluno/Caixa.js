@@ -1,10 +1,11 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {Text, View, StyleSheet, TouchableOpacity, Button} from 'react-native'
 import Foto from './Foto'
 import estilo from '../../estilo'
 import {useFonts} from 'expo-font'
 import { printToFileAsync } from 'expo-print'
 import { shareAsync } from 'expo-sharing'
+import NetInfo from "@react-native-community/netinfo"
 
 export default ({aluno, navigation}) => {
     const [fontsLoaded] = useFonts({
@@ -319,6 +320,17 @@ export default ({aluno, navigation}) => {
         </body>
     </html>`
 
+    const [conexao, setConexao] = useState(false)
+    useEffect(() => {
+        const unsubscribe = NetInfo.addEventListener(state => {
+            setConexao(state.type === 'wifi' || state.type === 'cellular')
+        })
+
+        return () => {
+            unsubscribe()
+        }
+    }, [])
+    
     const gerarPdf = async () => {
         const arquivo = await printToFileAsync({
             html: htmlCombinado, 
@@ -376,7 +388,7 @@ export default ({aluno, navigation}) => {
                         </TouchableOpacity>
                     <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat, {marginTop: '3%'}]}>Frequência:</Text>
                     <View>
-                        <TouchableOpacity style={[style.botao, estilo.corPrimaria]}  onPress={()=> {navigation.navigate("Frequencia do aluno", {aluno: aluno})}}>
+                        <TouchableOpacity style={[style.botao, conexao? estilo.corPrimaria : estilo.corDisabled]} disabled={!conexao} onPress={()=> {navigation.navigate("Frequencia do aluno", {aluno: aluno})}}>
                             <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>VISUALIZAR PRESENÇA</Text>
                         </TouchableOpacity>
                     </View>

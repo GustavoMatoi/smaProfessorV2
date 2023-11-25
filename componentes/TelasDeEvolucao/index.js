@@ -13,11 +13,8 @@ import ModalSemConexao from "../ModalSemConexao";
 import NetInfo from "@react-native-community/netinfo"
 
 
-export default ({navigation}) => {
-    const [imageUrl, setImageUrl] = useState(null);
-    const [loading, setLoading] = useState(true)
-    const [alunos, setAlunos] = useState([])
-    const [carregandoAlunos, setCarregandoAlunos] = useState(true)
+export default ({navigation, route}) => {
+    const {alunos} = route.params
     const [conexao, setConexao] = useState(true)
     useEffect (() => {
       const unsubscribe = NetInfo.addEventListener(state => {
@@ -27,61 +24,6 @@ export default ({navigation}) => {
         unsubscribe()
       }
     }, [])
-    useEffect(() => {
-        const fetchAlunos = async () => {
-          try {
-            const academiaRef = collection(firebaseBD, 'Academias');
-            const querySnapshot = await getDocs(academiaRef);
-      
-            const newArrayAlunos = [];
-      
-            for (const academiaDoc of querySnapshot.docs) {
-              const academiaNome = academiaDoc.get('nome');
-                console.log("Chegou aqui")
-                console.log(academiaNome)
-                console.log(professorLogado.getAcademia())
-              if (academiaNome === professorLogado.getAcademia()) {
-                const professoresRef = collection(
-                  firebaseBD,
-                  'Academias',
-                  professorLogado.getAcademia(),
-                  'Professores'
-                );
-                console.log(professorLogado.getAcademia())
-                const professoresSnapshot = await getDocs(professoresRef);
-      
-                for (const professorDoc of professoresSnapshot.docs) {
-                    const professorData = professorDoc.data()
-                    console.log(professorData)
-                  const alunoRef = collection(
-                    firebaseBD,
-                    'Academias',
-                    professorLogado.getAcademia(),
-                    'Professores',
-                    professorData.nome,
-                    'alunos'
-                  );
-                  const alunoSnapshot = await getDocs(alunoRef);
-                    
-                  for (const alunoDoc of alunoSnapshot.docs) {
-                    const alunoData = alunoDoc.data();
-                    console.log(alunoData)
-                    newArrayAlunos.push(alunoData);
-                  }
-                }
-              }
-            }
-      
-            setAlunos(newArrayAlunos);
-            setCarregandoAlunos(false);
-          } catch (error) {
-            console.log(error);
-            setCarregandoAlunos(false)
-          }
-        };
-      
-        fetchAlunos();
-      }, []);
 
       
       return (
@@ -99,13 +41,7 @@ export default ({navigation}) => {
               >
                 Selecione o aluno para continuar.
               </Text>
-              {carregandoAlunos ? (
-                <Spinner
-                  visible={carregandoAlunos}
-                  textContent={'Carregando alunos...'}
-                  textStyle={[estilo.textoCorLight, estilo.textoP16px]}
-                />
-              ) : alunos.length === 0 ? (
+            { alunos.length === 0 ? (
                 <View style={[estilo.centralizado]}>
                   <Text
                     style={[

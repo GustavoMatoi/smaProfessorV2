@@ -82,7 +82,7 @@ export default ({ navigation }) => {
             await AsyncStorage.setItem('senha', password);
             setPassword('');
           }
-              await getValueFunction();
+            await getValueFunction();
         } catch (error) {
           console.error('Erro ao salvar dados no AsyncStorage:', error);
         }
@@ -119,7 +119,9 @@ export default ({ navigation }) => {
               setPassword(senhaProf || '');
           
               if (emailProf && senhaProf) {
-                await firebase.auth().signInWithEmailAndPassword(emailProf, senhaProf);
+                if(conexao){
+                   await firebase.auth().signInWithEmailAndPassword(emailProf, senhaProf);
+                }
                 navigation.navigate('Principal', {professor: dadosProfessor});
               } 
             } catch (error) {
@@ -128,10 +130,12 @@ export default ({ navigation }) => {
         }
       };
 
-      
+      useEffect(() => {
+        console.log("Chamou a função")
+        fetchProfessorData()
+      }, [])
         const fetchProfessorData = async () => {
-          if(conexao){
-            try {
+               try {
                 const academiaRef = collection(firebaseBD, "Academias");
                 const querySnapshot = await getDocs(academiaRef);
                 for (const academiaDoc of querySnapshot.docs) {
@@ -164,12 +168,11 @@ export default ({ navigation }) => {
                     }
                   }
                 }
-              } catch (error) {
+             } catch (error) {
                 console.log(error);
-              } finally {
+              }  finally {
                 saveValueFunction()
-              }
-            };
+              } 
           }
 
       const handleCadastro = () => {

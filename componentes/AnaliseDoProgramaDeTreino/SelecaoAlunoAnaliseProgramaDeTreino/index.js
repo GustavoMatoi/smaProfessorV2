@@ -32,7 +32,7 @@ export default ({ navigation, route }) => {
   return (
     <ScrollView
       style={style.container}>
-      {conexao ?
+      {!conexao ?
         <TouchableOpacity onPress={() => {
           Alert.alert(
             "Modo Offline",

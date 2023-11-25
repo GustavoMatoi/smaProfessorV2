@@ -7,69 +7,8 @@ import { professorLogado } from "../LoginScreen";
 import Spinner from 'react-native-loading-spinner-overlay';
 
 
-export default ({navigation}) => {
-    const [imageUrl, setImageUrl] = useState(null);
-    const [loading, setLoading] = useState(true)
-    const [alunos, setAlunos] = useState([])
-    const [carregandoAlunos, setCarregandoAlunos] = useState(true)
-    useEffect(() => {
-        const fetchAlunos = async () => {
-          try {
-            const academiaRef = collection(firebaseBD, 'Academias');
-            const querySnapshot = await getDocs(academiaRef);
-      
-            const newArrayAlunos = [];
-      
-            for (const academiaDoc of querySnapshot.docs) {
-              const academiaNome = academiaDoc.get('nome');
-                console.log("Chegou aqui")
-                console.log(academiaNome)
-                console.log(professorLogado.getAcademia())
-              if (academiaNome === professorLogado.getAcademia()) {
-                const professoresRef = collection(
-                  firebaseBD,
-                  'Academias',
-                  professorLogado.getAcademia(),
-                  'Professores'
-                );
-                console.log("ZZZZZZZZzz")
-                console.log(professorLogado.getAcademia())
-                const professoresSnapshot = await getDocs(professoresRef);
-      
-                for (const professorDoc of professoresSnapshot.docs) {
-                    const professorData = professorDoc.data()
-                    console.log(professorData)
-                  const alunoRef = collection(
-                    firebaseBD,
-                    'Academias',
-                    professorLogado.getAcademia(),
-                    'Professores',
-                    professorData.nome,
-                    'alunos'
-                  );
-                  const alunoSnapshot = await getDocs(alunoRef);
-                    
-                  for (const alunoDoc of alunoSnapshot.docs) {
-                    const alunoData = alunoDoc.data();
-                    console.log(alunoData)
-                    newArrayAlunos.push(alunoData);
-                  }
-                }
-              }
-            }
-      
-            setAlunos(newArrayAlunos);
-          } catch (error) {
-            console.log(error);
-          } finally {
-            setCarregandoAlunos(false);
-            setLoading(false); 
-
-          }
-        };
-    
-        fetchAlunos();
-      }, []);
+export default ({navigation, route}) => {
+  const {alunos } = route.params
       
     return (
         <SafeAreaView 
@@ -79,13 +18,7 @@ export default ({navigation}) => {
             style={[estilo.textoCorDanger, estilo.textoP16px, style.textoAlinhado]}
              numberOfLines={2}
              >Selecione o aluno para continuar.</Text>
-            {carregandoAlunos ? (
-                                      <Spinner
-                                      visible={carregandoAlunos}
-                                      textContent={'Carregando alunos...'}
-                                      textStyle={[estilo.textoCorLight, estilo.textoP16px]}
-                                    />
-) : (
+            {
   alunos.map((aluno) => (
     <TouchableOpacity
       key={aluno.cpf}
@@ -97,7 +30,7 @@ export default ({navigation}) => {
       <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>{aluno.nome}</Text>
     </TouchableOpacity>
   ))
-)}
+}
         </SafeAreaView>
     )
 }

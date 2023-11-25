@@ -16,6 +16,8 @@ export default ({ navigation, route }) => {
   const numAvaliacoes = avaliacoes.length
   console.log(aluno.email)
 
+// { avaliacao, posicaoDoArray: index, aluno: aluno, avaliacaoAnterior: avaliacoes[index-1] }
+
 
   console.log(numAvaliacoes)
   return (
@@ -34,6 +36,10 @@ export default ({ navigation, route }) => {
         <View>
           {avaliacoes.map((avaliacao, index) => (
             <View style={style.conteudos} key={`keyBotaoAvaliacoes${index}`}>
+              {console.log('avaliacao ', avaliacao)}
+              {console.log('index ', index)}
+              {console.log('aluno ', aluno)}
+              {console.log('avaliacoes[index-1] ', avaliacoes[index-1])}
               <TouchableOpacity
                 style={[estilo.botao, estilo.corPrimaria]}
                 onPress={() => navigation.navigate('Analise do Programa de Treino', { avaliacao, posicaoDoArray: index, aluno: aluno, avaliacaoAnterior: avaliacoes[index-1] })}

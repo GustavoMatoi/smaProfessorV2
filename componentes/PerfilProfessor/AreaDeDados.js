@@ -4,7 +4,7 @@ import estilo from '../estilo'
 import {useFonts} from "expo-font"
 import { getAuth, signOut } from "firebase/auth";
 import { professorLogado, enderecoProfessor } from '../LoginScreen'
-export default ({navigation}) => {
+export default ({navigation, conexao}) => {
     const [fontsLoaded] = useFonts({
         'Montserrat': require('../../assets/Montserrat-Regular.ttf'),
 
@@ -40,7 +40,7 @@ export default ({navigation}) => {
             <Text style={[estilo.tituloH619px, estilo.textoCorSecundaria]}>{professorLogado.getProfissao()}</Text>
             <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.montserrat]}>Endereço:</Text>
             <Text style={[estilo.tituloH619px, estilo.textoCorSecundaria]}>{enderecoProfessor.getRua()},{enderecoProfessor.getNumero()}, {enderecoProfessor.getCidade()}, {enderecoProfessor.getEstado()}</Text>
-            <TouchableOpacity style={[estilo.botao, estilo.corPrimaria, estilo.sombra, {marginTop: '5%'}]} onPress={()=>navigation.navigate('Editar foto')}>
+            <TouchableOpacity style={[estilo.botao, conexao? estilo.corPrimaria : estilo.corDisabled, estilo.sombra, {marginTop: '5%'}]} disabled={!conexao} onPress={()=>navigation.navigate('Editar foto')}>
                 <Text style={[estilo.textoCorLight, estilo.tituloH619px]} >ALTERAR FOTO</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[estilo.botao, estilo.corPrimaria, estilo.sombra, {marginTop: '5%'}]} onPress={()=>handleLogout()}>

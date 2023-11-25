@@ -10,7 +10,7 @@ import { Entypo } from '@expo/vector-icons';
 import ModalSemConexao from "../../ModalSemConexao"
 import NetInfo from '@react-native-community/netinfo'
 
-import { professorLogado } from "../../Home"
+import { professorLogado } from "../../LoginScreen"
 export default ({route, navigation}) => {
     const {aluno} = route.params
     const [arrayDinamometriaPernas, setArrayDinamometriaPernas] = useState([]);
