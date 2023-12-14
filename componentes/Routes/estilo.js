@@ -250,7 +250,7 @@ export default function Routes() {
 
 
 
-  useEffect(() => { verificaDocumentos(); Alert.alert("Chamou a função") }, [])
+  useEffect(() => { verificaDocumentos(); }, [])
   if (carregando) {
     return (
       <Spinner

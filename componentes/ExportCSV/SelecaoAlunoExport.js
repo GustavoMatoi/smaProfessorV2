@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react"
-import { Text, SafeAreaView, StyleSheet, TouchableOpacity } from "react-native"
+import { Text, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView } from "react-native"
 import estilo from "../estilo";
 import {firebase, firebaseBD} from '../configuracoes/firebaseconfig/config'
 import { collection, getDocs} from "firebase/firestore";
@@ -11,7 +11,7 @@ export default ({navigation, route}) => {
   const {alunos } = route.params
       
     return (
-        <SafeAreaView 
+        <ScrollView 
         style={style.container}>
 
             <Text 
@@ -31,7 +31,7 @@ export default ({navigation, route}) => {
     </TouchableOpacity>
   ))
 }
-        </SafeAreaView>
+        </ScrollView>
     )
 }
 

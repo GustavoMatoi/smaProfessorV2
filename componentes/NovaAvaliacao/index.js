@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Text, SafeAreaView, Alert, StyleSheet, TouchableOpacity, Image } from "react-native"
+import { Text, SafeAreaView, Alert, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native"
 import Logo from '../Logo'
 import estilo from "../estilo"
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -29,7 +29,7 @@ export default ({ navigation, route }) => {
   }, [])
 
   return (
-    <SafeAreaView style={style.container}>
+    <ScrollView style={style.container}>
       {!conexao ?
         <TouchableOpacity onPress={() => {
           Alert.alert(
@@ -60,7 +60,7 @@ export default ({ navigation, route }) => {
       ))}
 
 
-    </SafeAreaView>
+    </ScrollView>
   )
 }
 

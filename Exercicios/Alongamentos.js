@@ -223,13 +223,13 @@ export default [
                 nome: 'Alongamento glúteo máximo, reto femoral e iliopsoas',
                 subnome: 'em pé unilateral',
                 execucao: [' estático ', ' dinâmico '],
-                nome: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/gluteoMaximoRetoFemoralEIliopsoasEmPeUnilateral.png?alt=media&token=d58af973-343f-4058-8f8f-c0e4e66aa067'
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/gluteoMaximoRetoFemoralEIliopsoasEmPeUnilateral.png?alt=media&token=d58af973-343f-4058-8f8f-c0e4e66aa067'
             },
             {
                 nome: 'Alongamento glúteo máximo',
                 subnome: 'Deitado',
                 execucao: [' estático ', ' dinâmico '],
-                nome: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/gluteoMaximoDeitado.png?alt=media&token=008e3a68-bc79-41d2-bff1-d5cb4b14944e'
+                imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/gluteoMaximoDeitado.png?alt=media&token=008e3a68-bc79-41d2-bff1-d5cb4b14944e'
             }
         ]
     },
@@ -431,7 +431,7 @@ export default [
         exercicios: [
             {
                 nome: 'Alongamento isquiotibiais e glúteo máximo',
-                subnome: 'deitaod unilateral',
+                subnome: 'deitado unilateral',
                 execucao: [' estático ', ' dinâmico '],
                 imagem: 'https://firebasestorage.googleapis.com/v0/b/shapemeappbdteste.appspot.com/o/isquiotibiaisEGluteoMaximoDeitadoUnilateral.png?alt=media&token=4a25edbc-07a7-4ed1-954e-1b6b14887e1d'
             },

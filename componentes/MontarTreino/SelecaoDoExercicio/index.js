@@ -57,9 +57,10 @@ export default ({ navigation, route }) => {
           exercicioAux = { ...i }
         }
       }
-      console.log(exercicioAux)
+      console.log('exercicioAux', exercicioAux)
+
       if (Object.keys(exercicioAux).length === 0) {
-        Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.1");
+        Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
       } else {
         setSelecionado(value)
         console.log(exercicioAux)
@@ -129,6 +130,7 @@ export default ({ navigation, route }) => {
   const alongamentosIsquiotibiais = Alongamentos[18].exercicios.map((item) => item.subnome)
   const alongamentosMusculosDoPescoco = Alongamentos[19].exercicios.map((item) => item.subnome)
 
+console.log("alongamentosCadeiaLateral", alongamentosCadeiaLateral)
   //console.log(alongamentoDeltoide)
   return (
     <View>
@@ -536,7 +538,7 @@ export default ({ navigation, route }) => {
                     titulo='Selecione um exercício'
                     max={1}
                     onChange={(value) =>
-                      handleSelecaoExercicio(value, 11, 'Alongamento')
+                      handleSelecaoExercicio(value, 12, 'Alongamento')
                     }
                     options={alongamentosCadeiaLateral}
                     select={'Cadeia lateral'}
@@ -549,7 +551,7 @@ export default ({ navigation, route }) => {
                     titulo='Selecione um exercício'
                     max={1}
                     onChange={(value) =>
-                      handleSelecaoExercicio(value, 12, 'Alongamento')
+                      handleSelecaoExercicio(value, 11, 'Alongamento')
                     }
                     options={alongamentosAntebraco}
                     select={'Antebraço'}

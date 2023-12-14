@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react"
-import { Text, SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native"
+import { Text, SafeAreaView, StyleSheet, TouchableOpacity, View, ScrollView } from "react-native"
 import Logo from '../Logo'
 import estilo from "../estilo"
 import { FontAwesome5 } from '@expo/vector-icons'; 
@@ -27,7 +27,7 @@ export default ({navigation, route}) => {
 
       
       return (
-        <SafeAreaView>
+        <ScrollView>
           {conexao ? (
             <>
               <Text
@@ -86,7 +86,7 @@ export default ({navigation, route}) => {
           ) : (
             <ModalSemConexao ondeNavegar={'Home'} navigation={navigation} />
           )}
-        </SafeAreaView>
+        </ScrollView>
       );
 }
 

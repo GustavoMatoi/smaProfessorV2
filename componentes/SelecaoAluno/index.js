@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Text, SafeAreaView, StyleSheet, TouchableOpacity, View, Alert } from "react-native"
+import { Text, SafeAreaView, StyleSheet, TouchableOpacity, View, Alert, ScrollView } from "react-native"
 import Logo from '../Logo'
 import estilo from "../estilo"
 import NetInfo from "@react-native-community/netinfo"
@@ -23,7 +23,7 @@ export default ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={style.container}>
-      <View>
+      <ScrollView>
 
         <>
           <Logo />
@@ -57,7 +57,7 @@ export default ({ navigation, route }) => {
             </TouchableOpacity>
           ))}
         </>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

@@ -33,7 +33,7 @@ export default ({ navigation, route }) => {
           </Text>
         </View>
       ) : (
-        <View>
+        <ScrollView>
           {avaliacoes.map((avaliacao, index) => (
             <View style={style.conteudos} key={`keyBotaoAvaliacoes${index}`}>
               {console.log('avaliacao ', avaliacao)}
@@ -50,7 +50,7 @@ export default ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           ))}
-        </View>
+        </ScrollView>
       )}
     </ScrollView>
   );

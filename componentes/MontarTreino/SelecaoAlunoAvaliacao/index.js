@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Text, SafeAreaView, StyleSheet, TouchableOpacity, Image } from "react-native"
+import { Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native"
 import estilo from "../../estilo"
 import NetInfo from "@react-native-community/netinfo"
 import { AntDesign } from '@expo/vector-icons';
@@ -21,7 +21,7 @@ export default ({ navigation, route }) => {
   }, [])
   const { alunos } = route.params
   return (
-    <SafeAreaView style={style.container}>
+    <ScrollView style={style.container}>
       {!conexao ?
         <TouchableOpacity onPress={() => {
           Alert.alert(
@@ -46,7 +46,7 @@ export default ({ navigation, route }) => {
           <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>{aluno.nome}</Text>
         </TouchableOpacity>
       ))}
-    </SafeAreaView>
+    </ScrollView>
   );
 }
 
