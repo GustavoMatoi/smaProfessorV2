@@ -15,14 +15,6 @@ export default ({aluno, navigation}) => {
     const anoAux = data.getFullYear()
 
     const html = `
-    <!DOCTYPE html>
-        <html lang="pt-br">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Document</title>
-        </head>
-        <body>
             <div style="width: 100%; height: 100%; position: relative; background: white">
                 <div style="width: 220px; height: 78px; left: 0px; top: 25px; position: absolute">
                     <div style="width: 154px; height: 27px; left: 60px; top: 35px; position: absolute">
@@ -133,18 +125,10 @@ export default ({aluno, navigation}) => {
                     ${aluno.sexo}
                 </div>
             </div>
-        </body>
-        </html>
+
     `;
     const parq = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    <body>
+
         <div style="width: 595px; height: 842px; position: relative; background: white">
             <div style="width: 220px; height: 78px; left: 0px; top: 25px; position: absolute">
                 <div style="width: 154px; height: 27px; left: 60px; top: 35px; position: absolute">
@@ -188,19 +172,11 @@ export default ({aluno, navigation}) => {
         <br>
         <br>
         <br>
-    </body>
-    </html>
+
     `;
   
     const anamnese = `
-    <!DOCTYPE html>
-    <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    <body>
+
         <div style="width: 595px; height: 842px; position: relative; background: white">
             <div style="width: 220px; height: 78px; left: 0px; top: 25px; position: absolute">
                 <div style="width: 154px; height: 27px; left: 60px; top: 35px; position: absolute">
@@ -308,8 +284,7 @@ export default ({aluno, navigation}) => {
             </div>
 
         </div>
-    </body>
-    </html>`;
+`;
   
     const htmlCombinado = 
     `<html>
@@ -393,7 +368,7 @@ export default ({aluno, navigation}) => {
                         </TouchableOpacity>
                     </View>
                     </View>
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat, {marginTop: '3%'}]}>Exportar os dados:</Text>
+                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat, {marginTop: '3%'}]}>Exportar PARQ e Anamnese:</Text>
                     <View>
                         <TouchableOpacity style={[style.botao, estilo.corPrimaria]} onPress={()=> gerarPdf()}>
                             <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>EXPORTAR DADOS</Text>

@@ -134,7 +134,7 @@ export default ({ navigation, route }) => {
     const finalizarAvaliacao = () => {
         setSalvandoAvaliacao(true)
         if (conexao) {
-            setDoc(doc(firebaseBD, "Academias", professorLogado.getAcademia(), "Professores", aluno.professorResponsavel, 'alunos', `Aluno ${aluno.email}`, 'Avaliações', `Avaliacao${ano}|${mes}|${dia}`), {
+            setDoc(doc(firebaseBD, "Academias", professorLogado.getAcademia(), "Professores", aluno.professorResponsavel, 'alunos', `Aluno ${aluno.email}`, 'Avaliações', `Avaliacao${ano}|${mes}|${dia}|${horario}|${minutos}`), {
                 DCCoxaMedida1: novaAvalicao.getDCcoxaMedida1(),
                 DCCoxaMedida2: novaAvalicao.getDCcoxaMedida2(),
                 DCCoxaMedida3: novaAvalicao.getDCcoxaMedida3(),
@@ -236,7 +236,7 @@ export default ({ navigation, route }) => {
         } else {
             try {
                 const avaliacaoString = JSON.stringify(avaliacao)
-                AsyncStorage.setItem(`Aluno ${aluno.email}-Avaliacao${ano}|${mes}|${dia}`, avaliacaoString)
+                AsyncStorage.setItem(`Aluno ${aluno.email}-Avaliacao${ano}|${mes}|${dia}|${horario}|${minutos}`, avaliacaoString)
                 setSalvandoAvaliacao(false)
                 navigation.navigate('Modal aviso avaliação sucesso')
             } catch (error) {

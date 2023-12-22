@@ -11,7 +11,6 @@ import { professorLogado } from "./LoginScreen";
 export default ({ navigation, route }) => {
   const {alunos} = route.params
 
-  console.log('alunos na home: ', alunos)
 
   const [conexao, setConexao] = useState(true);
 

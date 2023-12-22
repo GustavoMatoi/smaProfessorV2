@@ -58,7 +58,6 @@ export default function Routes() {
 
       }
       setAlunos(newArrayAlunos)
-      console.log("alunos -> ", alunos)
       setCarregando(false)
 
     } catch (error) {
@@ -161,7 +160,6 @@ export default function Routes() {
           }
         }
       }
-      console.log('newArrayAlunos ', newArrayAlunos)
       setAlunos(newArrayAlunos);
       setCarregando(false)
 
@@ -179,7 +177,7 @@ export default function Routes() {
       console.error('Erro ao buscar alunos:', error);
     }
 
-
+      verificaDocumentos()
   };
 
 
@@ -187,63 +185,67 @@ export default function Routes() {
 
   const verificaDocumentos = async () => {
     //AsyncStorage.clear()
-    if (conexao) {
-      const bd = getFirestore();
-      try {
-        const keys = await AsyncStorage.getAllKeys();
-        const arrayAlunos = []
+    if (conexao !== '') {
+      if (conexao) {
+        const bd = getFirestore();
+        try {
+          const keys = await AsyncStorage.getAllKeys();
+          const arrayAlunos = []
 
-        for (const key of keys) {
-          const value = await AsyncStorage.getItem(key);
+          for (const key of keys) {
+            const value = await AsyncStorage.getItem(key);
 
-          if (value) {
+            if (value) {
 
-            if (key.includes("Avaliacao")) {
+              if (key.includes("Avaliacao")) {
 
-              const parts = key.split(' ');
-              const email = parts[1].split("-")[0];
-              const dataAvaliacao = parts[1].split("-")[1];
-              alunos.forEach((item) => {
+                const parts = key.split(' ');
+                const email = parts[1].split("-")[0];
+                const dataAvaliacao = parts[1].split("-")[1];
+                alunos.forEach((item) => {
 
-                if (item.email == email) {
-                  const avaliacaoObjeto = JSON.parse(value)
-                  setDoc(doc(bd, 'Academias', item.Academia, 'Professores', item.professorResponsavel, 'alunos', `Aluno ${item.email}`, 'Avaliações', dataAvaliacao),
-                    avaliacaoObjeto)
-                  AsyncStorage.removeItem(key)
-                }
-              })
-            }
-            if (key.includes("FichaDeExercicios")) {
-
-              const parts = key.split(' ');
-              const email = parts[1].split("-")[0];
-              const dataFicha = parts[1].split("-")[1];
-              const ultimoParam = parts[1].split('-')[2];
-
-              alunos.forEach((item) => {
-
-                if (item.email == email) {
-                  if (ultimoParam === 'Atributos') {
-                    const atributosObj = JSON.parse(value)
-                    setDoc(doc(bd, 'Academias', item.Academia, 'Professores', item.professorResponsavel, 'alunos', `Aluno ${item.email}`, 'FichaDeExercicios', dataFicha),
-                      atributosObj)
+                  if (item.email == email) {
+                    const avaliacaoObjeto = JSON.parse(value)
+                    setDoc(doc(bd, 'Academias', item.Academia, 'Professores', item.professorResponsavel, 'alunos', `Aluno ${item.email}`, 'Avaliações', dataAvaliacao),
+                      avaliacaoObjeto)
                     AsyncStorage.removeItem(key)
-                  }
-                  if (ultimoParam.includes('Exercicio')) {
-                    const atributosObj = JSON.parse(value)
-                    setDoc(doc(bd, 'Academias', item.Academia, 'Professores', item.professorResponsavel, 'alunos', `Aluno ${item.email}`, 'FichaDeExercicios', dataFicha, "Exercicios", ultimoParam),
-                      atributosObj)
-                    AsyncStorage.removeItem(key)
+                    console.log('key: ', key, "data ", dataAvaliacao, " value:", value)
 
                   }
+                })
+              }
+              if (key.includes("FichaDeExercicios")) {
 
-                }
-              })
+                const parts = key.split(' ');
+                const email = parts[1].split("-")[0];
+                const dataFicha = parts[1].split("-")[1];
+                const ultimoParam = parts[1].split('-')[2];
+
+                alunos.forEach((item) => {
+
+                  if (item.email == email) {
+                    if (ultimoParam === 'Atributos') {
+                      const atributosObj = JSON.parse(value)
+                      setDoc(doc(bd, 'Academias', item.Academia, 'Professores', item.professorResponsavel, 'alunos', `Aluno ${item.email}`, 'FichaDeExercicios', dataFicha),
+                        atributosObj)
+                      AsyncStorage.removeItem(key)
+                    }
+                    if (ultimoParam.includes('Exercicio')) {
+                      const atributosObj = JSON.parse(value)
+                      setDoc(doc(bd, 'Academias', item.Academia, 'Professores', item.professorResponsavel, 'alunos', `Aluno ${item.email}`, 'FichaDeExercicios', dataFicha, "Exercicios", ultimoParam),
+                        atributosObj)
+                      AsyncStorage.removeItem(key)
+
+                    }
+
+                  }
+                })
+              }
             }
           }
+        } catch (error) {
+          console.error('Erro ao obter dados do AsyncStorage:', error);
         }
-      } catch (error) {
-        console.error('Erro ao obter dados do AsyncStorage:', error);
       }
     }
   };

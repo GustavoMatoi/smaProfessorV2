@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Alert } from 'react-native';
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import Spinner from "react-native-loading-spinner-overlay";
 import estilo from "../../estilo"
 import RadioBotao from "../../RadioBotao";
 export default ({ navigation, route }) => {
     const { nomeExercicio, exercicio, tipo, index } = route.params;
+
+
     const [exercicioString, setExercicioString] = useState('')
     const [dataExercicio, setDataExercicio] = useState({});
     const [carregando, setCarregando] = useState(true);
@@ -47,15 +49,18 @@ export default ({ navigation, route }) => {
     const [execucaoSelecionada, setExecucaoSelecionada] = useState(-1)
     const [execucaoString, setExecucaoString] = useState('')
 
-    const[sentidoDoMovimentoString, setSentidoDoMovimentoString] = useState('')
-    const[sentidoDoMovimentoSelecionado, setSentidoDoMovimentoSelecionado] = useState(-1)
-    
+    const [sentidoDoMovimentoString, setSentidoDoMovimentoString] = useState('')
+    const [sentidoDoMovimentoSelecionado, setSentidoDoMovimentoSelecionado] = useState(-1)
+
 
     console.log('index pt 3', index)
     const [imagem, setImagem] = useState('')
     useEffect(() => {
         const fetchData = () => {
             console.log(tipo)
+            if (tipo === 'Força') {
+
+            }
             if (tipo === 'MembrosSuperiores' || tipo === 'MembrosInferiores') {
 
                 if ("variacoes" in exercicio) {
@@ -99,7 +104,7 @@ export default ({ navigation, route }) => {
 
             } else if (tipo === 'Aerobicos') {
                 setExercicioString(exercicio)
-            } else {
+            } else if (tipo === 'Alongamento') {
 
 
                 setDataExercicio(exercicio || {});
@@ -107,7 +112,7 @@ export default ({ navigation, route }) => {
                 if ("sentidoDoMovimento" in exercicio) {
 
                     setSentidoDoMovimento(Object.values(exercicio.sentidoDoMovimento));
-                    
+
                 }
 
                 if ("execucao" in exercicio) {
@@ -131,7 +136,15 @@ export default ({ navigation, route }) => {
         areaSelecao: {
             width: '100%',
             padding: 20
-        }
+        },
+        botaoInput: {
+            width: '90%',
+            height: 50,
+            borderRadius: 10,
+            textAlign: 'center',
+            borderWidth: 1,
+            marginTop: 10
+        },
     })
 
     const montarExercicio = (nome, variacao, implemento, postura, pegada, execucao, posicaoDosPes, posicaoDosJoelhos, quadril, amplitude, apoioDosPes, sentidoDoMovimento) => {
@@ -164,16 +177,39 @@ export default ({ navigation, route }) => {
         if (apoioDosPes) {
             exercicioAux += ` | ${apoioDosPes}`
         }
-        if(sentidoDoMovimento){
+        if (sentidoDoMovimento) {
             exercicioAux += ` | ${sentidoDoMovimento}`
+        }
+        if(tipo === 'Força'){
+            if(exercicioString.includes('+')){
+                route.params.receberExercicio(exercicioString, imagem, index)
+                navigation.navigate('Montar treino', { aluno: route.params.aluno })                 
+            }else {
+                Alert.alert("Nome inválido.", "Os nomes precisam ser separados pelo símbolo +")
+                return
+            }
+       
+        }
+        if(exercicio === 'Personalizado'){
+            if(exercicioString.includes('+')){
+                setExercicioString(exercicioAux)
+                route.params.receberExercicio(exercicioAux, imagem, index)
+                navigation.navigate('Montar treino', { aluno: route.params.aluno })                 
+            }else {
+                Alert.alert("Nome inválido.", "Os nomes precisam ser separados pelo símbolo +")
+                return
+            }      
         }
         console.log(sentidoDoMovimento)
         setExercicioString(exercicioAux)
         route.params.receberExercicio(exercicioAux, imagem, index)
         navigation.navigate('Montar treino', { aluno: route.params.aluno })
     }
+    let nomeExercicioString = ''
+    if (exercicio !== 'Personalizado') {
+        nomeExercicioString = exercicio.nome.split("(");
+    }
 
-    const nomeExercicioString = exercicio.nome.split("(");
     return (
         <View>
             <ScrollView style={[{ width: '100%' }]}>
@@ -184,6 +220,47 @@ export default ({ navigation, route }) => {
                         textStyle={[estilo.textoCorLight, estilo.textoP16px]}
                     />
                 ) : (
+
+                        <View>
+                        {tipo === 'Força' ?
+                            <View style={style.areaSelecao}>
+                                <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Nomes dos exercícios, separado por '+': </Text>
+                                <TextInput
+                                onChangeText={(text)=> setExercicioString(text)}
+                                style={[style.botaoInput, estilo.corLight, estilo.sombra]}
+                                placeholder="Informe o nome do exercício"
+                                >
+
+                                </TextInput>
+                            </View> : null
+
+                        }
+                        {tipo === 'Aerobicos' && exercicio == 'Personalizado' ?
+                            <View style={style.areaSelecao}>
+                                <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Nomes dos exercícios, separado por '+': </Text>
+                                <TextInput
+                                onChangeText={(text)=> setExercicioString(text)}
+                                style={[style.botaoInput, estilo.corLight, estilo.sombra]}
+                                placeholder="Informe o nome do exercício"
+                                >
+
+                                </TextInput>
+                            </View> : null
+                        }
+                        
+
+                        {tipo === 'AlongamentoP' && exercicio == 'Personalizado' ?
+                            <View style={style.areaSelecao}>
+                                <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Nomes dos exercícios, separado por '+': </Text>
+                                <TextInput
+                                onChangeText={(text)=> setExercicioString(text)}
+                                style={[style.botaoInput, estilo.corLight, estilo.sombra]}
+                                placeholder="Informe o nome do exercício"
+                                >
+
+                                </TextInput>
+                            </View> : null
+                        }
                     <View style={[{ width: '95%' }]}>
                         <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, estilo.centralizado, { marginVertical: '5%' }]}>{exercicio.nome}</Text>
 
@@ -311,15 +388,21 @@ export default ({ navigation, route }) => {
 
 
                     </View>
-                )}
+                                   </View>
+                                   )}
                 <View style={[estilo.centralizado, { width: '80%' }]}>
-                    <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Exercício: {nomeExercicioString[0].trim()} {posturaString} {implementoString} {variacaoString} {pegadaString} {execucaoString} {posicaoDosPesString} {quadrilString} {amplitudeString} {posicaoString} {posicaoDosJoelhosString} {apoioDosPesString} {sentidoDoMovimentoString}</Text>
-
+                    {exercicio !== 'Personalizado' ? <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Exercício: {nomeExercicioString[0].trim()} {posturaString} {implementoString} {variacaoString} {pegadaString} {execucaoString} {posicaoDosPesString} {quadrilString} {amplitudeString} {posicaoString} {posicaoDosJoelhosString} {apoioDosPesString} {sentidoDoMovimentoString}</Text>
+                        : <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Exercício: {exercicioString}</Text>}
                 </View>
                 <View style={[{ marginVertical: '5%' }]}>
-                    <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => montarExercicio(nomeExercicioString[0].trim(), variacaoString, implementoString, posturaString, pegadaString, execucaoString, posicaoDosPesString, posicaoDosJoelhosString, quadrilString, amplitudeString, apoioDosPesString, sentidoDoMovimentoString)}>
-                        <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>SALVAR EXERCÍCIO</Text>
-                    </TouchableOpacity>
+                        {exercicio !== 'Personalizado'? 
+                                            <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => montarExercicio(nomeExercicioString[0].trim(), variacaoString, implementoString, posturaString, pegadaString, execucaoString, posicaoDosPesString, posicaoDosJoelhosString, quadrilString, amplitudeString, apoioDosPesString, sentidoDoMovimentoString)}>
+                                            <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>SALVAR EXERCÍCIO</Text>
+                                        </TouchableOpacity> :
+                                                            <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => montarExercicio(exercicioString)}>
+                                                            <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>SALVAR EXERCÍCIO</Text>
+                                                        </TouchableOpacity>}
+
                 </View>
             </ScrollView>
         </View>

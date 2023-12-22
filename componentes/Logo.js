@@ -10,7 +10,7 @@ export default props => {
                     <Text style={[Estilo.tituloH148px, Estilo.textoCorPrimariaMenos1]}>App</Text>
                 </View>
                 <View style={[Estilo.corPrimariaMais1, style.logoProfessor]}>
-                        <Text style={[Estilo.tituloH333px, Estilo.textoCorLight]}>PROFESSOR</Text>
+                <Text style={[Estilo.tituloH333px, Estilo.textoCorLight]}>PROFESSOR</Text>
                 </View>
             </View>
         )
@@ -22,7 +22,7 @@ export default props => {
                     <Text style={[Estilo.tituloH427px, Estilo.textoCorPrimariaMenos1]}>App</Text>
                 </View>
                 <View style={[Estilo.corPrimariaMais1, style.logoProfessorSmall]}>
-                        <Text style={[Estilo.tituloH619px, Estilo.textoCorLight]}>PROFESSOR</Text>
+                <Text style={[{fontSize:15, fontWeight: 'bold'}, Estilo.textoCorLight]}>PROFESSOR</Text>
                 </View>
             </View>            
         )

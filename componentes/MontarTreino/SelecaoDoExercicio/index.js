@@ -38,7 +38,15 @@ export default ({ navigation, route }) => {
         setSelecionado(value)
         navigation.navigate('Adicionais exercício', { exercicio: exercicioAux, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo: tipoExercicio, index: indexPorParametro })
       }
-    } else if (tipoExercicio === 'MembrosInferiores') {
+    } else if (tipoExercicio === 'Força') {
+      navigation.navigate('Adicionais exercício', { exercicio: 'Personalizado', receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo: tipoExercicio, index: indexPorParametro })
+
+    } else if (tipoExercicio === 'AlongamentoP') {
+      navigation.navigate('Adicionais exercício', { exercicio: 'Personalizado', receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo: tipoExercicio, index: indexPorParametro })
+
+    }
+
+    else if (tipoExercicio === 'MembrosInferiores') {
       for (i of MembrosInferores[index].exercicios) {
         if (i.nome === value) {
           exercicioAux = { ...i }
@@ -57,7 +65,6 @@ export default ({ navigation, route }) => {
           exercicioAux = { ...i }
         }
       }
-      console.log('exercicioAux', exercicioAux)
 
       if (Object.keys(exercicioAux).length === 0) {
         Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
@@ -72,21 +79,25 @@ export default ({ navigation, route }) => {
 
 
   const handleSelecaoExercicioCardio = (value, tipo) => {
-    console.log(value)
-    console.log(value);
-    let exercicioAux = {}
-    for (i of Aerobicos) {
-      console.log(i)
-      if (i.nome === value) {
-        exercicioAux = { ...i }
+    if (value === 'Personalizado') {
+      navigation.navigate('Adicionais exercício', { exercicio: 'Personalizado', receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo, index: index })
+
+    } else {
+      let exercicioAux = {}
+      for (i of Aerobicos) {
+        console.log(i)
+        if (i.nome === value) {
+          exercicioAux = { ...i }
+        }
+      }
+      if (Object.keys(exercicioAux).length === 0) {
+        Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
+      } else {
+        setSelecionado(value)
+        navigation.navigate('Adicionais exercício', { exercicio: exercicioAux, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo, index: index })
       }
     }
-    if (Object.keys(exercicioAux).length === 0) {
-      Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
-    } else {
-      setSelecionado(value)
-      navigation.navigate('Adicionais exercício', { exercicio: exercicioAux, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo, index: index })
-    }
+
   }
 
 
@@ -130,7 +141,7 @@ export default ({ navigation, route }) => {
   const alongamentosIsquiotibiais = Alongamentos[18].exercicios.map((item) => item.subnome)
   const alongamentosMusculosDoPescoco = Alongamentos[19].exercicios.map((item) => item.subnome)
 
-console.log("alongamentosCadeiaLateral", alongamentosCadeiaLateral)
+  console.log("alongamentosCadeiaLateral", alongamentosCadeiaLateral)
   //console.log(alongamentoDeltoide)
   return (
     <View>
@@ -142,8 +153,11 @@ console.log("alongamentosCadeiaLateral", alongamentosCadeiaLateral)
         />
       ) : (
         tipo === 'força' ? <ScrollView style={[estilo.centralizado, { width: '100%' }]}>
+          <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Selecionar</Text>
+
           <View style={[estilo.centralizado, { marginVertical: 10 }]}>
-            <Text style={[estilo.textoCorSecundaria, estilo.tituloH427px]}>Grupos musculares</Text>
+
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Grupos musculares</Text>
 
           </View>
           <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Membros superiores:</Text>
@@ -360,11 +374,16 @@ console.log("alongamentosCadeiaLateral", alongamentosCadeiaLateral)
               select={'Exercícios uniarticulares'}
             />
           </View>
-
+          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Conjugado:</Text>
+          <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { handleSelecaoExercicio('Personalizado', 0, 'Força') }}>
+            <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>CRIAR CONJUGADO</Text>
+          </TouchableOpacity>
         </ScrollView>
           :
           tipo === 'aerobicos' ? <>
             <View style={{ marginBottom: '3%', padding: 10 }}>
+
+
               <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Selecione um exercício:</Text>
 
               <BotaoSelect
@@ -378,11 +397,22 @@ console.log("alongamentosCadeiaLateral", alongamentosCadeiaLateral)
               />
             </View>
 
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Conjugado:</Text>
+            <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { handleSelecaoExercicioCardio('Personalizado', 'Aerobicos') }}>
+              <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>CRIAR CONJUGADO</Text>
+            </TouchableOpacity>
+
           </> :
             tipo === 'alongamento' ?
               <ScrollView>
                 <View style={{ padding: 10 }}>
-                  <Text style={[estilo.textoCorSecundaria, estilo.tituloH427px, estilo.centralizado]}>Selecione um exercício</Text>
+                  <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Selecionar</Text>
+
+                  <View style={[estilo.centralizado, { marginVertical: 10 }]}>
+
+                    <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Grupos musculares</Text>
+
+                  </View>
 
                 </View>
                 <View style={{ marginBottom: '3%' }}>
@@ -649,7 +679,10 @@ console.log("alongamentosCadeiaLateral", alongamentosCadeiaLateral)
                     select={'Músculos do pescoço'}
                   />
                 </View>
-
+                <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Conjugado:</Text>
+                <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { handleSelecaoExercicio('Personalizado', 0, 'AlongamentoP') }}>
+                  <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>CRIAR CONJUGADO</Text>
+                </TouchableOpacity>
               </ScrollView> : null
 
 

@@ -26,8 +26,8 @@ export default ({ navigation, route }) => {
         }
     }, [])
 
-    console.log(exercicios)
-    console.log(exercicios)
+    console.log(professorLogado.getNome())
+
     const style = StyleSheet.create({
         container: {
             flex: 1,
@@ -77,6 +77,12 @@ export default ({ navigation, route }) => {
     let mes = data.getMonth() + 1
     mes < 10 ? mes = `0${mes}` : mes = mes
     const ano = data.getFullYear()
+
+
+    console.log('aluno.professorResponsavel', aluno.professorResponsavel)
+    console.log(aluno.email)
+    const horario = data.getHours()
+    const minutos = data.getMinutes()
     const salvarFicha = async () => {
         if (dataFim !== '') {
             const bd = getFirestore();
@@ -123,7 +129,7 @@ export default ({ navigation, route }) => {
                         'alunos',
                         `Aluno ${aluno.email}`,
                         'FichaDeExercicios',
-                        `FichaDeExercicios${ano}|${mes}|${dia}`
+                        `FichaDeExercicios${ano}|${mes}|${dia}|${horario}|${minutos}`
                     ), {
                         dataFim: dataFim,
                         dataInicio: `${dia}/${mes}/${ano}`,
@@ -147,7 +153,7 @@ export default ({ navigation, route }) => {
                             'alunos',
                             `Aluno ${aluno.email}`,
                             'FichaDeExercicios',
-                            `FichaDeExercicios${ano}|${mes}|${dia}`,
+                            `FichaDeExercicios${ano}|${mes}|${dia}|${horario}|${minutos}`,
                             'Exercicios',
                             `Exercicio ${index}`
                         ), element);
@@ -182,7 +188,7 @@ export default ({ navigation, route }) => {
 
                 const avaliacaoString = JSON.stringify(avaliacaoData)
                 try {
-                    AsyncStorage.setItem(`Aluno ${aluno.email}-FichaDeExercicios${ano}|${mes}|${dia}-Atributos`, avaliacaoString);
+                    AsyncStorage.setItem(`Aluno ${aluno.email}-FichaDeExercicios${ano}|${mes}|${dia}|${horario}|${minutos}-Atributos`, avaliacaoString);
                 } catch (error) {
                     console.log("Não foi possível salvar os arquivos no Async Storage")
                 }
@@ -192,7 +198,7 @@ export default ({ navigation, route }) => {
                     console.log('index', index)
                     try {
                         const elementString = JSON.stringify(element);
-                        AsyncStorage.setItem(`Aluno ${aluno.email}-FichaDeExercicios${ano}|${mes}|${dia}-Exercicio${index}`, elementString);
+                        AsyncStorage.setItem(`Aluno ${aluno.email}-FichaDeExercicios${ano}|${mes}|${dia}|${horario}|${minutos}-Exercicio${index}`, elementString);
                     } catch (error) {
                         console.log('Erro ao salvar dados no AsyncStorage:', error);
                     }
