@@ -58,8 +58,6 @@ export default ({ navigation, route }) => {
         }
     }
     const data = new Date()
-    const horario = data.getHours()
-    const minutos = data.getMinutes()
     const mes = data.getMonth() + 1
     const dia = data.getDate()
     const ano = data.getFullYear()
@@ -70,6 +68,10 @@ export default ({ navigation, route }) => {
     if (mes < 10) {
         mes = `0${mes}`
     }
+    let horario = data.getHours()
+    horario < 10 ? horario = `0${horario}`: null
+    let minutos = data.getMinutes()
+    minutos < 10 ? minutos = `0${minutos}`: null
 
     const avaliacao = {
         DCCoxaMedida1: novaAvalicao.getDCcoxaMedida1(),
@@ -133,7 +135,7 @@ export default ({ navigation, route }) => {
 
     const finalizarAvaliacao = () => {
         setSalvandoAvaliacao(true)
-        if (conexao) {
+        if (!conexao) {
             setDoc(doc(firebaseBD, "Academias", professorLogado.getAcademia(), "Professores", aluno.professorResponsavel, 'alunos', `Aluno ${aluno.email}`, 'Avaliações', `Avaliacao${ano}|${mes}|${dia}|${horario}|${minutos}`), {
                 DCCoxaMedida1: novaAvalicao.getDCcoxaMedida1(),
                 DCCoxaMedida2: novaAvalicao.getDCcoxaMedida2(),

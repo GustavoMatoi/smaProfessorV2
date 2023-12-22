@@ -374,9 +374,9 @@ export default ({ navigation, route }) => {
               select={'Exercícios uniarticulares'}
             />
           </View>
-          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Conjugado:</Text>
+          <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Combinar exercícios:</Text>
           <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { handleSelecaoExercicio('Personalizado', 0, 'Força') }}>
-            <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>CRIAR CONJUGADO</Text>
+            <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>COMBINAR</Text>
           </TouchableOpacity>
         </ScrollView>
           :
@@ -397,9 +397,9 @@ export default ({ navigation, route }) => {
               />
             </View>
 
-            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Conjugado:</Text>
+            <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Combinar exercícios:</Text>
             <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { handleSelecaoExercicioCardio('Personalizado', 'Aerobicos') }}>
-              <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>CRIAR CONJUGADO</Text>
+              <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>COMBINAR</Text>
             </TouchableOpacity>
 
           </> :
@@ -679,9 +679,9 @@ export default ({ navigation, route }) => {
                     select={'Músculos do pescoço'}
                   />
                 </View>
-                <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Conjugado:</Text>
+                <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Combinar exercícios:</Text>
                 <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { handleSelecaoExercicio('Personalizado', 0, 'AlongamentoP') }}>
-                  <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>CRIAR CONJUGADO</Text>
+                  <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>COMBINAR</Text>
                 </TouchableOpacity>
               </ScrollView> : null
 

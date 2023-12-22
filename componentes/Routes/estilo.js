@@ -25,7 +25,7 @@ export default function Routes() {
   const [carregando, setCarregando] = useState(true)
   const [alunos, setAlunos] = useState([])
   const [carregandoAlunos, setCarregandoAlunos] = useState(true)
-  const [conexao, setConexao] = useState('');
+  const [conexao, setConexao] = useState(true);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -33,9 +33,15 @@ export default function Routes() {
       if (conexao !== '') {
         if (conexao) {
           fetchAlunosWifi()
+          console.log("Wifi")
+          verificaDocumentos()
         } else {
           fetchAlunosSemNet()
+          verificaDocumentos()
+
         }
+      } else {
+        console.log("Aaa")
       }
     })
     return () => {
@@ -176,17 +182,16 @@ export default function Routes() {
     } catch (error) {
       console.error('Erro ao buscar alunos:', error);
     }
-
-      verificaDocumentos()
   };
 
 
 
 
   const verificaDocumentos = async () => {
-    //AsyncStorage.clear()
-    if (conexao !== '') {
+
+
       if (conexao) {
+        console.log("com conexao")
         const bd = getFirestore();
         try {
           const keys = await AsyncStorage.getAllKeys();
@@ -228,16 +233,16 @@ export default function Routes() {
                       const atributosObj = JSON.parse(value)
                       setDoc(doc(bd, 'Academias', item.Academia, 'Professores', item.professorResponsavel, 'alunos', `Aluno ${item.email}`, 'FichaDeExercicios', dataFicha),
                         atributosObj)
-                      AsyncStorage.removeItem(key)
+                      //AsyncStorage.removeItem(key)
                     }
                     if (ultimoParam.includes('Exercicio')) {
                       const atributosObj = JSON.parse(value)
                       setDoc(doc(bd, 'Academias', item.Academia, 'Professores', item.professorResponsavel, 'alunos', `Aluno ${item.email}`, 'FichaDeExercicios', dataFicha, "Exercicios", ultimoParam),
                         atributosObj)
-                      AsyncStorage.removeItem(key)
+                      //AsyncStorage.removeItem(key)
 
                     }
-
+                    console.log('key ', key, 'value ', value)
                   }
                 })
               }
@@ -246,7 +251,7 @@ export default function Routes() {
         } catch (error) {
           console.error('Erro ao obter dados do AsyncStorage:', error);
         }
-      }
+      
     }
   };
 

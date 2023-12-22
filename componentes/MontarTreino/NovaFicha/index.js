@@ -81,8 +81,11 @@ export default ({ navigation, route }) => {
 
     console.log('aluno.professorResponsavel', aluno.professorResponsavel)
     console.log(aluno.email)
-    const horario = data.getHours()
-    const minutos = data.getMinutes()
+    let horario = data.getHours()
+    horario < 10 ? horario = `0${horario}`: null
+    let minutos = data.getMinutes()
+    minutos < 10 ? minutos = `0${minutos}`: null
+
     const salvarFicha = async () => {
         if (dataFim !== '') {
             const bd = getFirestore();
@@ -118,7 +121,7 @@ export default ({ navigation, route }) => {
                     }
                 }
             });
-            if (conexao) {
+            if (!conexao) {
                 try {
                     await setDoc(doc(
                         bd,
