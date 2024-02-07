@@ -156,6 +156,8 @@ export default ({navigation}) => {
     const [ruaInvalida, setRuaInvalida] = useState(false)
 
     const [numero, setNumero] = useState('')
+
+
     const [complemento, setComplemento] = useState('')
     
     const [email, setEmail] = useState('')
@@ -163,6 +165,9 @@ export default ({navigation}) => {
 
     const [senha, setSenha] = useState('')
     const [senhaInvalida, setSenhaInvalida] = useState(false)
+
+    const [numeroInvalido, setNumeroInvalido] = useState('')
+  
 
     const [selectedOption, setSelectedOption] = useState('');
     const [selected, setSelected] = useState(0)
@@ -180,10 +185,14 @@ export default ({navigation}) => {
       const ano = data.getFullYear()
       
 
-      setDoc(doc(firebaseBD, "Academias", `${novoProfessor.getAcademia()}`, "Professores", `${novoProfessor.getNome()}`), {
+      firebase.auth().createUserWithEmailAndPassword(novoProfessor.getEmail(), novoProfessor.getSenha())
+      .then((userCredential) => {
+        console.log(userCredential);
+    
+        setDoc(doc(firebaseBD, "Academias", `${novoProfessor.getAcademia()}`, "Professores", `${novoProfessor.getNome()}`), {
           nome: novoProfessor.getNome(),
           cpf: novoProfessor.getCpf(),
-          dataNascimento:  novoProfessor.getDataNascimento(),
+          dataNascimento: novoProfessor.getDataNascimento(),
           telefone: novoProfessor.getTelefone(),
           profissao: novoProfessor.getProfissao(),
           sexo: novoProfessor.getSexo(),
@@ -198,27 +207,57 @@ export default ({navigation}) => {
           email: novoProfessor.getEmail(),
           senha: novoProfessor.getSenha(),
         }).then(() => {
-          alert("Novo usuário criado com sucesso!")
-          firebase.auth().createUserWithEmailAndPassword(novoProfessor.getEmail(), novoProfessor.getSenha())
-          .then((userCredential) => {
-            console.log(userCredential)
-
-          }).catch((error) => {
-            alert("Ocorreu um erro no seu cadastro.")
-          })
-        }).catch((erro) => {
-            console.log(`Não foi possível criar o documento. Já existe um usuário cadastrado com este email.`)
-          });
-          setDoc(doc(firebaseBD,"Academias", `${novoProfessor.getAcademia()}`, "Professores", `${novoProfessor.getNome()}`, "Notificações", `Notificação${ano}|${mes}|${dia}`), {
+          alert("Novo usuário criado com sucesso!");
+    
+          setDoc(doc(firebaseBD, "Academias", `${novoProfessor.getAcademia()}`, "Professores", `${novoProfessor.getNome()}`, "Notificações", `Notificação${ano}|${mes}|${dia}`), {
             data: `${dia}/${mes}/${ano}`,
             nova: false,
             remetente: 'Gustavo & cia',
             texto: "É um prazer recebê-lo em nosso aplicativo. Desenvolvido por Gustavo Vaz Teixeira, João Bastista, Mateus Novaes, Sérgio Muinhos e Marcelo Patrício, em parceria com o Instituto Federal do Sudeste de Minas Gerais, o ShapeMeApp foi criado para proporcionar a você uma experiência interativa e personalizada durante seus treinos.",
             tipo: "sistema",
             titulo: "Bem-vindo ao ShapeMeApp!"
-          })
-          navigation.navigate("Login")
-    }
+          });
+    
+          navigation.navigate("Login");
+        }).catch(error => {
+          let errorMessage = '';
+          switch (error.code) {
+            case 'auth/email-already-in-use':
+              errorMessage = 'O email fornecido já está em uso por outra conta.';
+              break;
+            case 'auth/invalid-email':
+              errorMessage = 'O email fornecido é inválido.';
+              break;
+            case 'auth/weak-password':
+              errorMessage = 'A senha fornecida é muito fraca. Escolha uma senha mais forte.';
+              break;
+            default:
+              errorMessage = 'Ocorreu um erro ao cadastrar o usuário. Tente novamente.';
+          }
+    
+          Alert.alert('Erro no cadastro', errorMessage);
+          console.log(error);
+        });
+      }).catch((error) => {
+        let errorMessage = '';
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            errorMessage = 'O email fornecido já está em uso por outra conta.';
+            break;
+          case 'auth/invalid-email':
+            errorMessage = 'O email fornecido é inválido.';
+            break;
+          case 'auth/weak-password':
+            errorMessage = 'A senha fornecida é muito fraca. Escolha uma senha mais forte.';
+            break;
+          default:
+            errorMessage = 'Ocorreu um erro ao cadastrar o usuário. Tente novamente.';
+        }
+  
+        Alert.alert('Erro no cadastro', errorMessage);
+        console.log(error);
+      });
+    }    
           //Validação do estado
         const estadosBrasileiros = [
         'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO',
@@ -522,7 +561,10 @@ export default ({navigation}) => {
                       <View style={[style.inputArea, style.campoPequeno]}>
                           <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria]} numberOfLines={1}>NÚMERO:</Text>
                           <TextInput 
-                              style={[style.inputText, estilo.sombra, estilo.corLight]} placeholder="Número da sua residência"
+                              style={[style.inputText, estilo.sombra, estilo.corLight,
+                                numeroInvalido ? { borderColor: 'red', borderWidth: 1 } : {}
+                              
+                              ]} placeholder="Número da sua residência"
                               value={numero}
                               keyboardType='numeric'
                               onChangeText={(text) => setNumero(text)}
@@ -609,6 +651,7 @@ export default ({navigation}) => {
                       if(enderecoProfessor.getCidade() == '') setCidadeInvalida(true)
                       if(enderecoProfessor.getBairro() == '') setBairroInvalido(true)
                       if(novoProfessor.getEmail() == '') setEmailInvalido(true)
+                      if(enderecoProfessor.getNumero() == '') setNumeroInvalido(true)
                       
                     } else {
                       handleFinalizarCadastro()
