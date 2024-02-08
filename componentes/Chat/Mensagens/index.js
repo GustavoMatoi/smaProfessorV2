@@ -49,7 +49,7 @@ export default ({ route }) => {
       'Academias',
       professorLogado.getAcademia(),
       'Professores',
-      professorLogado.getNome(),
+      professorLogado.getEmail(),
       'Mensagens',
       `Mensagens ${aluno.email}`,
       'todasAsMensagens'
@@ -59,8 +59,8 @@ export default ({ route }) => {
       firebaseBD,
       'Academias',
       professorLogado.getAcademia(),
-      'Professores',
-      aluno.nome,
+      'Alunos',
+      aluno.email,
       'Mensagens',
       `Mensagens ${professorLogado.getEmail()}`,
       'todasAsMensagens'

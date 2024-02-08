@@ -20,7 +20,12 @@ export default ({ navigation, route }) => {
     }
   }, [])
 
+  const turmas = alunos.map((aluno) => aluno.turma)
 
+  console.log(turmas)
+  const turmasFiltradas = new Set(turmas)
+  let turmasSemRepeticoes = Array.from(turmasFiltradas);
+  console.log(turmasSemRepeticoes)
   return (
     <SafeAreaView style={style.container}>
       <ScrollView>
@@ -44,18 +49,32 @@ export default ({ navigation, route }) => {
           >
             Selecione o aluno para continuar.
           </Text>
+          {
+            turmasSemRepeticoes.map((turma) => {
+              return (
+                <View>
+                      <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, {margin: 10}]}>{turma}</Text>
+                {alunos.map((aluno) => (
+                  turma === aluno.turma ?
+                    <>
+                      <TouchableOpacity
+                        key={aluno.cpf}
+                        style={[estilo.botao, estilo.corPrimaria, style.botao]}
+                        onPress={() => navigation.navigate('Perfil Aluno', { aluno: aluno })}
+                      >
+                        <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>
+                          {aluno.nome}
+                        </Text>
+                      </TouchableOpacity>
+                    </>
+                    : null
+                ))}
+                </View>
+              )
 
-          {alunos.map((aluno) => (
-            <TouchableOpacity
-              key={aluno.cpf}
-              style={[estilo.botao, estilo.corPrimaria, style.botao]}
-              onPress={() => navigation.navigate('Perfil Aluno', { aluno: aluno })}
-            >
-              <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>
-                {aluno.nome}
-              </Text>
-            </TouchableOpacity>
-          ))}
+            })
+          }
+
         </>
       </ScrollView>
     </SafeAreaView>

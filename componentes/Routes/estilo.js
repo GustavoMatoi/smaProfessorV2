@@ -86,23 +86,11 @@ export default function Routes() {
         const academiaNome = academiaDoc.get('nome');
 
         if (academiaNome === professorLogado.getAcademia()) {
-          const professoresRef = collection(
-            firebaseBD,
-            'Academias',
-            professorLogado.getAcademia(),
-            'Professores'
-          );
-          const professoresSnapshot = await getDocs(professoresRef);
-
-          for (const professorDoc of professoresSnapshot.docs) {
-            const professorData = professorDoc.data();
             const alunoRef = collection(
               firebaseBD,
               'Academias',
               professorLogado.getAcademia(),
-              'Professores',
-              professorData.nome,
-              'alunos'
+              'Alunos',
             );
             const alunoSnapshot = await getDocs(alunoRef);
 
@@ -113,10 +101,8 @@ export default function Routes() {
                 firebaseBD,
                 'Academias',
                 professorLogado.getAcademia(),
-                'Professores',
-                professorData.nome,
-                'alunos',
-                `Aluno ${alunoData.email}`,
+                'Alunos',
+                `${alunoData.email}`,
                 'Avaliações'
               );
               const avaliacoesSnapshot = await getDocs(avaliacoesRef);
@@ -126,10 +112,8 @@ export default function Routes() {
                 firebaseBD,
                 'Academias',
                 professorLogado.getAcademia(),
-                'Professores',
-                professorData.nome,
-                'alunos',
-                `Aluno ${alunoData.email}`,
+                'Alunos',
+                `${alunoData.email}`,
                 'FichaDeExercicios'
               );
               const fichasSnashot = await getDocs(fichasRef);
@@ -143,10 +127,8 @@ export default function Routes() {
                   firebaseBD,
                   'Academias',
                   professorLogado.getAcademia(),
-                  'Professores',
-                  professorData.nome,
-                  'alunos',
-                  `Aluno ${alunoData.email}`,
+                  'Alunos',
+                  `${alunoData.email}`,
                   'FichaDeExercicios',
                   fichaDoc.id,
                   'Exercicios'
@@ -163,7 +145,7 @@ export default function Routes() {
               newArrayAlunos.push(alunoData)
             }
 
-          }
+          
         }
       }
       setAlunos(newArrayAlunos);
@@ -211,7 +193,7 @@ export default function Routes() {
 
                   if (item.email == email) {
                     const avaliacaoObjeto = JSON.parse(value)
-                    setDoc(doc(bd, 'Academias', item.Academia, 'Professores', item.professorResponsavel, 'alunos', `Aluno ${item.email}`, 'Avaliações', dataAvaliacao),
+                    setDoc(doc(bd, 'Academias', item.Academia, 'Alunos',  `${item.email}`, 'Avaliações', dataAvaliacao),
                       avaliacaoObjeto)
                     AsyncStorage.removeItem(key)
                     console.log('key: ', key, "data ", dataAvaliacao, " value:", value)
@@ -231,13 +213,13 @@ export default function Routes() {
                   if (item.email == email) {
                     if (ultimoParam === 'Atributos') {
                       const atributosObj = JSON.parse(value)
-                      setDoc(doc(bd, 'Academias', item.Academia, 'Professores', item.professorResponsavel, 'alunos', `Aluno ${item.email}`, 'FichaDeExercicios', dataFicha),
-                        atributosObj)
+                      setDoc(doc(bd, 'Academias', item.Academia, 'Alunos',  `${item.email}`, 'FichaDeExercicios', dataFicha),
+                      atributosObj)
                       //AsyncStorage.removeItem(key)
                     }
                     if (ultimoParam.includes('Exercicio')) {
                       const atributosObj = JSON.parse(value)
-                      setDoc(doc(bd, 'Academias', item.Academia, 'Professores', item.professorResponsavel, 'alunos', `Aluno ${item.email}`, 'FichaDeExercicios', dataFicha, "Exercicios", ultimoParam),
+                      setDoc(doc(bd, 'Academias', item.Academia, 'Alunos',  `${item.email}`, 'FichaDeExercicios', dataFicha, "Exercicios", ultimoParam),
                         atributosObj)
                       //AsyncStorage.removeItem(key)
 

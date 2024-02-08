@@ -189,7 +189,7 @@ export default ({navigation}) => {
       .then((userCredential) => {
         console.log(userCredential);
     
-        setDoc(doc(firebaseBD, "Academias", `${novoProfessor.getAcademia()}`, "Professores", `${novoProfessor.getNome()}`), {
+        setDoc(doc(firebaseBD, "Academias", `${novoProfessor.getAcademia()}`, "Professores", `${novoProfessor.getEmail()}`), {
           nome: novoProfessor.getNome(),
           cpf: novoProfessor.getCpf(),
           dataNascimento: novoProfessor.getDataNascimento(),
@@ -209,7 +209,7 @@ export default ({navigation}) => {
         }).then(() => {
           alert("Novo usuário criado com sucesso!");
     
-          setDoc(doc(firebaseBD, "Academias", `${novoProfessor.getAcademia()}`, "Professores", `${novoProfessor.getNome()}`, "Notificações", `Notificação${ano}|${mes}|${dia}`), {
+          setDoc(doc(firebaseBD, "Academias", `${novoProfessor.getAcademia()}`, "Professores", `${novoProfessor.getEmail()}`, "Notificações", `Notificação${ano}|${mes}|${dia}`), {
             data: `${dia}/${mes}/${ano}`,
             nova: false,
             remetente: 'Gustavo & cia',

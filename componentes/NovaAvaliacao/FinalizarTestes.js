@@ -58,8 +58,8 @@ export default ({ navigation, route }) => {
         }
     }
     const data = new Date()
-    const mes = data.getMonth() + 1
-    const dia = data.getDate()
+    let mes = data.getMonth() + 1
+    let dia = data.getDate()
     const ano = data.getFullYear()
 
     if (dia < 10) {
@@ -135,8 +135,8 @@ export default ({ navigation, route }) => {
 
     const finalizarAvaliacao = () => {
         setSalvandoAvaliacao(true)
-        if (!conexao) {
-            setDoc(doc(firebaseBD, "Academias", professorLogado.getAcademia(), "Professores", aluno.professorResponsavel, 'alunos', `Aluno ${aluno.email}`, 'Avaliações', `Avaliacao${ano}|${mes}|${dia}|${horario}|${minutos}`), {
+        if (conexao) {
+            setDoc(doc(firebaseBD, "Academias", professorLogado.getAcademia(), 'Alunos', `${aluno.email}`, 'Avaliações', `Avaliacao${ano}|${mes}|${dia}|${horario}|${minutos}`), {
                 DCCoxaMedida1: novaAvalicao.getDCcoxaMedida1(),
                 DCCoxaMedida2: novaAvalicao.getDCcoxaMedida2(),
                 DCCoxaMedida3: novaAvalicao.getDCcoxaMedida3(),
@@ -194,7 +194,7 @@ export default ({ navigation, route }) => {
                 pressaoArterial: pressaoArterial,
             }).then(() => {
                 console.log("Documento criado com sucesso")
-                setDoc(doc(firebaseBD, "Academias", professorLogado.getAcademia(), "Professores", aluno.professorResponsavel, 'alunos', `Aluno ${aluno.email}`, 'Notificações', `Notificação${ano}|${mes}|${dia}`), {
+                setDoc(doc(firebaseBD, "Academias", professorLogado.getAcademia(), 'Alunos', `${aluno.email}`, 'Notificações', `Notificação${ano}|${mes}|${dia}`), {
                     data: `${dia}/${mes}/${ano}`,
                     nova: true,
                     remetente: professorLogado.getNome(),

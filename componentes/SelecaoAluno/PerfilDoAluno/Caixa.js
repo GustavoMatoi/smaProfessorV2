@@ -1,13 +1,14 @@
-import React, {useState, useEffect} from 'react'
-import {Text, View, StyleSheet, TouchableOpacity, Button} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { Text, View, StyleSheet, TouchableOpacity, Button, Modal } from 'react-native'
 import Foto from './Foto'
 import estilo from '../../estilo'
-import {useFonts} from 'expo-font'
+import { useFonts } from 'expo-font'
 import { printToFileAsync } from 'expo-print'
 import { shareAsync } from 'expo-sharing'
 import NetInfo from "@react-native-community/netinfo"
+import { updateDoc } from 'firebase/firestore'
 
-export default ({aluno, navigation}) => {
+export default ({ aluno, navigation }) => {
     const [fontsLoaded] = useFonts({
         'Montserrat': require('../../../assets/Montserrat-Regular.ttf'),
     })
@@ -174,7 +175,7 @@ export default ({aluno, navigation}) => {
         <br>
 
     `;
-  
+
     const anamnese = `
 
         <div style="width: 595px; height: 842px; position: relative; background: white">
@@ -285,9 +286,9 @@ export default ({aluno, navigation}) => {
 
         </div>
 `;
-  
-    const htmlCombinado = 
-    `<html>
+
+    const htmlCombinado =
+        `<html>
         <body>
            ${html}
            ${parq}
@@ -305,78 +306,128 @@ export default ({aluno, navigation}) => {
             unsubscribe()
         }
     }, [])
-    
+
     const gerarPdf = async () => {
         const arquivo = await printToFileAsync({
-            html: htmlCombinado, 
+            html: htmlCombinado,
             base64: false
         });
 
         await shareAsync(arquivo.uri)
     }
+
+    const [modalVisible, setModalVisible] = useState(false)
+    const [turmas, setTurmas] = useState([])
+    const [carregouTurma, setCarregouTurma] = useState(false)
+    const trocarTurma = async () => {
+            try {
+                const db = getFirestore();
+                const academiasRef = collection(db, "Academias");
+                const academiaQuery = query(academiasRef, where("nome", "==", selectedOption));
+                const academiaSnapshot = await getDocs(academiaQuery);
+
+                if (!academiaSnapshot.empty) {
+                    const academiaDoc = academiaSnapshot.docs[0];
+
+                    const turmasRef = collection(academiaDoc.ref, "Turmas")
+                    const turmas = []
+
+                    const turmasSnapshot = await getDocs(turmasRef)
+                    turmasSnapshot.forEach((doc) => {
+                        const nome = doc.data().nome
+                        turmas.push(nome)
+                        console.log(nome)
+                    })
+
+                    setCarregouTurma(true)
+                    setTurmas(turmas)
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        setModalVisible(true)
+    }
+
+    const handleSelectChangeTurma = (value) => {
+        setSelectedOptionTurma(value);
+    }
+
     console.log(aluno.PARQ)
     return (
-            <View style={[estilo.corLight, style.container, estilo.centralizado, estilo.sombra]}>
-                <View style={[style.areaConteudos]}>
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>DATA DE NASCIMENTO:</Text>
-                    <View style={style.areaRespostas}>
-                        <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{`${aluno.diaNascimento}/${aluno.mesNascimento}/${aluno.anoNascimento}`}</Text>
-                    </View>
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>PROFESSOR RESPONSÁVEL:</Text>
-                    <View style={style.areaRespostas}>
-                        <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.professorResponsavel}</Text>
-                    </View>
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>CONTATO DE EMERGÊNCIA:</Text>
-                    <View style={style.areaRespostas}>
-                        <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.telefone}</Text>
-                    </View>
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>TIPO SANGUÍNEO:</Text>
-                    <View style={style.areaRespostas}>
-                        <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.Anamnese.tipoSanguineo}</Text>
-                    </View>
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>MEDICAMENTOS REGULARES:</Text>
-                    <View style={style.areaRespostas}>
-                        <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.Anamnese.usoDeMedicamento == '' ? "Nenhum" : aluno.Anamnese.usoDeMedicamento}</Text>
-                    </View>
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>ALERGIA A MEDICAÇÃO:</Text>
-                    <View style={style.areaRespostas}>
-                        <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.Anamnese.possuiAlergiaMedicamento == '' ? "Nenhum" : aluno.Anamnese.possuiAlergiaMedicamento}</Text>
-                    </View>
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>HISTÓRICO MÉDICO:</Text>
-                    <View style={style.areaRespostas}>
-                        <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.Anamnese.comentariosMedicos == '' ? "Nenhum" : aluno.Anamnese.comentariosMedicos}</Text>
-                    </View>
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>OBJETIVO DE TREINO:</Text>
-                    <View style={style.areaRespostas}>
-                        <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.Anamnese.objetivo}</Text>
-                    </View>
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>PARQ:</Text>
+        <View style={[estilo.corLight, style.container, estilo.centralizado, estilo.sombra]}>
+            <View style={[style.areaConteudos]}>
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>DATA DE NASCIMENTO:</Text>
+                <View style={style.areaRespostas}>
+                    <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{`${aluno.diaNascimento}/${aluno.mesNascimento}/${aluno.anoNascimento}`}</Text>
+                </View>
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>TURMA:</Text>
+                <View style={style.areaRespostas}>
+                    <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.turma}</Text>
+                </View>
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>PROFESSOR RESPONSÁVEL:</Text>
+                <View style={style.areaRespostas}>
+                    <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.professorResponsavel}</Text>
+                </View>
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>CONTATO DE EMERGÊNCIA:</Text>
+                <View style={style.areaRespostas}>
+                    <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.telefone}</Text>
+                </View>
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>TIPO SANGUÍNEO:</Text>
+                <View style={style.areaRespostas}>
+                    <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.Anamnese.tipoSanguineo}</Text>
+                </View>
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>MEDICAMENTOS REGULARES:</Text>
+                <View style={style.areaRespostas}>
+                    <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.Anamnese.usoDeMedicamento == '' ? "Nenhum" : aluno.Anamnese.usoDeMedicamento}</Text>
+                </View>
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>ALERGIA A MEDICAÇÃO:</Text>
+                <View style={style.areaRespostas}>
+                    <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.Anamnese.possuiAlergiaMedicamento == '' ? "Nenhum" : aluno.Anamnese.possuiAlergiaMedicamento}</Text>
+                </View>
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>HISTÓRICO MÉDICO:</Text>
+                <View style={style.areaRespostas}>
+                    <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.Anamnese.comentariosMedicos == '' ? "Nenhum" : aluno.Anamnese.comentariosMedicos}</Text>
+                </View>
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>OBJETIVO DE TREINO:</Text>
+                <View style={style.areaRespostas}>
+                    <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.Anamnese.objetivo}</Text>
+                </View>
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>PARQ:</Text>
+                <View>
+                    <TouchableOpacity style={[style.botao, estilo.corPrimaria]} onPress={() => { navigation.navigate("PARQ", { parq: aluno.PARQ }) }}>
+                        <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>VISUALIZAR PARQ</Text>
+                    </TouchableOpacity>
+                </View>
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat, { marginTop: '3%' }]}>Anamnese:</Text>
+                <View>
+                    <TouchableOpacity style={[style.botao, estilo.corPrimaria]} onPress={() => { navigation.navigate("Anamnese", { aluno: aluno }) }}>
+                        <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>VISUALIZAR ANAMNESE</Text>
+                    </TouchableOpacity>
+                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat, { marginTop: '3%' }]}>Frequência:</Text>
                     <View>
-                        <TouchableOpacity style={[style.botao, estilo.corPrimaria]} onPress={() => {navigation.navigate("PARQ", {parq: aluno.PARQ})}}>
-                            <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>VISUALIZAR PARQ</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat, {marginTop: '3%'}]}>Anamnese:</Text>
-                    <View>
-                        <TouchableOpacity style={[style.botao, estilo.corPrimaria]}  onPress={()=> {navigation.navigate("Anamnese", {aluno: aluno})}}>
-                            <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>VISUALIZAR ANAMNESE</Text>
-                        </TouchableOpacity>
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat, {marginTop: '3%'}]}>Frequência:</Text>
-                    <View>
-                        <TouchableOpacity style={[style.botao, conexao? estilo.corPrimaria : estilo.corDisabled]} disabled={!conexao} onPress={()=> {navigation.navigate("Frequencia do aluno", {aluno: aluno})}}>
+                        <TouchableOpacity style={[style.botao, conexao ? estilo.corPrimaria : estilo.corDisabled]} disabled={!conexao} onPress={() => { navigation.navigate("Frequencia do aluno", { aluno: aluno }) }}>
                             <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>VISUALIZAR PRESENÇA</Text>
                         </TouchableOpacity>
                     </View>
-                    </View>
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat, {marginTop: '3%'}]}>Exportar PARQ e Anamnese:</Text>
-                    <View>
-                        <TouchableOpacity style={[style.botao, estilo.corPrimaria]} onPress={()=> gerarPdf()}>
-                            <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>EXPORTAR DADOS</Text>
-                        </TouchableOpacity>
-                    </View>
                 </View>
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat, { marginTop: '3%' }]}>Exportar PARQ e Anamnese:</Text>
+                <View>
+                    <TouchableOpacity style={[style.botao, estilo.corPrimaria]} onPress={() => gerarPdf()}>
+                        <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>EXPORTAR DADOS</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat, { marginTop: '3%' }]}>TROCAR TURMA:</Text>
+                <View>
+                    <TouchableOpacity style={[style.botao, estilo.corPrimaria]} onPress={() => navigation.navigate('Trocar turma', {aluno})}>
+                        <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>TROCAR TURMA</Text>
+                    </TouchableOpacity>
+                </View>
+
+
             </View>
-            
+        </View>
+
 
     )
 }
@@ -393,7 +444,7 @@ const style = StyleSheet.create({
     },
     areaTexto: {
         marginTop: '5%'
-    }, 
+    },
     areaConteudos: {
         marginLeft: '8%',
         marginTop: '8%',
@@ -412,6 +463,6 @@ const style = StyleSheet.create({
         alignItems: 'center',
         width: '90%',
         borderRadius: 30,
-        marginTop: 10,  
+        marginTop: 10,
     },
 })

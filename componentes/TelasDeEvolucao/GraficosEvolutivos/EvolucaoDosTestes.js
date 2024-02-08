@@ -57,7 +57,7 @@ export default ({route, navigation}) => {
 
     const getAvaliacoes = async () => {
         const db = getFirestore();
-        const avaliacoesRef = collection(db, "Academias", `${professorLogado.getAcademia()}`,"Professores", aluno.professorResponsavel, "alunos", `Aluno ${aluno.email}`, 'Avaliações');
+        const avaliacoesRef = collection(db, "Academias", `${professorLogado.getAcademia()}`,"Alunos", `${aluno.email}`, 'Avaliações');
         const querySnapshot = await getDocs(avaliacoesRef);
 
 

@@ -75,10 +75,8 @@ export default ({navigation, route}) => {
                 db,
                 "Academias",
                 aluno.Academia,
-                "Professores",
-                aluno.professorResponsavel,
-                "alunos",
-                `Aluno ${aluno.email}`,
+                "Alunos",
+                `${aluno.email}`,
                 "Avaliações"
               );
               const querySnapshot = await getDocs(avaliacoesRef);

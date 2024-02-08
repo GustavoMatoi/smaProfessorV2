@@ -51,16 +51,8 @@ export default ({route, navigation}) => {
 
     const getPseSemanal = async () => {
         const db = getFirestore();
-        const diariosRef = collection(
-          db,
-          "Academias",
-          professorLogado.getAcademia(),
-          "Professores",
-          aluno.professorResponsavel,
-          "alunos",
-          `Aluno ${aluno.email}`,
-          "Diarios"
-        );
+        const diariosRef = collection(db, "Academias", professorLogado.getAcademia(), "Alunos", `${aluno.email}`, 'Diarios');
+
         const querySnapshot = await getDocs(diariosRef);
         const arrayMeses = [];
         

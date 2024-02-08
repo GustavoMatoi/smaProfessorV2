@@ -31,22 +31,19 @@ export default ({ navigation }) => {
   }, [])
   const [carregandoAlunos, setCarregandoAlunos] = useState(true)
   useEffect(() => {
-    const fetchAlunos = async () => {
+    const fetchProfessores = async () => {
       try {
         const academiaRef = collection(firebaseBD, 'Academias');
         const querySnapshot = await getDocs(academiaRef);
-
+    
         const newArrayProfessores = [];
-        const newArrayAlunos = []
+    
         for (const academiaDoc of querySnapshot.docs) {
           const academiaNome = academiaDoc.get('nome');
           if (academiaNome === professorLogado.getAcademia()) {
-            const professoresRef = collection(
-              academiaDoc.ref,
-              'Professores'
-            );
+            const professoresRef = collection(academiaDoc.ref, 'Professores');
             const professoresSnapshot = await getDocs(professoresRef);
-
+    
             for (const professorDoc of professoresSnapshot.docs) {
               const professorData = professorDoc.data();
               const mensagensRef = collection(
@@ -55,29 +52,11 @@ export default ({ navigation }) => {
                 `Mensagens ${professorLogado.getEmail()}`,
                 'todasAsMensagens'
               );
-
-              const alunosRef = collection(professoresRef,professorData.nome, 'alunos');
-
-              const alunosSnapshot = await getDocs(alunosRef)
-
-              for(const alunoDoc of alunosSnapshot.docs){
-                const alunoData = alunoDoc.data()
-                const q = query(mensagensRef, orderBy('data', 'asc'));
-                const mensagensSnapshot = await getDocs(q);
-                const lastMessageDoc = mensagensSnapshot.docs[mensagensSnapshot.docs.length - 1];
-                if (lastMessageDoc) {
-                  const remetente = lastMessageDoc.get('remetente');
-                  newArrayAlunos.push({ aluno: alunoData, remetente: remetente });
-                } else {
-                  const remetente = 'ninguem';
-                  newArrayAlunos.push({ aluno: alunoData, remetente: remetente });
-                }
-                
-              }
-
+    
               const q = query(mensagensRef, orderBy('data', 'asc'));
               const mensagensSnapshot = await getDocs(q);
               const lastMessageDoc = mensagensSnapshot.docs[mensagensSnapshot.docs.length - 1];
+              
               if (lastMessageDoc) {
                 const remetente = lastMessageDoc.get('remetente');
                 newArrayProfessores.push({ professor: professorData, remetente: remetente });
@@ -86,19 +65,61 @@ export default ({ navigation }) => {
                 newArrayProfessores.push({ professor: professorData, remetente: remetente });
               }
             }
-
           }
         }
         setProfessores(newArrayProfessores);
-        setAlunos(newArrayAlunos)
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setCarregandoProfessores(false);
+      }
+    };
+    
+    const fetchAlunos = async () => {
+      try {
+        const academiaRef = collection(firebaseBD, 'Academias');
+        const querySnapshot = await getDocs(academiaRef);
+    
+        const newArrayAlunos = [];
+    
+        for (const academiaDoc of querySnapshot.docs) {
+          const academiaNome = academiaDoc.get('nome');
+          if (academiaNome === professorLogado.getAcademia()) {
+            const alunosRef = collection(firebaseBD, 'Academias', professorLogado.getAcademia(), 'Alunos');
+            const alunosSnapshot = await getDocs(alunosRef);
+    
+            for (const alunoDoc of alunosSnapshot.docs) {
+              const alunoData = alunoDoc.data();
+              const mensagensRef = collection(
+                firebaseBD, 'Academias', professorLogado.getAcademia(), 'Alunos', alunoData.nome,
+                'Mensagens',
+                `Mensagens ${alunoData.email}`,
+                'todasAsMensagens'
+              );
+    
+              const q = query(mensagensRef, orderBy('data', 'asc'));
+              const mensagensSnapshot = await getDocs(q);
+              const lastMessageDoc = mensagensSnapshot.docs[mensagensSnapshot.docs.length - 1];
+    
+              if (lastMessageDoc) {
+                const remetente = lastMessageDoc.get('remetente');
+                newArrayAlunos.push({ aluno: alunoData, remetente: remetente });
+              } else {
+                const remetente = 'ninguem';
+                newArrayAlunos.push({ aluno: alunoData, remetente: remetente });
+              }
+            }
+          }
+        }
+        setAlunos(newArrayAlunos);
       } catch (error) {
         console.log(error);
       } finally {
         setCarregandoAlunos(false);
-
       }
     };
-
+    
+    fetchProfessores();
     fetchAlunos();
   }, []);
 

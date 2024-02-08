@@ -25,7 +25,7 @@ export default ({route, navigation}) => {
     useEffect(() => {
         async function getNotificacoes() {
           const db = getFirestore();
-          const notificacoesRef = collection(db,"Academias",professorLogado.getAcademia(),"Professores",professorLogado.getNome(),"Notificações");
+          const notificacoesRef = collection(db,"Academias",professorLogado.getAcademia(),"Professores",professorLogado.getEmail(),"Notificações");
           
           try {
             const notificacoesSnapshot = await getDocs(notificacoesRef);

@@ -121,16 +121,14 @@ export default ({ navigation, route }) => {
                     }
                 }
             });
-            if (!conexao) {
+            if (conexao) {
                 try {
                     await setDoc(doc(
                         bd,
                         'Academias',
                         professorLogado.getAcademia(),
-                        'Professores',
-                        aluno.professorResponsavel,
-                        'alunos',
-                        `Aluno ${aluno.email}`,
+                        'Alunos',
+                        `${aluno.email}`,
                         'FichaDeExercicios',
                         `FichaDeExercicios${ano}|${mes}|${dia}|${horario}|${minutos}`
                     ), {
@@ -151,10 +149,8 @@ export default ({ navigation, route }) => {
                             bd,
                             'Academias',
                             professorLogado.getAcademia(),
-                            'Professores',
-                            aluno.professorResponsavel,
-                            'alunos',
-                            `Aluno ${aluno.email}`,
+                            'Alunos',
+                            `${aluno.email}`,
                             'FichaDeExercicios',
                             `FichaDeExercicios${ano}|${mes}|${dia}|${horario}|${minutos}`,
                             'Exercicios',

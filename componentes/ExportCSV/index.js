@@ -35,7 +35,7 @@ export default ({ route }) => {
     const arrayExercicios = [];
 
     const bd = getFirestore();
-    const diarioRef = collection(bd, 'Academias', professorLogado.getAcademia(), 'Professores', aluno.professorResponsavel, 'alunos', `Aluno ${aluno.email}`, 'Diarios');
+    const diarioRef = collection(bd, 'Academias', professorLogado.getAcademia(), 'Alunos', `${aluno.email}`, 'Diarios');
     const diarioSnapshot = await getDocs(diarioRef);
 
     const objetoParaCSV = await Promise.all(diarioSnapshot.docs.map(async (doc) => {
