@@ -68,15 +68,15 @@ export default ({navigation, route}) => {
                 </View>
               ) : (
                 alunos.map((aluno) => (
-                  <View key={aluno.cpf}>
+                  <View key={aluno.email}>
                     <TouchableOpacity
-                      style={[estilo.botao, estilo.corPrimaria, style.botao]}
+                      style={[estilo.botao, aluno.inativo ? estilo.corDisabled : estilo.corPrimaria, style.botao]}
                       onPress={() =>
                         navigation.navigate('Seleção da evolução', { aluno: aluno })
                       }
                     >
                       <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>
-                        {aluno.nome}
+                        {aluno.nome} {aluno.inativo ? " - inativo" : ""}
                       </Text>
                     </TouchableOpacity>
                   </View>

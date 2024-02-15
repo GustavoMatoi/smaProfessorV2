@@ -83,10 +83,15 @@ export default ({ route, navigation }) => {
     });
   };
 
+  console.log('listaAux', listaAux)
+  console.log('listaFinal', listaFinal)
+  console.log('listaDeExercicios', listaDeExercicios)
   const adicionarExercicioNaFicha = (i, nomeExercicio, index, tipo) => {
+    console.log('nomeExercicio.imagem', nomeExercicio.imagem)
+
     if (validaExercicio(i, nomeExercicio)) {
       const listaDeExerciciosAux = [...listaFinal]
-      if (tipo === 'força') listaDeExerciciosAux[index] = { index, tipo, nomeExercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series, cadencia: i.cadencia }
+      if (tipo === 'força') listaDeExerciciosAux[index] = { index, tipo, nomeExercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series, cadencia: i.cadencia, imagem: nomeExercicio.imagem }
       if (tipo === 'aerobico') listaDeExerciciosAux[index] = { index, tipo, nomeExercicio, validado: true, descanso: i.descanso, velocidade: i.velocidade, duracao: i.duracao, series: i.series }
       if (tipo === 'alongamento') listaDeExerciciosAux[index] = { index, tipo, nomeExercicio: nomeExercicio.exercicio, validado: true, descanso: i.descanso, repeticoes: i.repeticoes, series: i.series, imagem: nomeExercicio.imagem }
       setListaFinal([...new Set(listaDeExerciciosAux)])

@@ -22,12 +22,12 @@ export default ({navigation, route}) => {
   alunos.map((aluno) => (
     <TouchableOpacity
       key={aluno.cpf}
-      style={[estilo.botao, estilo.corPrimaria, style.botao]}
+      style={[estilo.botao, aluno.inativo? estilo.corDisabled : estilo.corPrimaria, style.botao]}
       onPress={() => navigation.navigate('Exportar CSV', {aluno: aluno, navigation: navigation})}
     >
 
       {console.log(aluno)}
-      <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>{aluno.nome}</Text>
+      <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>{aluno.nome} {aluno.inativo? " - inativo" : ""}</Text>
     </TouchableOpacity>
   ))
 }

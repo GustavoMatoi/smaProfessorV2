@@ -50,13 +50,13 @@ export default ({ navigation, route }) => {
       </Text>
 
       {alunos.map((aluno) => (
-        <TouchableOpacity
-          key={aluno.cpf}
-          style={[estilo.botao, estilo.corPrimaria, style.botao]}
-          onPress={() => navigation.navigate('Dados corporais', { aluno: aluno })}
-        >
-          <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>{aluno.nome}</Text>
-        </TouchableOpacity>
+        aluno.inativo ? null :         <TouchableOpacity
+        key={aluno.cpf}
+        style={[estilo.botao, estilo.corPrimaria, style.botao]}
+        onPress={() => navigation.navigate('Dados corporais', { aluno: aluno })}
+      >
+        <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>{aluno.nome}</Text>
+      </TouchableOpacity>
       ))}
 
 

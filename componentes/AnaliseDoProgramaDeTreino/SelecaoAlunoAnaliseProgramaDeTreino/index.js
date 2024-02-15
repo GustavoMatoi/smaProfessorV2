@@ -49,12 +49,12 @@ export default ({ navigation, route }) => {
       >Selecione o aluno para continuar.</Text>
       {alunos.map((aluno) => 
         <TouchableOpacity
-          key={aluno.cpf}
-          style={[estilo.botao, estilo.corPrimaria, style.botao]}
+          key={aluno.email}
+          style={[estilo.botao, aluno.inativo ? estilo.corDisabled : estilo.corPrimaria, style.botao]}
           onPress={() => navigation.navigate('Avaliações Análise do Programa de Treino', { aluno: aluno, navigation: navigation })}
         >
 
-          <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>{aluno.nome}</Text>
+          <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>{aluno.nome} {aluno.inativo? " - inativo" : ''}</Text>
         </TouchableOpacity>)}
 
     </ScrollView>

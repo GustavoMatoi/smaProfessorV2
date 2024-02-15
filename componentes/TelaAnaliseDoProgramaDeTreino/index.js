@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react"
-import { Text, View, StyleSheet, SafeAreaView, ScrollView } from 'react-native'
+import { Text, View, StyleSheet, SafeAreaView, ScrollView, Alert } from 'react-native'
 import estilo from "../estilo"
 import TabelaResultados from "../AnaliseDoProgramaDeTreino/SelecaoAlunoAnaliseProgramaDeTreino/TabelaResultados"
 import FichaDeTreinoAnalise from "../Ficha/FichaDeTreinoAnalise";
 import NetInfo from "@react-native-community/netinfo"
 import Spinner from "react-native-loading-spinner-overlay";
 import ModalSemConexao from "../ModalSemConexao";
+import { Firestore, collection, doc, getDocs, getFirestore, updateDoc } from "firebase/firestore";
+import { professorLogado } from "../LoginScreen";
 
 
 const getPressaoArterial = (pressaoSistolica, pressaoDiastolica) => {
@@ -35,7 +37,6 @@ const getPressaoArterial = (pressaoSistolica, pressaoDiastolica) => {
         return "Não informada"
     }
 }
-
 
 function comparaValores(avaliacaoAtual, avaliacaoAnterior) {
     let resultado = avaliacaoAtual - avaliacaoAnterior

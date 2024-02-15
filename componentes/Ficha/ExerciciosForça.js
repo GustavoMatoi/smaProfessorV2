@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Text, View, SafeAreaView, StyleSheet} from 'react-native'
+import {Text, View, SafeAreaView, StyleSheet, Image} from 'react-native'
 import estilo from '../estilo'
 import {Exercicio} from '../../classes/Exercicio'
 import { ExercicioNaFicha } from '../../classes/ExercicioNaFicha'
@@ -10,8 +10,13 @@ export default props => {
 
     return (
         <View style={ props.conjugado? [style.containerConjugado] :  [style.container, {marginTop: 12}]}>
-            <View style={[estilo.corLightMais1, style.nomeDoExercicio]}>
-                <Text style={estilo.textoSmall12px}>{props.nomeDoExercicio || "Exercício Força"}</Text>
+            <View style={[estilo.corLightMais1, style.nomeDoExercicio, {flexDirection: 'row', justifyContent: 'space-around'}]}>
+                <Image
+                style={{width: 50, height: 50}}
+                source={{uri: props.imagem || ''}}>
+
+                </Image>
+                <Text style={[estilo.textoSmall12px, {width: 100}]}>{props.nomeDoExercicio || "Exercício Alongamento"}</Text>
             </View>
             
             <View style={[style.parametroGrande,estilo.corLight]}>

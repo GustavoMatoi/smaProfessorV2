@@ -99,7 +99,8 @@ export default ({ navigation, route }) => {
                         repeticoes: exercicio.repeticoes,
                         series: exercicio.series,
                         tipo: exercicio.tipo,
-                        cadencia: exercicio.cadencia
+                        cadencia: exercicio.cadencia,
+                        image: exercicio.imagem
                     };
                 } else if (exercicio.tipo === 'aerobico') {
                     return {
@@ -212,6 +213,7 @@ export default ({ navigation, route }) => {
         navigation.navigate("Principal")
     };
 
+    console.log(exercicios)
     const transformedData = exercicios.map(item => ({
         key: item.nomeDoExercicio,
         ...item,
@@ -245,6 +247,7 @@ export default ({ navigation, route }) => {
                             repeticoes={item.repeticoes}
                             descanso={item.descanso}
                             cadencia={item.cadencia}
+                            imagem={item.imagem ? item.imagem : ''}
                         />
                     ) : item.tipo === 'aerobico' ? (
                         <ExerciciosCardio

@@ -423,7 +423,13 @@ export default ({ aluno, navigation }) => {
                         <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>TROCAR TURMA</Text>
                     </TouchableOpacity>
                 </View>
-
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat, { marginTop: '3%' }]}>{!aluno.inativo? "INATIVAR" : "ATIVAR"} ALUNO:</Text>
+                {console.log(aluno.inativo)}
+                <View>
+                    <TouchableOpacity style={[style.botao, estilo.corPrimaria]} onPress={() => navigation.navigate('Inativar aluno', {aluno, inativo: aluno.inativo})}>
+                        <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>{!aluno.inativo? "INATIVAR" : "ATIVAR"} ALUNO</Text>
+                    </TouchableOpacity>
+                </View>
 
             </View>
         </View>

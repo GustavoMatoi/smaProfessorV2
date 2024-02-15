@@ -4,12 +4,14 @@ import BotaoSelect from '../../BotaoSelect'
 import RadioBotao from '../../RadioBotao'
 import estilo from "../../estilo";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
-import { professorLogado } from "../../Home";
 import Spinner from "react-native-loading-spinner-overlay";
 import Aerobicos from "../../../Exercicios/Aerobicos";
 import MembrosSuperiores from "../../../Exercicios/MembrosSuperiores";
 import Alongamentos from "../../../Exercicios/Alongamentos";
 import MembrosInferores from "../../../Exercicios/MembrosInferiores"
+import { professorLogado } from "../../LoginScreen";
+import NetInfo from '@react-native-community/netinfo';
+
 export default ({ navigation, route }) => {
   const [exercicio, setExercicio] = useState('')
   const [grupoMuscular, setGrupoMuscular] = useState([])
@@ -18,6 +20,59 @@ export default ({ navigation, route }) => {
   const [alongamentos, setAlongamentos] = useState([])
   const [selecionado, setSelecionado] = useState('')
   const [cardioSelecionado, setCardioSelecionado] = useState('')
+  const [exerciciosBd, setExerciciosBd] = useState([])
+  const [nomesExerciciosBd, setNomesExerciciosBd] = useState([])
+  const [conexao, setConexao] = useState(true)
+  const [exerciciosBdAux, setExerciciosBdAux] = useState([])
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+        setConexao(state.type === 'wifi' || state.type === 'cellular')
+    })
+
+    return () => {
+        unsubscribe()
+    }
+}, [])
+
+  useEffect(() => {
+      const exerciciosAux = []
+
+      const recuperarExerciciosBD = async () => {
+  
+        if(conexao){
+          const bd = getFirestore()
+          const tipoExercicio = tipo === 'força' ? 'ExerciciosForça' : tipo === 'Alongamento' ? 'ExerciciosAlongamento' : 'ExerciciosAerobicos'
+          console.log(tipo)
+          const exercicioRef = collection(bd, 'Academias', professorLogado.getAcademia(), tipoExercicio)
+          const exerciciosSnapshot = await getDocs(exercicioRef)
+    
+          const promises = exerciciosSnapshot.docs.map(async (exercicio) => {
+            console.log(exercicio.data())
+            exerciciosAux.push(exercicio.data())
+          });
+    
+          await Promise.all(promises);
+    
+          setExerciciosBd(exerciciosAux)
+          const exerciciosBdNome = exerciciosAux.map(item => item.nome)
+          setNomesExerciciosBd(exerciciosBdNome)
+          if (tipo == 'força') {
+            MembrosSuperiores[13] = { exercicios: exerciciosAux }
+            console.log('MembrosSuperiores.length', MembrosSuperiores.length)
+            console.log('MembrosSuperiores[13]', MembrosSuperiores[13].exercicios)
+            const exerciciosBDAux = MembrosSuperiores[13].exercicios.map((item => item.nome))
+            setExerciciosBdAux(exerciciosBDAux)
+    
+          }
+        }
+  
+      }
+  
+      recuperarExerciciosBD()
+    
+
+
+  }, [])
   const { tipo, index } = route.params
   const indexPorParametro = index
   console.log('index pt 2', indexPorParametro)
@@ -141,8 +196,9 @@ export default ({ navigation, route }) => {
   const alongamentosIsquiotibiais = Alongamentos[18].exercicios.map((item) => item.subnome)
   const alongamentosMusculosDoPescoco = Alongamentos[19].exercicios.map((item) => item.subnome)
 
-  console.log("alongamentosCadeiaLateral", alongamentosCadeiaLateral)
-  //console.log(alongamentoDeltoide)
+  console.log(' MembrosSuperiores.length - 1', MembrosSuperiores[MembrosSuperiores.length - 1])
+
+  console.log(MembrosSuperiores[12])
   return (
     <View>
       {carregandoDados ? (
@@ -160,6 +216,39 @@ export default ({ navigation, route }) => {
             <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Grupos musculares</Text>
 
           </View>
+
+
+          {!carregandoDados ? (
+                    exerciciosBdAux.length >= 1 ? (
+                      <View style={{ marginBottom: '3%' }}>
+                        <Text
+                          style={[
+                            estilo.textoCorSecundaria,
+                            estilo.tituloH619px,
+                            { marginVertical: '2%' },
+                          ]}
+                        >
+                          Exercícios salvos no Banco de Dados:
+                        </Text>
+
+                        <BotaoSelect
+                          selecionado={true}
+                          titulo="Selecione um exercício"
+                          max={1}
+                          onChange={(value) =>
+                            handleSelecaoExercicio(value, 13, 'MembrosSuperiores')
+                          }
+                          options={exerciciosBdAux}
+                          select={'Exercícios salvos Online'}
+                        />
+                      </View>
+                    ) : (
+                      null
+                    )
+                  ) : (
+                    <Text>Recuperando exercícios do BD...</Text>
+
+                  )}
           <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Membros superiores:</Text>
 
           <View style={{ marginBottom: '3%' }}>
@@ -396,6 +485,37 @@ export default ({ navigation, route }) => {
                 options={cardios}
               />
             </View>
+            {!carregandoDados ? (
+              exerciciosBdAux.length >= 1 ? (
+                <View style={{ marginBottom: '3%' }}>
+                  <Text
+                    style={[
+                      estilo.textoCorSecundaria,
+                      estilo.tituloH619px,
+                      { marginVertical: '2%' },
+                    ]}
+                  >
+                    Exercícios salvos no Banco de Dados:
+                  </Text>
+
+                  <BotaoSelect
+                    selecionado={true}
+                    titulo="Selecione um exercício"
+                    max={1}
+                    onChange={(value) =>
+                      handleSelecaoExercicioCardio(value, 'Aerobicos')
+                    }
+                    options={exerciciosBdAux}
+                    select={'Exercícios salvos Online'}
+                  />
+                </View>
+              ) : (
+                null
+              )
+            ) : (
+              <Text>Recuperando exercícios do BD...</Text>
+
+            )}
 
             <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Combinar exercícios:</Text>
             <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { handleSelecaoExercicioCardio('Personalizado', 'Aerobicos') }}>
@@ -413,7 +533,37 @@ export default ({ navigation, route }) => {
                     <Text style={[estilo.textoCorSecundaria, estilo.tituloH523px]}>Grupos musculares</Text>
 
                   </View>
+                  {!carregandoDados ? (
+                    exerciciosBdAux.length >= 1 ? (
+                      <View style={{ marginBottom: '3%' }}>
+                        <Text
+                          style={[
+                            estilo.textoCorSecundaria,
+                            estilo.tituloH619px,
+                            { marginVertical: '2%' },
+                          ]}
+                        >
+                          Exercícios salvos no Banco de Dados:
+                        </Text>
 
+                        <BotaoSelect
+                          selecionado={true}
+                          titulo="Selecione um exercício"
+                          max={1}
+                          onChange={(value) =>
+                            handleSelecaoExercicio(value, 0, 'Alongamento')
+                          }
+                          options={exerciciosBdAux}
+                          select={'Exercícios salvos Online'}
+                        />
+                      </View>
+                    ) : (
+                      null
+                    )
+                  ) : (
+                    <Text>Recuperando exercícios do BD...</Text>
+
+                  )}
                 </View>
                 <View style={{ marginBottom: '3%' }}>
                   <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px, { marginVertical: '2%' }]}>Quadríceps:</Text>

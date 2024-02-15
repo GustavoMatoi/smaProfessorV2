@@ -55,6 +55,8 @@ export default ({ posicaoDoArray = 0, aluno }) => {
                   repeticoes={item.repeticoes}
                   descanso={item.descanso}
                   cadencia={item.cadencia}
+                  imagem={item.Nome.imagem}
+
                 />
               ) : item.tipo === 'aerobico' ? (
                 <ExerciciosCardio

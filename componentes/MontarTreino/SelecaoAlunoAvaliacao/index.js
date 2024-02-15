@@ -52,7 +52,7 @@ export default ({ navigation, route }) => {
                 <View>
                       <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, {margin: 10}]}>{turma}</Text>
                 {alunos.map((aluno) => (
-                  turma === aluno.turma ?
+                  turma === aluno.turma && !aluno.inativo?
                     <>
                       <TouchableOpacity
                         key={aluno.cpf}

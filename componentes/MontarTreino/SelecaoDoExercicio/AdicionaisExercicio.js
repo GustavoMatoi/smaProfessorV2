@@ -101,7 +101,9 @@ export default ({ navigation, route }) => {
                     setApoioDosPes(Object.values(exercicio.apoioDosPes))
                 }
 
-
+                if (exercicio.hasOwnProperty('imagem')) {
+                    setImagem(exercicio.imagem)
+                }
             } else if (tipo === 'Aerobicos') {
                 setExercicioString(exercicio)
             } else if (tipo === 'Alongamento') {
