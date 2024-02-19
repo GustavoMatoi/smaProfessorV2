@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Text, SafeAreaView, Alert, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native"
+import { Text, SafeAreaView, Alert, View, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native"
 import Logo from '../Logo'
 import estilo from "../estilo"
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -27,7 +27,11 @@ export default ({ navigation, route }) => {
       unsubscribe()
     }
   }, [])
+  const turmas = alunos.map((aluno) => aluno.turma)
 
+  console.log(turmas)
+  const turmasFiltradas = new Set(turmas)
+  let turmasSemRepeticoes = Array.from(turmasFiltradas);
   return (
     <ScrollView style={style.container}>
       {!conexao ?
@@ -49,15 +53,31 @@ export default ({ navigation, route }) => {
         Selecione o aluno para continuar.
       </Text>
 
-      {alunos.map((aluno) => (
-        aluno.inativo ? null :         <TouchableOpacity
-        key={aluno.cpf}
-        style={[estilo.botao, estilo.corPrimaria, style.botao]}
-        onPress={() => navigation.navigate('Dados corporais', { aluno: aluno })}
-      >
-        <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>{aluno.nome}</Text>
-      </TouchableOpacity>
-      ))}
+      {
+            turmasSemRepeticoes.map((turma) => {
+              return (
+                <View>
+                      <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, {margin: 10}]}>{turma}</Text>
+                {alunos.map((aluno) => (
+                  turma === aluno.turma && !aluno.inativo?
+                    <>
+                      <TouchableOpacity
+                        key={aluno.cpf}
+                        style={[estilo.botao, estilo.corPrimaria, style.botao]}
+                        onPress={() => navigation.navigate('Dados corporais', { aluno: aluno })}
+                        >
+                        <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>
+                          {aluno.nome}
+                        </Text>
+                      </TouchableOpacity>
+                    </>
+                    : null
+                ))}
+                </View>
+              )
+
+            })
+          }
 
 
     </ScrollView>

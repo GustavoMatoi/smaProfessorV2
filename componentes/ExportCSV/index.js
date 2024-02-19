@@ -170,6 +170,9 @@ export default ({ route }) => {
     }
     return true;
   }
+
+
+  
   return (
     <View style={[estilo.textoCorLightMenos1, { padding: 20 }]}>
       {conexao ? (

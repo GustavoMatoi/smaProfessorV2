@@ -56,10 +56,8 @@ export default ({ navigation, route }) => {
             <View style={[style.inputArea, estilo.centralizado]}>
                 <Text style={[estilo.tituloH427px, style.Montserrat, estilo.centralizado, estilo.textoCorDanger, {margin: 10}]}>ATENÇÃO!</Text>
                 <Text style={[estilo.textoP16px, style.Montserrat, estilo.centralizado, estilo.textoCorSecundaria, {margin: 10}]}>
-                    {!inativo ? `Ao inativar um aluno, ele ficará impossibilitado de utilizar o sistema.
-                     Essa ação poderá ser desfeita mais tarde. Deseja continuar?` : 
-                     `Ao ativar um aluno que foi inativado, ele poderá utilizar o sistema novamente.
-                     Essa ação poderá ser desfeita mais tarde. Deseja continuar?`
+                    {!inativo ? `Ao inativar um aluno, ele ficará impossibilitado de utilizar o sistema. Essa ação poderá ser desfeita mais tarde.` : 
+                     `Ao ativar um aluno que foi inativado, ele poderá utilizar o sistema novamente. Essa ação poderá ser desfeita mais tarde.`
                      }
 
                      Deseja continuar?</Text>
