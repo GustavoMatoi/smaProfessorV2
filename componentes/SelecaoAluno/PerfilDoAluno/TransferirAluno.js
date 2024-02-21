@@ -29,7 +29,7 @@ export default ({ navigation, route }) => {
                 const turmasSnapshot = await getDocs(turmasRef)
     
                 turmasSnapshot.forEach((doc) => {
-                    const nome = doc.id
+                    const nome = doc.get('nome')
                     turmas.push(nome)
                     console.log(nome)
                 })

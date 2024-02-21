@@ -60,6 +60,8 @@ import ExportCSV from './componentes/ExportCSV/index.js';
 import SelecaoAlunoExport from './componentes/ExportCSV/SelecaoAlunoExport.js';
 import TransferirAluno from './componentes/SelecaoAluno/PerfilDoAluno/TransferirAluno.js';
 import InativarAluno from './componentes/SelecaoAluno/PerfilDoAluno/InativarAluno.js';
+import EditarTurmas from './componentes/SelecaoAluno/EditarTurmas/index.js';
+import DadosTurma from './componentes/SelecaoAluno/EditarTurmas/DadosTurma.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -122,6 +124,8 @@ export default function App() {
         <Stack.Screen name="Seleção Aluno CSV" component={SelecaoAlunoExport}/>
         <Stack.Screen name="Trocar turma" component={TransferirAluno}/>
         <Stack.Screen name="Inativar aluno" component={InativarAluno}/>
+        <Stack.Screen name="Editar Turmas" component={EditarTurmas}/>
+        <Stack.Screen name="Dados Turma" component={DadosTurma}/>
 
       </Stack.Navigator>
     </NavigationContainer> 

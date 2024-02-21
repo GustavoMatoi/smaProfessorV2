@@ -49,6 +49,17 @@ export default ({ navigation, route }) => {
               <AntDesign name="infocirlce" size={20} color="#CFCDCD" />
             </TouchableOpacity>
           ) : null}
+          <Text style={[estilo.textoCorSecundaria, estilo.textoP16px, style.textoAlinhado]}>
+            Editar turmas
+          </Text>
+          <TouchableOpacity
+                  style={[estilo.botao, estilo.corLightMenos1, {borderWidth: 3}, style.botao]}
+                  onPress={() => navigation.navigate('Editar Turmas')}
+                >
+                  <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>
+                    Editar turmas
+                  </Text>
+                </TouchableOpacity>
           <Text style={[estilo.textoCorDanger, estilo.textoP16px, style.textoAlinhado]} numberOfLines={2}>
             Selecione o aluno para continuar.
           </Text>
