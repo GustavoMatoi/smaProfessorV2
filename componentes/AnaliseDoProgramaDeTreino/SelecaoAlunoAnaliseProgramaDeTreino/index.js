@@ -51,35 +51,38 @@ export default ({ navigation, route }) => {
         style={[estilo.textoCorDanger, estilo.textoP16px, style.textoAlinhado, style.container]}
         numberOfLines={2}
       >Selecione o aluno para continuar.</Text>
-      {
-            turmasSemRepeticoes.map((turma) => {
-              return (
-                <View>
-                      <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, {margin: 10}]}>{turma}</Text>
-                {alunos.map((aluno) => (
-                  turma === aluno.turma && !aluno.inativo?
-                    <>
-                      <TouchableOpacity
-                        key={aluno.cpf}
-                        style={[estilo.botao, estilo.corPrimaria, style.botao]}
-                        onPress={() => navigation.navigate('Avaliações Análise do Programa de Treino', { aluno: aluno, navigation: navigation })}
-                        >
-                        <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>
-                          {aluno.nome}
-                        </Text>
-                      </TouchableOpacity>
-                    </>
-                    : null
-                ))}
-                </View>
-              )
 
-            })
-          }
+      <Text style={[estilo.textoP16px, { margin: 20 }]}>Alunos cujo botão esteja com a cor <Text style={[{ color: '#F2D64E' }]}>Amarela</Text> são alunos que a ficha de treino está prestes a vencer.</Text>
+
+      {
+        turmasSemRepeticoes.map((turma) => {
+          return (
+            <View>
+              <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, { margin: 10 }]}>{turma}</Text>
+              {alunos.map((aluno) => (
+                turma === aluno.turma && !aluno.inativo ?
+                  <>
+                    <TouchableOpacity
+                      key={aluno.cpf}
+                      style={[estilo.botao, aluno.fichaVencendo? estilo.corWarning : estilo.corPrimaria, style.botao]}
+                      onPress={() => navigation.navigate('Avaliações Análise do Programa de Treino', { aluno: aluno, navigation: navigation })}
+                    >
+                      <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>
+                        {aluno.nome}
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                  : null
+              ))}
+            </View>
+          )
+
+        })
+      }
 
     </ScrollView>
   )
-      }
+}
 
 const style = StyleSheet.create({
   container: {

@@ -27,7 +27,6 @@ export default ({ navigation }) => {
     const [emailRecuperacao, setEmailRecuperacao] = useState('')
     const [professorData, setProfessorData] = useState()
 
-
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
             setConexao(state.type === 'wifi' || state.type === 'cellular')
@@ -40,18 +39,18 @@ export default ({ navigation }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-          try {
-            const keys = await AsyncStorage.getAllKeys();
-    
-            for (const key of keys) {
-              const value = await AsyncStorage.getItem(key);
-              console.log(`Chave: ${key}, Valor: ${value}`);
+            try {
+                const keys = await AsyncStorage.getAllKeys();
+
+                for (const key of keys) {
+                    const value = await AsyncStorage.getItem(key);
+                    console.log(`Chave: ${key}, Valor: ${value}`);
+                }
+            } catch (error) {
+                console.error('Erro ao obter dados do AsyncStorage:', error);
             }
-          } catch (error) {
-            console.error('Erro ao obter dados do AsyncStorage:', error);
-          }
         };
-    
+
         fetchData();
         getValueFunction()
     }, [])
@@ -73,26 +72,26 @@ export default ({ navigation }) => {
 
     const saveValueFunction = async () => {
         try {
-          if (email) {
-            await AsyncStorage.setItem('email', email);
-            setEmail('');
-          }
-      
-          if (password) {
-            await AsyncStorage.setItem('senha', password);
-            setPassword('');
-          }
+            if (email) {
+                await AsyncStorage.setItem('email', email);
+                setEmail('');
+            }
+
+            if (password) {
+                await AsyncStorage.setItem('senha', password);
+                setPassword('');
+            }
             await getValueFunction();
         } catch (error) {
-          console.error('Erro ao salvar dados no AsyncStorage:', error);
+            console.error('Erro ao salvar dados no AsyncStorage:', error);
         }
-      };
-      
-      const getValueFunction = async () => {
+    };
+
+    const getValueFunction = async () => {
         const professorLocalTeste = await AsyncStorage.getItem('professorLocal')
         const profOjb = JSON.parse(professorLocalTeste)
-        
-        if(profOjb !== null){
+
+        if (profOjb !== null) {
             try {
                 const storedEmail = await AsyncStorage.getItem('professorLocal');
                 const dadosProfessor = JSON.parse(storedEmail)
@@ -112,70 +111,75 @@ export default ({ navigation }) => {
                 enderecoProfessor.setRua(dadosProfessor.endereco.rua)
                 enderecoProfessor.setNumero(dadosProfessor.endereco.numero)
                 professorLogado.setAcademia(dadosProfessor.academia)
+                professorLogado.setDeletado(dadosProfessor.excluido)
                 const emailProf = dadosProfessor.email
-              setEmail(emailProf || ''); 
-                
-              const senhaProf = dadosProfessor.senha
-              setPassword(senhaProf || '');
-          
-              if (emailProf && senhaProf) {
-                if(conexao){
-                   await firebase.auth().signInWithEmailAndPassword(emailProf, senhaProf);
-                }
-                navigation.navigate('Principal', {professor: dadosProfessor});
-              } 
-            } catch (error) {
-              console.error('Erro ao obter dados do AsyncStorage ou fazer login:', error);
-            }
-        }
-      };
+                setEmail(emailProf || '');
 
-      useEffect(() => {
+                const senhaProf = dadosProfessor.senha
+                setPassword(senhaProf || '');
+                console.log("Dados professor excluido", dadosProfessor.excluido)
+                if(dadosProfessor.excluido === true){
+                    Alert.alert("Não foi possível realizar login.", "O coordenador da academia que você está vinculato te marcou como excluído.")
+                } else {
+                    if (emailProf && senhaProf) {
+                        if (conexao) {
+                            await firebase.auth().signInWithEmailAndPassword(emailProf, senhaProf);
+                        }
+                        navigation.navigate('Principal', { professor: dadosProfessor });
+                    }
+                }
+                } catch (error) {
+                    console.error('Erro ao obter dados do AsyncStorage ou fazer login:', error);
+                }
+        }
+    };
+
+    useEffect(() => {
         console.log("Chamou a função")
         fetchProfessorData()
-      }, [])
-        const fetchProfessorData = async () => {
-               try {
-                const academiaRef = collection(firebaseBD, "Academias");
-                const querySnapshot = await getDocs(academiaRef);
-                for (const academiaDoc of querySnapshot.docs) {
-                  const academiaNome = academiaDoc.get("nome");
-                  const professoresRef = collection(firebaseBD, "Academias", academiaNome, "Professores");
-        
-                  const professoresSnapshot = await getDocs(professoresRef);
-                  for (const professorDoc of professoresSnapshot.docs) {
+    }, [])
+    const fetchProfessorData = async () => {
+        try {
+            const academiaRef = collection(firebaseBD, "Academias");
+            const querySnapshot = await getDocs(academiaRef);
+            for (const academiaDoc of querySnapshot.docs) {
+                const academiaNome = academiaDoc.get("nome");
+                const professoresRef = collection(firebaseBD, "Academias", academiaNome, "Professores");
+
+                const professoresSnapshot = await getDocs(professoresRef);
+                for (const professorDoc of professoresSnapshot.docs) {
                     if (email == professorDoc.get("email")) {
-                      const professorData = professorDoc.data();
-                      setProfessorData(professorDoc.data())
-                      professorLogado.setNome(professorData.nome);
-                      professorLogado.setEmail(professorData.email);
-                      professorLogado.setSenha(professorData.senha)
-                      professorLogado.setDataNascimento(professorData.dataNascimento);
-                      professorLogado.setSexo(professorData.sexo);
-                      professorLogado.setProfissao(professorData.profissao);
-                      professorLogado.setCpf(professorData.cpf);
-                      professorLogado.setTelefone(professorData.telefone);
-                      enderecoProfessor.setBairro(professorData.endereco.bairro)
-                      enderecoProfessor.setCep(professorData.endereco.cep)
-                      enderecoProfessor.setCidade(professorData.endereco.cidade)
-                      enderecoProfessor.setEstado(professorData.endereco.estado)
-                      enderecoProfessor.setRua(professorData.endereco.rua)
-                      enderecoProfessor.setNumero(professorData.endereco.numero)
-                      professorLogado.setAcademia(professorData.academia)
+                        const professorData = professorDoc.data();
+                        setProfessorData(professorDoc.data())
+                        professorLogado.setNome(professorData.nome);
+                        professorLogado.setEmail(professorData.email);
+                        professorLogado.setSenha(professorData.senha)
+                        professorLogado.setDataNascimento(professorData.dataNascimento);
+                        professorLogado.setSexo(professorData.sexo);
+                        professorLogado.setProfissao(professorData.profissao);
+                        professorLogado.setCpf(professorData.cpf);
+                        professorLogado.setTelefone(professorData.telefone);
+                        enderecoProfessor.setBairro(professorData.endereco.bairro)
+                        enderecoProfessor.setCep(professorData.endereco.cep)
+                        enderecoProfessor.setCidade(professorData.endereco.cidade)
+                        enderecoProfessor.setEstado(professorData.endereco.estado)
+                        enderecoProfessor.setRua(professorData.endereco.rua)
+                        enderecoProfessor.setNumero(professorData.endereco.numero)
+                        professorLogado.setAcademia(professorData.academia)
 
-                      const professorString = JSON.stringify(professorDoc.data())
-                      AsyncStorage.setItem('professorLocal', professorString)
+                        const professorString = JSON.stringify(professorDoc.data())
+                        AsyncStorage.setItem('professorLocal', professorString)
                     }
-                  }
                 }
-             } catch (error) {
-                console.log(error);
-              }  finally {
-                saveValueFunction()
-              } 
-          }
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            saveValueFunction()
+        }
+    }
 
-      const handleCadastro = () => {
+    const handleCadastro = () => {
         navigation.navigate('Cadastro')
     }
 
@@ -243,7 +247,7 @@ export default ({ navigation }) => {
                                 Estilo.textoCorPrimaria,
                                 Estilo.textoSmall12px,
                             ]}
-                            onPress={() => 
+                            onPress={() =>
                                 setModalVisible(true)
                             }
                         >

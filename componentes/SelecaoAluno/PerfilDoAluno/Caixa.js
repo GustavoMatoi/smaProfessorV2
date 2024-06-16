@@ -388,6 +388,10 @@ export default ({ aluno, navigation }) => {
                 <View style={style.areaRespostas}>
                     <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.Anamnese.comentariosMedicos == '' ? "Nenhum" : aluno.Anamnese.comentariosMedicos}</Text>
                 </View>
+                <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>OUTROS:</Text>
+                <View style={style.areaRespostas}>
+                    <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.Anamnese.outro === ''  ? "Nenhum" : aluno.Anamnese.outro}</Text>
+                </View>
                 <Text style={[estilo.textoSmall12px, estilo.textoCorSecundaria, estilo.Montserrat]}>OBJETIVO DE TREINO:</Text>
                 <View style={style.areaRespostas}>
                     <Text style={[estilo.textoCorSecundaria, style.textoRespostas, style.Montserrat, estilo.textoP16px]}>{aluno.Anamnese.objetivo}</Text>

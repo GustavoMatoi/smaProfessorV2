@@ -120,7 +120,7 @@ const style = StyleSheet.create({
         height: 35
     },
     Montserrat: {
-        fontFamily: 'Montserrat'
+        fontFamily: 'Roboto'
     },
     item: {
         width: '100%',

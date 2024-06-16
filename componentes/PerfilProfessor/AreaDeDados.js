@@ -4,6 +4,8 @@ import estilo from '../estilo'
 import {useFonts} from "expo-font"
 import { getAuth, signOut } from "firebase/auth";
 import { professorLogado, enderecoProfessor } from '../LoginScreen'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default ({navigation, conexao}) => {
     const [fontsLoaded] = useFonts({
         'Montserrat': require('../../assets/Montserrat-Regular.ttf'),
@@ -17,6 +19,7 @@ export default ({navigation, conexao}) => {
             console.log("Usuário deslogado com sucesso!");
             alert("Desconectado com sucesso!")
             navigation.navigate('Login')
+            AsyncStorage.clear()
         })
           .catch((error) => {
             console.error(error.message);

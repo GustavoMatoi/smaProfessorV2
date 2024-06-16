@@ -24,14 +24,15 @@ export default ({ navigation, route }) => {
     return (
         <ScrollView style={estilo.corLightMais1}>
             <SafeAreaView style={{ marginBottom: '5%' }}>
-                <View style={[style.quadradoAzul, estilo.corPrimaria]}>
+                <View style={[style.quadradoAzul, aluno.fichaVencendo? estilo.corWarning : estilo.corPrimaria ]}>
+                    <Text style={[estilo.centralizado, estilo.tituloH427px, estilo.textoCorLight, {marginTop: '5%'}]}>PERFIL DO ALUNO</Text>
                     {!conexao ?
                         <TouchableOpacity onPress={() => {
                             Alert.alert(
                                 "Modo Offline",
                                 "Atualmente, o seu dispositivo está sem conexão com a internet. Por motivos de segurança, o aplicativo oferece funcionalidades limitadas nesse estado. Durante o período offline, os dados são armazenados localmente e serão sincronizados com o banco de dados assim que uma conexão estiver disponível."
                             );
-                        }} style={[estilo.centralizado, { marginTop: '10%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }]}>
+                        }} style={[estilo.centralizado, { marginTop: '5%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }]}>
                             <Text style={[estilo.textoP16px, estilo.textoCorDisabled]}>MODO OFFLINE - </Text>
                             <AntDesign name="infocirlce" size={20} color="#CFCDCD" />
                         </TouchableOpacity>

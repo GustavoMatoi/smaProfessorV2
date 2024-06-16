@@ -53,6 +53,9 @@ export default ({ navigation, route }) => {
         Selecione o aluno para continuar.
       </Text>
 
+      <Text style={[estilo.textoP16px, {margin: 20}]}>Alunos cujo botão esteja com a cor <Text style={[{color: '#F2D64E'}]}>Amarela</Text> são alunos que a ficha de treino está prestes a vencer.</Text>
+
+
       {
             turmasSemRepeticoes.map((turma) => {
               return (
@@ -63,7 +66,7 @@ export default ({ navigation, route }) => {
                     <>
                       <TouchableOpacity
                         key={aluno.cpf}
-                        style={[estilo.botao, estilo.corPrimaria, style.botao]}
+                        style={[estilo.botao, aluno.fichaVencendo? estilo.corWarning :estilo.corPrimaria, style.botao]}
                         onPress={() => navigation.navigate('Dados corporais', { aluno: aluno })}
                         >
                         <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>

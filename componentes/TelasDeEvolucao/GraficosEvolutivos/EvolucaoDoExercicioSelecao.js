@@ -44,6 +44,7 @@ export default ({ navigation, route }) => {
             tipo: exercicioDoc.data().tipo
           };
         });
+        console.log(exercicios)
         return exercicios;
       });
       promises.push(promise);

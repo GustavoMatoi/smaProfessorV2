@@ -1,4 +1,4 @@
-import react, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { View, SafeAreaView, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native'
 import BotaoSelect from '../../BotaoSelect'
 import RadioBotao from '../../RadioBotao'
@@ -41,13 +41,12 @@ export default ({ navigation, route }) => {
   
         if(conexao){
           const bd = getFirestore()
-          const tipoExercicio = tipo === 'força' ? 'ExerciciosForça' : tipo === 'Alongamento' ? 'ExerciciosAlongamento' : 'ExerciciosAerobicos'
-          console.log(tipo)
+          const tipoExercicio = tipo === 'força' ? 'ExerciciosForça' : tipo === 'alongamento' || tipo === 'Alongamento' ? 'ExerciciosAlongamento' : 'ExerciciosAerobicos'
+          console.log('tipo', tipo)
           const exercicioRef = collection(bd, 'Academias', professorLogado.getAcademia(), tipoExercicio)
           const exerciciosSnapshot = await getDocs(exercicioRef)
     
           const promises = exerciciosSnapshot.docs.map(async (exercicio) => {
-            console.log(exercicio.data())
             exerciciosAux.push(exercicio.data())
           });
     
@@ -56,83 +55,70 @@ export default ({ navigation, route }) => {
           setExerciciosBd(exerciciosAux)
           const exerciciosBdNome = exerciciosAux.map(item => item.nome)
           setNomesExerciciosBd(exerciciosBdNome)
+          console.log('exerciciosBd', exerciciosAux)
+
           if (tipo == 'força') {
             MembrosSuperiores[13] = { exercicios: exerciciosAux }
-            console.log('MembrosSuperiores.length', MembrosSuperiores.length)
-            console.log('MembrosSuperiores[13]', MembrosSuperiores[13].exercicios)
+
             const exerciciosBDAux = MembrosSuperiores[13].exercicios.map((item => item.nome))
             setExerciciosBdAux(exerciciosBDAux)
-    
+
           }
+
         }
-  
+
       }
-  
+      setCarregandoDados(false)
       recuperarExerciciosBD()
     
-
 
   }, [])
   const { tipo, index } = route.params
   const indexPorParametro = index
-  console.log('index pt 2', indexPorParametro)
   const handleSelecaoExercicio = (value, index, tipoExercicio) => {
-    console.log(value);
-    let exercicioAux = {}
-    if (tipoExercicio === 'MembrosSuperiores') {
-      for (i of MembrosSuperiores[index].exercicios) {
-        if (i.nome === value) {
-          exercicioAux = { ...i }
+    let exercicioAux = {};
+  
+    const navegarParaAdicionaisExercicio = (exercicio) => {
+      navigation.navigate('Adicionais exercício', {
+        exercicio,
+        receberExercicio: route.params.receberExercicio,
+        aluno: route.params.aluno,
+        tipo: tipoExercicio,
+        index: indexPorParametro
+      });
+    };
+  
+    const encontrarExercicio = (lista, chaveNome) => {
+      return lista.find((exercicio) => exercicio[chaveNome] === value);
+    };
+  
+    switch (tipoExercicio) {
+      case 'MembrosSuperiores':
+        exercicioAux = encontrarExercicio(MembrosSuperiores[index].exercicios, 'nome') || {};
+        break;
+      case 'MembrosInferiores':
+        exercicioAux = encontrarExercicio(MembrosInferiores[index].exercicios, 'nome') || {};
+        break;
+      case 'Alongamento':
+        if (value === 'Personalizado') {
+          return navegarParaAdicionaisExercicio('Personalizado');
         }
-      }
-      console.log(exercicioAux)
-
-      if (Object.keys(exercicioAux).length === 0) {
-        Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
-      } else {
-        setSelecionado(value)
-        navigation.navigate('Adicionais exercício', { exercicio: exercicioAux, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo: tipoExercicio, index: indexPorParametro })
-      }
-    } else if (tipoExercicio === 'Força') {
-      navigation.navigate('Adicionais exercício', { exercicio: 'Personalizado', receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo: tipoExercicio, index: indexPorParametro })
-
-    } else if (tipoExercicio === 'AlongamentoP') {
-      navigation.navigate('Adicionais exercício', { exercicio: 'Personalizado', receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo: tipoExercicio, index: indexPorParametro })
-
+        exercicioAux = encontrarExercicio(exerciciosBd, 'nome') || encontrarExercicio(Alongamentos[index].exercicios, 'subnome') || {};
+        break;
+      case 'Força':
+        return navegarParaAdicionaisExercicio('Personalizado');
+      default:
+        break;
     }
-
-    else if (tipoExercicio === 'MembrosInferiores') {
-      for (i of MembrosInferores[index].exercicios) {
-        if (i.nome === value) {
-          exercicioAux = { ...i }
-        }
-      }
-      if (Object.keys(exercicioAux).length === 0) {
-        Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
-      } else {
-        setSelecionado(value)
-        navigation.navigate('Adicionais exercício', { exercicio: exercicioAux, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo: tipoExercicio, index: indexPorParametro })
-      }
-    } else if (tipoExercicio === 'Alongamento') {
-      for (i of Alongamentos[index].exercicios) {
-        if (i.subnome === value) {
-          console.log('exercicioAux no if', exercicioAux)
-          exercicioAux = { ...i }
-        }
-      }
-
-      if (Object.keys(exercicioAux).length === 0) {
-        Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
-      } else {
-        setSelecionado(value)
-        console.log(exercicioAux)
-        console.log(tipoExercicio)
-        navigation.navigate('Adicionais exercício', { exercicio: exercicioAux, receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo: tipoExercicio, index: indexPorParametro })
-      }
+  
+    if (Object.keys(exercicioAux).length === 0) {
+      Alert.alert("Selecione um exercício", "É necessário escolher um exercício antes de prosseguir.");
+    } else {
+      setSelecionado(value);
+      navegarParaAdicionaisExercicio(exercicioAux);
     }
-  }
-
-
+  };
+  
   const handleSelecaoExercicioCardio = (value, tipo) => {
     if (value === 'Personalizado') {
       navigation.navigate('Adicionais exercício', { exercicio: 'Personalizado', receberExercicio: route.params.receberExercicio, aluno: route.params.aluno, tipo, index: index })
@@ -140,7 +126,6 @@ export default ({ navigation, route }) => {
     } else {
       let exercicioAux = {}
       for (i of Aerobicos) {
-        console.log(i)
         if (i.nome === value) {
           exercicioAux = { ...i }
         }
@@ -196,9 +181,7 @@ export default ({ navigation, route }) => {
   const alongamentosIsquiotibiais = Alongamentos[18].exercicios.map((item) => item.subnome)
   const alongamentosMusculosDoPescoco = Alongamentos[19].exercicios.map((item) => item.subnome)
 
-  console.log(' MembrosSuperiores.length - 1', MembrosSuperiores[MembrosSuperiores.length - 1])
 
-  console.log(MembrosSuperiores[12])
   return (
     <View>
       {carregandoDados ? (
@@ -486,7 +469,7 @@ export default ({ navigation, route }) => {
               />
             </View>
             {!carregandoDados ? (
-              exerciciosBdAux.length >= 1 ? (
+              exerciciosBd.length >= 1 ? (
                 <View style={{ marginBottom: '3%' }}>
                   <Text
                     style={[
@@ -534,7 +517,7 @@ export default ({ navigation, route }) => {
 
                   </View>
                   {!carregandoDados ? (
-                    exerciciosBdAux.length >= 1 ? (
+                    exerciciosBd.length >= 1 ? (
                       <View style={{ marginBottom: '3%' }}>
                         <Text
                           style={[
@@ -553,7 +536,7 @@ export default ({ navigation, route }) => {
                           onChange={(value) =>
                             handleSelecaoExercicio(value, 0, 'Alongamento')
                           }
-                          options={exerciciosBdAux}
+                          options={nomesExerciciosBd}
                           select={'Exercícios salvos Online'}
                         />
                       </View>
@@ -830,7 +813,7 @@ export default ({ navigation, route }) => {
                   />
                 </View>
                 <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Combinar exercícios:</Text>
-                <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { handleSelecaoExercicio('Personalizado', 0, 'AlongamentoP') }}>
+                <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { handleSelecaoExercicio('Personalizado', 0, 'Alongamento') }}>
                   <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>COMBINAR</Text>
                 </TouchableOpacity>
               </ScrollView> : null

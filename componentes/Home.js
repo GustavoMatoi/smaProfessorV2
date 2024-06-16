@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Text, TouchableOpacity, Button, View, SafeAreaView, StyleSheet } from 'react-native'
+import { Text, TouchableOpacity, Button, View, SafeAreaView, StyleSheet, Alert } from 'react-native'
 import estilo from "./estilo"
 import Logo from "./Logo"
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -10,6 +10,7 @@ import NetInfo from "@react-native-community/netinfo"
 import { professorLogado } from "./LoginScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
+import moment from "moment";
 
 
 export default ({ navigation, route }) => {
@@ -27,6 +28,8 @@ export default ({ navigation, route }) => {
       unsubscribe()
     }
   }, [])
+
+
 
   const verificaDocumentos = async () => {
 
@@ -88,7 +91,6 @@ export default ({ navigation, route }) => {
             }
           }
 
-          console.log('key ', key, 'value ', value)
 
         }
       } catch (error) {
@@ -98,8 +100,8 @@ export default ({ navigation, route }) => {
   }
 };
 
-
 verificaDocumentos()
+
 
   return (
     <SafeAreaView style={[estilo.corLightMenos1, style.container]}>

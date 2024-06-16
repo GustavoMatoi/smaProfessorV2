@@ -47,7 +47,7 @@ export default ({ navigation }) => {
             for (const professorDoc of professoresSnapshot.docs) {
               const professorData = professorDoc.data();
               const mensagensRef = collection(
-                firebaseBD, 'Academias', professorLogado.getAcademia(), 'Professores', professorData.nome,
+                firebaseBD, 'Academias', professorLogado.getAcademia(), 'Professores', professorData.email,
                 'Mensagens',
                 `Mensagens ${professorLogado.getEmail()}`,
                 'todasAsMensagens'
@@ -70,8 +70,6 @@ export default ({ navigation }) => {
         setProfessores(newArrayProfessores);
       } catch (error) {
         console.log(error);
-      } finally {
-        setCarregandoProfessores(false);
       }
     };
     
@@ -91,7 +89,7 @@ export default ({ navigation }) => {
             for (const alunoDoc of alunosSnapshot.docs) {
               const alunoData = alunoDoc.data();
               const mensagensRef = collection(
-                firebaseBD, 'Academias', professorLogado.getAcademia(), 'Alunos', alunoData.nome,
+                firebaseBD, 'Academias', professorLogado.getAcademia(), 'Professores', professorLogado.getEmail(),
                 'Mensagens',
                 `Mensagens ${alunoData.email}`,
                 'todasAsMensagens'

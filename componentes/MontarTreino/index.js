@@ -685,7 +685,7 @@ export default ({ route, navigation }) => {
             <Text style={[estilo.tituloH619px, estilo.textoCorPrimaria]}>ADICIONAR EXERCÍCIO</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[listaFinal.length === 0 ? estilo.corDisabled : estilo.corPrimaria, style.botao, { marginVertical: '5%' }]} disabled={listaFinal.length === 0} onPress={() => handleValidacao()}>
+          <TouchableOpacity style={[style.botao, listaFinal.length === 0 ? estilo.corDisabled : estilo.corPrimaria, { marginVertical: '5%' }]} disabled={listaFinal.length === 0} onPress={() => handleValidacao()}>
             <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>FINALIZAR FICHA</Text>
           </TouchableOpacity>
         </View>
@@ -716,10 +716,10 @@ const style = StyleSheet.create({
   botao: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    width: '90%',
+    width: '100%',
     height: 50,
     alignItems: 'center',
-    borderRadius: 15
+    borderRadius: 15,
   },
   quadrado: {
     width: '90%',

@@ -94,6 +94,9 @@ export default StyleSheet.create ({
     corSecundaria: {
         backgroundColor: '#182128'
     },
+    corWarning: {
+        backgroundColor: '#F2D64E'
+    },
     corSecundariaMenos1: {
         backgroundColor: '#3B464F'
     },

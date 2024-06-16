@@ -63,13 +63,16 @@ export default ({ navigation, route }) => {
           <Text style={[estilo.textoCorDanger, estilo.textoP16px, style.textoAlinhado]} numberOfLines={2}>
             Selecione o aluno para continuar.
           </Text>
+
+          <Text style={[estilo.textoP16px, {margin: 20}]}>Alunos cujo botão esteja com a cor <Text style={[{color: '#F2D64E'}]}>Amarela</Text> são alunos que a ficha de treino está prestes a vencer.</Text>
+
           {Object.entries(alunosAtivosPorTurma).map(([turma, alunosDaTurma]) => (
             <View key={turma}>
               <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, { margin: 10 }]}>{turma}</Text>
               {alunosDaTurma.map((aluno) => (
                 <TouchableOpacity
                   key={aluno.cpf}
-                  style={[estilo.botao, estilo.corPrimaria, style.botao]}
+                  style={[estilo.botao, aluno.fichaVencendo? estilo.corWarning : estilo.corPrimaria, style.botao]}
                   onPress={() => navigation.navigate('Perfil Aluno', { aluno: aluno })}
                 >
                   <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>

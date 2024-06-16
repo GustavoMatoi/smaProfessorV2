@@ -11,5 +11,8 @@ class Professor  extends Pessoa{
     addAluno = (aluno) => {
         this.alunos.push(aluno)
     }
+
+    getDeletado = () => {return this.deletado}
+    setDeletado = (deletado) => {this.deletado = deletado}
 }
 export {Professor}

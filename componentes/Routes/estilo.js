@@ -18,6 +18,7 @@ import { professorLogado } from "../LoginScreen";
 import { enderecoProfessor } from "../LoginScreen";
 import NetInfo from "@react-native-community/netinfo"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from "moment";
 
 const Tab = createBottomTabNavigator()
 
@@ -86,69 +87,107 @@ export default function Routes() {
         const academiaNome = academiaDoc.get('nome');
 
         if (academiaNome === professorLogado.getAcademia()) {
-            const alunoRef = collection(
+          const alunoRef = collection(
+            firebaseBD,
+            'Academias',
+            professorLogado.getAcademia(),
+            'Alunos',
+          );
+          const alunoSnapshot = await getDocs(alunoRef);
+
+          for (const alunoDoc of alunoSnapshot.docs) {
+            const alunoData = alunoDoc.data();
+
+            const avaliacoesRef = collection(
               firebaseBD,
               'Academias',
               professorLogado.getAcademia(),
               'Alunos',
+              `${alunoData.email}`,
+              'Avaliações'
             );
-            const alunoSnapshot = await getDocs(alunoRef);
+            const avaliacoesSnapshot = await getDocs(avaliacoesRef);
+            alunoData.avaliacoes = avaliacoesSnapshot.docs.map(avaliacaoDoc => avaliacaoDoc.data());
 
-            for (const alunoDoc of alunoSnapshot.docs) {
-              const alunoData = alunoDoc.data();
+            const fichasRef = collection(
+              firebaseBD,
+              'Academias',
+              professorLogado.getAcademia(),
+              'Alunos',
+              `${alunoData.email}`,
+              'FichaDeExercicios'
+            );
+            const fichasSnashot = await getDocs(fichasRef);
+            let index = 0;
+            fichasSnashot.forEach(async (fichaDoc) => {
 
-              const avaliacoesRef = collection(
+              const fichaData = fichaDoc.data()
+              alunoData.fichas = fichasSnashot.docs.map(fichaDoc => fichaDoc.data());
+
+              const exerciciosRef = collection(
                 firebaseBD,
                 'Academias',
                 professorLogado.getAcademia(),
                 'Alunos',
                 `${alunoData.email}`,
-                'Avaliações'
+                'FichaDeExercicios',
+                fichaDoc.id,
+                'Exercicios'
               );
-              const avaliacoesSnapshot = await getDocs(avaliacoesRef);
-              alunoData.avaliacoes = avaliacoesSnapshot.docs.map(avaliacaoDoc => avaliacaoDoc.data());
-
-              const fichasRef = collection(
-                firebaseBD,
-                'Academias',
-                professorLogado.getAcademia(),
-                'Alunos',
-                `${alunoData.email}`,
-                'FichaDeExercicios'
-              );
-              const fichasSnashot = await getDocs(fichasRef);
-              let index = 0;
-              fichasSnashot.forEach(async (fichaDoc) => {
-
-                const fichaData = fichaDoc.data()
-                alunoData.fichas = fichasSnashot.docs.map(fichaDoc => fichaDoc.data());
-
-                const exerciciosRef = collection(
-                  firebaseBD,
-                  'Academias',
-                  professorLogado.getAcademia(),
-                  'Alunos',
-                  `${alunoData.email}`,
-                  'FichaDeExercicios',
-                  fichaDoc.id,
-                  'Exercicios'
-                );
-                const arrayExerciciosFicha = []
-                const exerciciosSnapshot = await getDocs(exerciciosRef);
-                exerciciosSnapshot.forEach((exDoc) => {
-                  arrayExerciciosFicha.push(exDoc.data())
-                })
-                alunoData.fichas[index].exercicios = arrayExerciciosFicha
-                index++
-              }
-              )
-              newArrayAlunos.push(alunoData)
+              const arrayExerciciosFicha = []
+              const exerciciosSnapshot = await getDocs(exerciciosRef);
+              exerciciosSnapshot.forEach((exDoc) => {
+                arrayExerciciosFicha.push(exDoc.data())
+              })
+              alunoData.fichas[index].exercicios = arrayExerciciosFicha
+              index++
             }
+            )
+            newArrayAlunos.push(alunoData)
+          }
 
-          
+
         }
       }
+
+      const comparaDataVencimento = (date1, date2) => {
+        const momentDate1 = moment(date1, 'DD/MM/YY');
+        const momentDate2 = moment(date2, 'DD/MM/YY');
+
+        const daysDifference = momentDate1.diff(momentDate2, 'days');
+        return Math.abs(daysDifference) === 7;
+      };
+
+
+      const data = new Date()
+      const dia = data.getDate()
+      const mes = data.getMonth() + 1
+      const ano = data.getFullYear()
+
+
+      console.log("CHEGOU AQUI 1")
+
+      newArrayAlunos.map((item) => {
+
+        if(typeof item.fichas !== 'undefined'){
+          if (comparaDataVencimento(item.fichas[item.fichas.length - 1].dataFim, `${dia}/${mes}/${ano}`)) {
+            item.fichaVencendo = true
+          }
+        }
+
+      })
+      console.log("CHEGOU AQUI 2")
+
+
+      newArrayAlunos.map((item) =>{
+        if(item.fichaVencendo){
+          Alert.alert("Aluno com ficha vencendo!", `A ficha do aluno ${item.nome} está prestes a vencer. Prepare um treino para esse aluno. A ficha vence na data: ${item.fichas[item.fichas.length - 1].dataFim}`)
+        }
+      })
       setAlunos(newArrayAlunos);
+
+
+
       setCarregando(false)
 
       newArrayAlunos.forEach(async (item) => {
@@ -172,68 +211,68 @@ export default function Routes() {
   const verificaDocumentos = async () => {
 
 
-      if (conexao) {
-        console.log("com conexao")
-        const bd = getFirestore();
-        try {
-          const keys = await AsyncStorage.getAllKeys();
-          const arrayAlunos = []
+    if (conexao) {
+      console.log("com conexao")
+      const bd = getFirestore();
+      try {
+        const keys = await AsyncStorage.getAllKeys();
+        const arrayAlunos = []
 
-          for (const key of keys) {
-            const value = await AsyncStorage.getItem(key);
+        for (const key of keys) {
+          const value = await AsyncStorage.getItem(key);
 
-            if (value) {
+          if (value) {
 
-              if (key.includes("Avaliacao")) {
+            if (key.includes("Avaliacao")) {
 
-                const parts = key.split(' ');
-                const email = parts[1].split("-")[0];
-                const dataAvaliacao = parts[1].split("-")[1];
-                alunos.forEach((item) => {
+              const parts = key.split(' ');
+              const email = parts[1].split("-")[0];
+              const dataAvaliacao = parts[1].split("-")[1];
+              alunos.forEach((item) => {
 
-                  if (item.email == email) {
-                    const avaliacaoObjeto = JSON.parse(value)
-                    setDoc(doc(bd, 'Academias', item.Academia, 'Alunos',  `${item.email}`, 'Avaliações', dataAvaliacao),
-                      avaliacaoObjeto)
-                    AsyncStorage.removeItem(key)
-                    console.log('key: ', key, "data ", dataAvaliacao, " value:", value)
+                if (item.email == email) {
+                  const avaliacaoObjeto = JSON.parse(value)
+                  setDoc(doc(bd, 'Academias', item.Academia, 'Alunos', `${item.email}`, 'Avaliações', dataAvaliacao),
+                    avaliacaoObjeto)
+                  AsyncStorage.removeItem(key)
+                  console.log('key: ', key, "data ", dataAvaliacao, " value:", value)
 
-                  }
-                })
-              }
-              if (key.includes("FichaDeExercicios")) {
+                }
+              })
+            }
+            if (key.includes("FichaDeExercicios")) {
 
-                const parts = key.split(' ');
-                const email = parts[1].split("-")[0];
-                const dataFicha = parts[1].split("-")[1];
-                const ultimoParam = parts[1].split('-')[2];
+              const parts = key.split(' ');
+              const email = parts[1].split("-")[0];
+              const dataFicha = parts[1].split("-")[1];
+              const ultimoParam = parts[1].split('-')[2];
 
-                alunos.forEach((item) => {
+              alunos.forEach((item) => {
 
-                  if (item.email == email) {
-                    if (ultimoParam === 'Atributos') {
-                      const atributosObj = JSON.parse(value)
-                      setDoc(doc(bd, 'Academias', item.Academia, 'Alunos',  `${item.email}`, 'FichaDeExercicios', dataFicha),
+                if (item.email == email) {
+                  if (ultimoParam === 'Atributos') {
+                    const atributosObj = JSON.parse(value)
+                    setDoc(doc(bd, 'Academias', item.Academia, 'Alunos', `${item.email}`, 'FichaDeExercicios', dataFicha),
                       atributosObj)
-                      //AsyncStorage.removeItem(key)
-                    }
-                    if (ultimoParam.includes('Exercicio')) {
-                      const atributosObj = JSON.parse(value)
-                      setDoc(doc(bd, 'Academias', item.Academia, 'Alunos',  `${item.email}`, 'FichaDeExercicios', dataFicha, "Exercicios", ultimoParam),
-                        atributosObj)
-                      //AsyncStorage.removeItem(key)
-
-                    }
-                    console.log('key ', key, 'value ', value)
+                    //AsyncStorage.removeItem(key)
                   }
-                })
-              }
+                  if (ultimoParam.includes('Exercicio')) {
+                    const atributosObj = JSON.parse(value)
+                    setDoc(doc(bd, 'Academias', item.Academia, 'Alunos', `${item.email}`, 'FichaDeExercicios', dataFicha, "Exercicios", ultimoParam),
+                      atributosObj)
+                    //AsyncStorage.removeItem(key)
+
+                  }
+                  console.log('key ', key, 'value ', value)
+                }
+              })
             }
           }
-        } catch (error) {
-          console.error('Erro ao obter dados do AsyncStorage:', error);
         }
-      
+      } catch (error) {
+        console.error('Erro ao obter dados do AsyncStorage:', error);
+      }
+
     }
   };
 

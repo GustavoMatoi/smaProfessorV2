@@ -48,36 +48,36 @@ export default ({route, navigation}) => {
         querySnapshot.forEach((doc)=> {
           let stringAux = doc.get('mes')
 
-          if(stringAux == 1) stringAux = 'Janeiro'
-          if(stringAux == 2) stringAux = 'Fevereiro'
-          if(stringAux == 3) stringAux = 'Março'
-          if(stringAux == 4) stringAux = 'Abril'
-          if(stringAux == 5) stringAux = 'Maio'
-          if(stringAux == 6) stringAux = 'Junho'
-          if(stringAux == 7) stringAux = 'Julho'
-          if(stringAux == 8) stringAux = 'Agosto'
-          if(stringAux == 9) stringAux = 'Setembro'
-          if(stringAux == 10) stringAux = 'Outubro'
-          if(stringAux == 11) stringAux = 'Novembro'
-          if(stringAux == 12) stringAux = 'Dezembro'
+          if (stringAux == 1 || stringAux === '01') stringAux = 'Janeiro'
+          if (stringAux == 2 || stringAux === '02') stringAux = 'Fevereiro'
+          if (stringAux == 3 || stringAux === '03') stringAux = 'Março'
+          if (stringAux == 4 || stringAux === '04') stringAux = 'Abril'
+          if (stringAux == 5 || stringAux === '05') stringAux = 'Maio'
+          if (stringAux == 6 || stringAux === '06') stringAux = 'Junho'
+          if (stringAux == 7 || stringAux === '07') stringAux = 'Julho'
+          if (stringAux == 8 || stringAux === '08') stringAux = 'Agosto'
+          if (stringAux == 9 || stringAux === '09') stringAux = 'Setembro'
+          if (stringAux == 10) stringAux = 'Outubro'
+          if (stringAux == 11) stringAux = 'Novembro'
+          if (stringAux == 12) stringAux = 'Dezembro'
             const pseObj = {
               pse: doc.get('PSE.valor'),
               data: `${stringAux} ${doc.get('ano')}`
             }
             newArrayPse.push(doc.get('PSE.valor') * doc.get('duracao'))
             newArrayPseObj.push(pseObj)
-            if(doc.get('mes') === 1){ arrayMesesAux.push({data:`Janeiro ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 2){ arrayMesesAux.push({data:`Fevereiro ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 3){ arrayMesesAux.push({data:`Março ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 4){ arrayMesesAux.push({data:`Abril ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 5){ arrayMesesAux.push({data:`Maio ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 6){ arrayMesesAux.push({data:`Junho ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 7){ arrayMesesAux.push({data:`Julho ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 8){ arrayMesesAux.push({data:`Agosto ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 9){ arrayMesesAux.push({data:`Setembro ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 10){ arrayMesesAux.push({data:`Outubro ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 11){ arrayMesesAux.push({data:`Novembro ${doc.get('ano')}`, dia: doc.get('dia')})}
-            if(doc.get('mes') === 12){ arrayMesesAux.push({data:`Dezembro ${doc.get('ano')}`, dia: doc.get('dia')})}
+            if (doc.get('mes') === 1 || doc.get('mes') === '01') { arrayMesesAux.push({ data: `Janeiro ${doc.get('ano')}`, dia: doc.get('dia') }) }
+            if (doc.get('mes') === 2 || doc.get('mes') === '02') { arrayMesesAux.push({ data: `Fevereiro ${doc.get('ano')}`, dia: doc.get('dia') }) }
+            if (doc.get('mes') === 3 || doc.get('mes') === '03') { arrayMesesAux.push({ data: `Março ${doc.get('ano')}`, dia: doc.get('dia') }) }
+            if (doc.get('mes') === 4 || doc.get('mes') === '04') { arrayMesesAux.push({ data: `Abril ${doc.get('ano')}`, dia: doc.get('dia') }) }
+            if (doc.get('mes') === 5 || doc.get('mes') === '05') { arrayMesesAux.push({ data: `Maio ${doc.get('ano')}`, dia: doc.get('dia') }) }
+            if (doc.get('mes') === 6 || doc.get('mes') === '06') { arrayMesesAux.push({ data: `Junho ${doc.get('ano')}`, dia: doc.get('dia') }) }
+            if (doc.get('mes') === 7 || doc.get('mes') === '07') { arrayMesesAux.push({ data: `Julho ${doc.get('ano')}`, dia: doc.get('dia') }) }
+            if (doc.get('mes') === 8 || doc.get('mes') === '08') { arrayMesesAux.push({ data: `Agosto ${doc.get('ano')}`, dia: doc.get('dia') }) }
+            if (doc.get('mes') === 9 || doc.get('mes') === '09') { arrayMesesAux.push({ data: `Setembro ${doc.get('ano')}`, dia: doc.get('dia') }) }
+            if (doc.get('mes') === 10) { arrayMesesAux.push({ data: `Outubro ${doc.get('ano')}`, dia: doc.get('dia') }) }
+            if (doc.get('mes') === 11) { arrayMesesAux.push({ data: `Novembro ${doc.get('ano')}`, dia: doc.get('dia') }) }
+            if (doc.get('mes') === 12) { arrayMesesAux.push({ data: `Dezembro ${doc.get('ano')}`, dia: doc.get('dia') }) }
             
         });  
         setArrayPse(newArrayPse)

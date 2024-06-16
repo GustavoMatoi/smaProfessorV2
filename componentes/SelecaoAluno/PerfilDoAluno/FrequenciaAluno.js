@@ -44,7 +44,7 @@ export default ({ navigation, route }) => {
 
     const getAvaliacoes = async () => {
         const db = getFirestore();
-        const diarioRedf = collection(db, "Academias", `${professorLogado.getAcademia()}`, "Professores", aluno.professorResponsavel, "alunos", `Aluno ${aluno.email}`, 'Diarios');
+        const diarioRedf = collection(db, "Academias", `${professorLogado.getAcademia()}`, "Alunos", aluno.email, 'Diarios');
         const querySnapshot = await getDocs(diarioRedf);
 
         const arrayTemporarioDatas = []
