@@ -145,7 +145,7 @@ export default ({ navigation, route }) => {
                         console.log('elemnt', element)
                         console.log('index', index)
                         console.log('Ficha de exercícios salva com sucesso');
-
+                        let indexString = index > 9 ? index : `0${index}`
                         return setDoc(doc(
                             bd,
                             'Academias',
@@ -155,7 +155,7 @@ export default ({ navigation, route }) => {
                             'FichaDeExercicios',
                             `FichaDeExercicios${ano}|${mes}|${dia}|${horario}|${minutos}`,
                             'Exercicios',
-                            `Exercicio ${index}`
+                            `Exercicio ${indexString}`
                         ), element);
 
                     }

@@ -42,12 +42,14 @@ export default ({ navigation, route }) => {
         if(conexao){
           const bd = getFirestore()
           const tipoExercicio = tipo === 'força' ? 'ExerciciosForça' : tipo === 'alongamento' || tipo === 'Alongamento' ? 'ExerciciosAlongamento' : 'ExerciciosAerobicos'
-          console.log('tipo', tipo)
           const exercicioRef = collection(bd, 'Academias', professorLogado.getAcademia(), tipoExercicio)
+          console.log('tipoExercicio', tipoExercicio)
+
           const exerciciosSnapshot = await getDocs(exercicioRef)
     
           const promises = exerciciosSnapshot.docs.map(async (exercicio) => {
             exerciciosAux.push(exercicio.data())
+            console.log('exercicio.data()', exercicio.data())
           });
     
           await Promise.all(promises);
@@ -97,7 +99,7 @@ export default ({ navigation, route }) => {
         exercicioAux = encontrarExercicio(MembrosSuperiores[index].exercicios, 'nome') || {};
         break;
       case 'MembrosInferiores':
-        exercicioAux = encontrarExercicio(MembrosInferiores[index].exercicios, 'nome') || {};
+        exercicioAux = encontrarExercicio(MembrosInferores[index].exercicios, 'nome') || {};
         break;
       case 'Alongamento':
         if (value === 'Personalizado') {
@@ -202,7 +204,7 @@ export default ({ navigation, route }) => {
 
 
           {!carregandoDados ? (
-                    exerciciosBdAux.length >= 1 ? (
+                    exerciciosBdAux.length > 0 ? (
                       <View style={{ marginBottom: '3%' }}>
                         <Text
                           style={[

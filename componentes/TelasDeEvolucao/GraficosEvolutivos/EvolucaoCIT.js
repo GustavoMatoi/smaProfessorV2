@@ -3,9 +3,7 @@ import { Text, View, SafeAreaView, ScrollView, StyleSheet, Button } from 'react-
 import estilo from "../../estilo"
 import RadioBotao from "../../RadioBotao"
 import { VictoryChart, VictoryLine, VictoryTheme, VictoryVoronoiContainer, VictoryLabel, VictoryAxis } from "victory-native"
-import { useFonts } from 'expo-font'
 import { doc, setDoc, collection, getDocs, query, where, addDoc, getFirestore, getDoc } from "firebase/firestore";
-import { firebase, firebaseBD } from "../../configuracoes/firebaseconfig/config"
 import { professorLogado } from "../../LoginScreen"
 import moment from 'moment';
 import Spinner from "react-native-loading-spinner-overlay"
@@ -38,6 +36,7 @@ export default ({ route, navigation }) => {
   const [citMensalFiltrada, setCitMensalFiltrada] = useState([])
   const [citMensalNoGrafico, setCitMensalNoGrafico] = useState([{ x: 0, y: 0 }])
   const [citMensalEixoX, setCitMensalEixoX] = useState([])
+  const [duracao, setDuracao] = useState([])
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       setConexao(state.type === 'wifi' || state.type === 'cellular')
@@ -56,6 +55,7 @@ export default ({ route, navigation }) => {
 
       const newArrayPse = []
       const newArrayCitObj = []
+      const newArrayDuracao = []
       querySnapshot.forEach((doc) => {
         let stringAux = doc.get('mes')
 
@@ -71,6 +71,8 @@ export default ({ route, navigation }) => {
         if (stringAux == 10) stringAux = 'Outubro'
         if (stringAux == 11) stringAux = 'Novembro'
         if (stringAux == 12) stringAux = 'Dezembro'
+
+        newArrayDuracao.push(doc.get('duracao'))
         const citObjeto = {
           cit: doc.get('PSE.valor') * doc.get('duracao'),
           data: `${stringAux} ${doc.get('ano')}`
@@ -80,6 +82,7 @@ export default ({ route, navigation }) => {
       });
       setArrayPse(newArrayPse)
       setCitObjetos(newArrayCitObj)
+      setDuracao(newArrayDuracao)
     };
 
 
@@ -610,7 +613,9 @@ export default ({ route, navigation }) => {
                     </View>
                     <View>
                       {arrayFiltrado.map((item) => { return <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>- CIT: {item.y}</Text> })}
-
+                    </View>
+                    <View>
+                      {duracao.map((item) => { return <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>- Duração: {item} minutos</Text> })}
                     </View>
                   </View>
 
