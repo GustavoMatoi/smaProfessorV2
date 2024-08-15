@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Text, View, SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native'
+import {Text, View, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView} from 'react-native'
 import estilo from '../estilo'
 import {useFonts} from "expo-font"
 import { getAuth, signOut } from "firebase/auth";
@@ -27,8 +27,10 @@ export default ({navigation, conexao}) => {
       };
 
     return(
-        <View>
+        <ScrollView>
             <View style={[estilo.corLightMenos1, style.container]}>
+            <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.montserrat]}>Academia:</Text>
+            <Text style={[estilo.tituloH619px, estilo.textoCorSecundaria]}>{professorLogado.getAcademia()}</Text>
             <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.montserrat]}>CPF:</Text>
             <Text style={[estilo.tituloH619px, estilo.textoCorSecundaria]}>{professorLogado.getCpf()}</Text>
             <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.montserrat]}>Data de nascimento:</Text>
@@ -50,14 +52,13 @@ export default ({navigation, conexao}) => {
                 <Text style={[estilo.textoCorLight, estilo.tituloH619px]} >SAIR</Text>
             </TouchableOpacity>
         </View>
-        </View>
+        </ScrollView>
 
     )
 }
 
 const style = StyleSheet.create({
     container: {
-        height: 500,
         width: '100%',
         padding: 20,
     },

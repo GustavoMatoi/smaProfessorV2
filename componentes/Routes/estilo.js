@@ -76,135 +76,92 @@ export default function Routes() {
 
 
   const fetchAlunosWifi = async () => {
-    const newArrayAlunos = [];
-
     try {
-
-      const academiaRef = collection(firebaseBD, 'Academias');
-      const querySnapshot = await getDocs(academiaRef);
-
-      for (const academiaDoc of querySnapshot.docs) {
-        const academiaNome = academiaDoc.get('nome');
-
-        if (academiaNome === professorLogado.getAcademia()) {
-          const alunoRef = collection(
-            firebaseBD,
-            'Academias',
-            professorLogado.getAcademia(),
-            'Alunos',
-          );
-          const alunoSnapshot = await getDocs(alunoRef);
-
-          for (const alunoDoc of alunoSnapshot.docs) {
-            const alunoData = alunoDoc.data();
-
-            const avaliacoesRef = collection(
+      const newArrayAlunos = [];
+  
+      // Buscar todos os alunos diretamente da academia específica
+      const alunoRef = collection(
+        firebaseBD,
+        'Academias',
+        professorLogado.getAcademia(),
+        'Alunos'
+      );
+      const alunoSnapshot = await getDocs(alunoRef);
+  
+      for (const alunoDoc of alunoSnapshot.docs) {
+        const alunoData = alunoDoc.data();
+  
+        const avaliacoesRef = collection(
+          firebaseBD,
+          'Academias',
+          professorLogado.getAcademia(),
+          'Alunos',
+          alunoDoc.id,
+          'Avaliações'
+        );
+        const avaliacoesSnapshot = await getDocs(avaliacoesRef);
+        alunoData.avaliacoes = avaliacoesSnapshot.docs.map(avaliacaoDoc => avaliacaoDoc.data());
+  
+        const fichasRef = collection(
+          firebaseBD,
+          'Academias',
+          professorLogado.getAcademia(),
+          'Alunos',
+          alunoDoc.id,
+          'FichaDeExercicios'
+        );
+        const fichasSnapshot = await getDocs(fichasRef);
+        alunoData.fichas = await Promise.all(
+          fichasSnapshot.docs.map(async fichaDoc => {
+            const fichaData = fichaDoc.data();
+  
+            const exerciciosRef = collection(
               firebaseBD,
               'Academias',
               professorLogado.getAcademia(),
               'Alunos',
-              `${alunoData.email}`,
-              'Avaliações'
+              alunoDoc.id,
+              'FichaDeExercicios',
+              fichaDoc.id,
+              'Exercicios'
             );
-            const avaliacoesSnapshot = await getDocs(avaliacoesRef);
-            alunoData.avaliacoes = avaliacoesSnapshot.docs.map(avaliacaoDoc => avaliacaoDoc.data());
-
-            const fichasRef = collection(
-              firebaseBD,
-              'Academias',
-              professorLogado.getAcademia(),
-              'Alunos',
-              `${alunoData.email}`,
-              'FichaDeExercicios'
-            );
-            const fichasSnashot = await getDocs(fichasRef);
-            let index = 0;
-            fichasSnashot.forEach(async (fichaDoc) => {
-
-              const fichaData = fichaDoc.data()
-              alunoData.fichas = fichasSnashot.docs.map(fichaDoc => fichaDoc.data());
-
-              const exerciciosRef = collection(
-                firebaseBD,
-                'Academias',
-                professorLogado.getAcademia(),
-                'Alunos',
-                `${alunoData.email}`,
-                'FichaDeExercicios',
-                fichaDoc.id,
-                'Exercicios'
-              );
-              const arrayExerciciosFicha = []
-              const exerciciosSnapshot = await getDocs(exerciciosRef);
-              exerciciosSnapshot.forEach((exDoc) => {
-                arrayExerciciosFicha.push(exDoc.data())
-              })
-              alunoData.fichas[index].exercicios = arrayExerciciosFicha
-              index++
-            }
-            )
-            newArrayAlunos.push(alunoData)
-          }
-
-
-        }
+            const exerciciosSnapshot = await getDocs(exerciciosRef);
+            fichaData.exercicios = exerciciosSnapshot.docs.map(exDoc => exDoc.data());
+  
+            return fichaData;
+          })
+        );
+  
+        newArrayAlunos.push(alunoData);
       }
-
-      const comparaDataVencimento = (date1, date2) => {
-        const momentDate1 = moment(date1, 'DD/MM/YY');
-        const momentDate2 = moment(date2, 'DD/MM/YY');
-
-        const daysDifference = momentDate1.diff(momentDate2, 'days');
-        return Math.abs(daysDifference) === 7;
-      };
-
-
-      const data = new Date()
-      const dia = data.getDate()
-      const mes = data.getMonth() + 1
-      const ano = data.getFullYear()
-
-
-      console.log("CHEGOU AQUI 1")
-
-      newArrayAlunos.map((item) => {
-
-        if(typeof item.fichas !== 'undefined'){
-          if (comparaDataVencimento(item.fichas[item.fichas.length - 1].dataFim, `${dia}/${mes}/${ano}`)) {
-            item.fichaVencendo = true
+  
+      const dataAtual = moment();
+      newArrayAlunos.forEach(item => {
+        if (item.fichas && item.fichas.length > 0) {
+          const ultimaFicha = item.fichas[item.fichas.length - 1];
+          const dataFimFicha = moment(ultimaFicha.dataFim, 'DD/MM/YY');
+  
+          if (dataAtual.diff(dataFimFicha, 'days') === 7) {
+            item.fichaVencendo = true;
+            Alert.alert(
+              "Aluno com ficha vencendo!",
+              `A ficha do aluno ${item.nome} está prestes a vencer. Prepare um treino para esse aluno. A ficha vence na data: ${ultimaFicha.dataFim}`
+            );
           }
         }
-
-      })
-      console.log("CHEGOU AQUI 2")
-
-
-      newArrayAlunos.map((item) =>{
-        if(item.fichaVencendo){
-          Alert.alert("Aluno com ficha vencendo!", `A ficha do aluno ${item.nome} está prestes a vencer. Prepare um treino para esse aluno. A ficha vence na data: ${item.fichas[item.fichas.length - 1].dataFim}`)
-        }
-      })
+      });
+      await Promise.all(newArrayAlunos.map(async item => {
+        const itemString = JSON.stringify(item);
+        await AsyncStorage.setItem(`Aluno ${item.email}`, itemString);
+      }));
+  
       setAlunos(newArrayAlunos);
-
-
-
-      setCarregando(false)
-
-      newArrayAlunos.forEach(async (item) => {
-        try {
-          const itemString = JSON.stringify(item)
-          await AsyncStorage.setItem(`Aluno ${item.email}`, itemString)
-        } catch (error) {
-          console.log("Erro no AS")
-        }
-      })
-
-
+      setCarregando(false);
     } catch (error) {
       console.error('Erro ao buscar alunos:', error);
     }
   };
-
+  
 
 
 

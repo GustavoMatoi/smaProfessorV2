@@ -72,7 +72,9 @@ export default ({ navigation }) => {
         console.log(error);
       }
     };
-    
+
+    console.log("Oiii")
+
     const fetchAlunos = async () => {
       try {
         const academiaRef = collection(firebaseBD, 'Academias');

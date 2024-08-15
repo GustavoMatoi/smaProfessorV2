@@ -4,7 +4,7 @@ import Estilo from "../estilo"
 import Logo from '../Logo'
 import { useFonts } from 'expo-font';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { collection, setDoc, doc, getDocs, getFirestore, where, query, addDoc, querySnapshot, QueryStartAtConstraint } from "firebase/firestore";
+import { collection, setDoc, doc, getDocs, getFirestore, where, query, addDoc, querySnapshot, QueryStartAtConstraint, collectionGroup } from "firebase/firestore";
 import { firebase, firebaseBD } from '../configuracoes/firebaseconfig/config'
 import NetInfo from '@react-native-community/netinfo';
 import ModalSemConexao from '../ModalSemConexao'
@@ -139,46 +139,45 @@ export default ({ navigation }) => {
         fetchProfessorData()
     }, [])
     const fetchProfessorData = async () => {
+        const firebaseBD = getFirestore();
+      
         try {
-            const academiaRef = collection(firebaseBD, "Academias");
-            const querySnapshot = await getDocs(academiaRef);
-            for (const academiaDoc of querySnapshot.docs) {
-                const academiaNome = academiaDoc.get("nome");
-                const professoresRef = collection(firebaseBD, "Academias", academiaNome, "Professores");
-
-                const professoresSnapshot = await getDocs(professoresRef);
-                for (const professorDoc of professoresSnapshot.docs) {
-                    if (email == professorDoc.get("email")) {
-                        const professorData = professorDoc.data();
-                        setProfessorData(professorDoc.data())
-                        professorLogado.setNome(professorData.nome);
-                        professorLogado.setEmail(professorData.email);
-                        professorLogado.setSenha(professorData.senha)
-                        professorLogado.setDataNascimento(professorData.dataNascimento);
-                        professorLogado.setSexo(professorData.sexo);
-                        professorLogado.setProfissao(professorData.profissao);
-                        professorLogado.setCpf(professorData.cpf);
-                        professorLogado.setTelefone(professorData.telefone);
-                        enderecoProfessor.setBairro(professorData.endereco.bairro)
-                        enderecoProfessor.setCep(professorData.endereco.cep)
-                        enderecoProfessor.setCidade(professorData.endereco.cidade)
-                        enderecoProfessor.setEstado(professorData.endereco.estado)
-                        enderecoProfessor.setRua(professorData.endereco.rua)
-                        enderecoProfessor.setNumero(professorData.endereco.numero)
-                        professorLogado.setAcademia(professorData.academia)
-
-                        const professorString = JSON.stringify(professorDoc.data())
-                        AsyncStorage.setItem('professorLocal', professorString)
-                    }
-                }
-            }
+          const professoresQuery = query(
+            collectionGroup(firebaseBD, 'Professores'),
+            where('email', '==', email) 
+          );
+      
+          const querySnapshot = await getDocs(professoresQuery);
+          querySnapshot.forEach((doc) => {
+            const professorData = doc.data();
+            console.log('Professor encontrado:', professorData);
+      
+            setProfessorData(professorData);
+            professorLogado.setNome(professorData.nome);
+            professorLogado.setEmail(professorData.email);
+            professorLogado.setSenha(professorData.senha);
+            professorLogado.setDataNascimento(professorData.dataNascimento);
+            professorLogado.setSexo(professorData.sexo);
+            professorLogado.setProfissao(professorData.profissao);
+            professorLogado.setCpf(professorData.cpf);
+            professorLogado.setTelefone(professorData.telefone);
+            enderecoProfessor.setBairro(professorData.endereco.bairro);
+            enderecoProfessor.setCep(professorData.endereco.cep);
+            enderecoProfessor.setCidade(professorData.endereco.cidade);
+            enderecoProfessor.setEstado(professorData.endereco.estado);
+            enderecoProfessor.setRua(professorData.endereco.rua);
+            enderecoProfessor.setNumero(professorData.endereco.numero);
+            professorLogado.setAcademia(professorData.academia);
+      
+            const professorString = JSON.stringify(professorData);
+            AsyncStorage.setItem('professorLocal', professorString);
+          });
         } catch (error) {
-            console.log(error);
+          console.log('Erro ao buscar os dados do professor:', error);
         } finally {
-            saveValueFunction()
+          saveValueFunction();
         }
-    }
-
+      }
     const handleCadastro = () => {
         navigation.navigate('Cadastro')
     }
