@@ -135,7 +135,6 @@ export default ({ navigation }) => {
     };
 
     useEffect(() => {
-        console.log("Chamou a função")
         fetchProfessorData()
     }, [])
     const fetchProfessorData = async () => {

@@ -31,14 +31,22 @@ export default function Routes() {
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       setConexao(state.type === 'wifi' || state.type === 'cellular')
+      const keys = AsyncStorage.getAllKeys();
+      const numberOfKeys = keys.length;
+      console.log(numberOfKeys)
       if (conexao !== '') {
         if (conexao) {
-          fetchAlunosWifi()
-          console.log("Wifi")
-          verificaDocumentos()
+          if(numberOfKeys < 1){
+            fetchAlunosWifi()
+            verificaDocumentos()
+          } else { 
+            console.log("Verifiquei sem net")
+            fetchAlunosSemNet()
+            verificaDocumentos()
+
+          }
         } else {
           fetchAlunosSemNet()
-          verificaDocumentos()
 
         }
       } else {
@@ -79,7 +87,6 @@ export default function Routes() {
     try {
       const newArrayAlunos = [];
   
-      // Buscar todos os alunos diretamente da academia específica
       const alunoRef = collection(
         firebaseBD,
         'Academias',
@@ -167,7 +174,6 @@ export default function Routes() {
 
   const verificaDocumentos = async () => {
 
-
     if (conexao) {
       console.log("com conexao")
       const bd = getFirestore();
@@ -211,13 +217,13 @@ export default function Routes() {
                     const atributosObj = JSON.parse(value)
                     setDoc(doc(bd, 'Academias', item.Academia, 'Alunos', `${item.email}`, 'FichaDeExercicios', dataFicha),
                       atributosObj)
-                    //AsyncStorage.removeItem(key)
+                    AsyncStorage.removeItem(key)
                   }
                   if (ultimoParam.includes('Exercicio')) {
                     const atributosObj = JSON.parse(value)
                     setDoc(doc(bd, 'Academias', item.Academia, 'Alunos', `${item.email}`, 'FichaDeExercicios', dataFicha, "Exercicios", ultimoParam),
                       atributosObj)
-                    //AsyncStorage.removeItem(key)
+                    AsyncStorage.removeItem(key)
 
                   }
                   console.log('key ', key, 'value ', value)
