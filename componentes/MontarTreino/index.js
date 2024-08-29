@@ -23,6 +23,12 @@ export default ({ route, navigation }) => {
   const [modoEdicao, setModoEdicao] = useState(false);
   const [indicesEmEdicao, setIndicesEmEdicao] = useState([]);
   const [conexao, setConexao] = useState(true);
+  const [modalFichasVisible, setModalFichasVisible] = useState(true);
+  const [numeroDeFichas, setNumeroDeFichas] = useState(0)
+  const [quantiFichas, setQuantiFichas] = useState([])
+
+
+
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -34,9 +40,11 @@ export default ({ route, navigation }) => {
     }
   }, [])
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
+
+  const gerenciaQuantidadeDeFichas = () => {
+    setQuantiFichas(Array.from({ length: numeroDeFichas }, (_, i) => String.fromCharCode(65 + i)))
+  }
+
   const data = new Date()
   const dia = data.getDate()
   const mes = data.getMonth() + 1;
@@ -60,9 +68,10 @@ export default ({ route, navigation }) => {
   const handleSelectChange = (value) => {
     setSelected(value);
   }
-  const addExercicio = () => {
+  const addExercicio = (i) => {
+    console.log('i', i)
     setModalVisible(true);
-    setListaDeExercicios(prevLista => [...prevLista, { validado: false }]);
+    setListaDeExercicios(prevLista => [...prevLista, { validado: false, ficha: i }]);
   };
   const deleteExercicio = (index) => {
     setListaDeExercicios((prevLista) => {
@@ -320,7 +329,6 @@ export default ({ route, navigation }) => {
 
   const handleMoveDown = (index) => {
     if (index < listaAux.length - 1) {
-      // Swap the items in the array to move the current item down
       const updatedListAux = [...listaAux];
       const updatedListFinal = [...listaFinal];
       const updatedListDeExercicios = [...listaDeExercicios];
@@ -347,6 +355,19 @@ export default ({ route, navigation }) => {
           <AntDesign name="infocirlce" size={20} color="#CFCDCD" />
         </TouchableOpacity>
         : null}
+
+      <Modal isVisible={modalFichasVisible}  >
+        <View style={{ flex: 1 }}>
+          <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>Quantas fichas deseja montar? (A, AB, ABC, etc.)</Text>
+          <TextInput keyboardType="numeric" style={[style.inputTextoPequeno]} placeholder="Informe a quantidade de fichas"
+            onChangeText={(text) => setNumeroDeFichas(text)}
+          />
+          <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { setModalFichasVisible(false); gerenciaQuantidadeDeFichas() }}>
+            <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>CONFIRMAR</Text>
+          </TouchableOpacity>
+
+        </View>
+      </Modal>
 
 
       <View style={style.areaTextos}>
@@ -375,218 +396,35 @@ export default ({ route, navigation }) => {
       <View style={{ alignItems: 'center', marginTop: 10 }}>
 
         <View style={{ marginVertical: 10 }}>
-
-
           {
-            listaDeExercicios.map((i, index) => (
-              <View key={index}>
-
-                <Modal isVisible={isModalVisible}  >
-                  <View style={{ flex: 1 }}>
-                    <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>Escolha o tipo do exercício!</Text>
-
-                    <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { selecionaTipoExercicio(i, 'alongamento', index); }}>
-                      <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>ALONGAMENTO</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { selecionaTipoExercicio(i, 'força', index) }}>
-                      <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>FORÇA</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { selecionaTipoExercicio(i, 'aerobico', index) }}>
-                      <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>AERÓBICO</Text>
-                    </TouchableOpacity>
-                  </View>
-
-
-                </Modal>
-                {i.tipo == 'aerobico' ? 
-                      (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' && listaAux[index].exercicio && listaAux[index] && !i.editando ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
-                      <View style={[{ flexDirection: 'row', justifyContent: 'space-between' }]}>
-                    <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício aeróbico:</Text>
-                    <View style={[{ flexDirection: 'row', width: '30%', justifyContent: 'space-around' }]}>
-                      <TouchableOpacity onPress={() => handleMoveUp(index)}>
-                        <AntDesign name="upcircle" size={24} color="182128" />
-                      </TouchableOpacity>
-                      <TouchableOpacity onPress={() => handleMoveDown(index)}>
-                        <AntDesign name="downcircle" size={24} color="182128" />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                  <View style={{ width: '100%' }}>
-                    
-                  {listaAux.length > 0 && typeof listaAux[index] === 'object' && listaAux[index].exercicio ? (
-                          <View style={style.inputTexto}>
-                            <Text>{listaAux[index].exercicio}</Text>
-                          </View>
-                        ) : (
-                          <TouchableOpacity
-                          style={[
-                            style.inputTexto,
-                            { backgroundColor: '#0066FF', borderRadius: 30 },
-                          ]}
-                          onPress={() =>
-                            navigation.navigate('Seleção do Exercício', {
-                              navigation: navigation,
-                              receberExercicio: receberExercicio,
-                              aluno: aluno,
-                              tipo: 'aerobicos',
-                              index: index
-  
-                            })
-                          }
-                        >
-                          <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>
-                            Selecione o exercício
-                          </Text>
+            quantiFichas.map((ficha) => (
+              <View key={ficha}>
+                <Text style={[estilo.textoP16px, estilo.textoCorSecundaria]}>Ficha {ficha}</Text>
+                {listaDeExercicios.map((i, index) =>
+                  i.ficha === ficha ? (
+                    <View key={index}>
+                    {console.log(listaDeExercicios)}
+                    <Modal isVisible={isModalVisible}  >
+                      <View style={{ flex: 1 }}>
+                        <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>Escolha o tipo do exercício!</Text>
+    
+                        <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { selecionaTipoExercicio(i, 'alongamento', index); }}>
+                          <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>ALONGAMENTO</Text>
                         </TouchableOpacity>
-                        )}
-
-                  </View>
-
-                  <View style={style.areaPreenchimentoParametros}>
-                    <View style={[style.areaParametroMedio]}>
-                      <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Velocidade:</Text>
-                      <TextInput keyboardType="numeric" style={[style.inputTextoPequeno]} placeholder="Vel. (km)"
-                        onChangeText={(text) => handleVelocidade(i, text)}
-                        value={typeof listaFinal[index] !== 'undefined' ? i.velocidade : 0}
-                      />
-                    </View>
-                    <View style={[style.areaParametroMedio]}>
-                      <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Duração:</Text>
-                      <TextInput keyboardType="numeric" style={[style.inputTextoPequeno]} placeholder="Durac. (min)"
-                        onChangeText={(text) => { handleDuracao(i, text) }}
-                        value={typeof listaFinal[index] !== 'undefined' ? i.duracao : 0}
-
-                      />
-                    </View>
-                  </View>
-
-                  <View style={style.areaPreenchimentoParametros}>
-                    <View style={[style.areaParametroMedio]}>
-                      <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
-                      <TextInput style={[style.inputTextoPequeno]} keyboardType="numeric" placeholder="Sér."
-                        onChangeText={(text) => {
-                          handleSeries(i, text)
-                        }}
-                        value={typeof listaFinal[index] !== 'undefined' ? i.series : 0}
-
-                      />
-                    </View>
-                    <View style={[style.areaParametroMedio]}>
-                      <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
-                      <TextInput
-                        value={typeof listaFinal[index] !== 'undefined' ? i.descanso : 0}
-
-                        keyboardType="numeric" style={[style.inputTextoPequeno]} placeholder="Desc. (seg)" onChangeText={(text) => { handleDescanso(i, text) }} />
-                    </View>
-                  </View>
-                </View>) :
-                  /* */
-
-                  i.tipo == 'força' ?
-
-                    (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' && listaAux[index].exercicio && listaAux[index] && !i.editando ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
-                      <View style={[{ flexDirection: 'row', justifyContent: 'space-between' }]}>
-                        <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício força:</Text>
-                        <View style={[{ flexDirection: 'row', width: '30%', justifyContent: 'space-around' }]}>
-                          <TouchableOpacity onPress={() => handleMoveUp(index)}>
-                            <AntDesign name="upcircle" size={24} color="182128" />
-                          </TouchableOpacity>
-                          <TouchableOpacity onPress={() => handleMoveDown(index)}>
-                            <AntDesign name="downcircle" size={24} color="182128" />
-                          </TouchableOpacity>
-                        </View>
+                        <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { selecionaTipoExercicio(i, 'força', index) }}>
+                          <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>FORÇA</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { selecionaTipoExercicio(i, 'aerobico', index) }}>
+                          <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>AERÓBICO</Text>
+                        </TouchableOpacity>
                       </View>
-                      <View style={{ width: '100%' }}>
-                        {listaAux.length > 0 && typeof listaAux[index] === 'object' && listaAux[index].exercicio ? (
-                          <View style={style.inputTexto}>
-                            <Text>{listaAux[index].exercicio}</Text>
-                          </View>
-                        ) : (
-
-                          <TouchableOpacity
-                            style={[
-                              style.inputTexto,
-                              { backgroundColor: '#0066FF', borderRadius: 30 },
-                            ]}
-                            onPress={() =>
-                              navigation.navigate('Seleção do Exercício', {
-                                navigation: navigation,
-                                receberExercicio: receberExercicio,
-                                aluno: aluno,
-                                tipo: 'força',
-                                index: index
-                              })
-                            }
-                          >
-                            <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>
-                              Selecione o exercício
-                            </Text>
-                          </TouchableOpacity>
-                        )}
-                      </View>
-
-                      <View style={style.areaPreenchimentoParametros}>
-                        <View style={[style.areaParametroMedio]}>
-                          <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
-                          <TextInput style={[style.inputTextoPequeno]}
-                            value={typeof listaFinal[index] !== 'undefined' ? i.series : 0}
-                            placeholder="Sér." keyboardType="numeric"
-                            onChangeText={(text) => { handleSeries(i, text) }}
-                          />
-                        </View>
-                        <View style={[style.areaParametroMedio]}>
-                          <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Repetições:</Text>
-                          <TextInput style={[style.inputTextoPequeno]} placeholder="Reps." keyboardType="numeric"
-                            onChangeText={(text) => { handleReps(i, text) }}
-                            value={typeof listaFinal[index] !== 'undefined' ? i.repeticoes : 0}
-
-                          />
-                        </View>
-                      </View>
-                      <View style={style.areaPreenchimentoParametros}>
-                        <View style={[style.areaParametroMedio]}>
-                          <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
-                          <TextInput style={[style.inputTextoPequeno]} placeholder="Desc. (seg)" keyboardType="numeric"
-                            onChangeText={(text) => { handleDescanso(i, text) }}
-                            value={typeof listaFinal[index] !== 'undefined' ? i.descanso : 0}
-                          />
-                        </View>
-                        <View style={[style.areaParametroMedio]}>
-                          <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Cadência:</Text>
-                          <TextInput
-                            style={[style.inputTextoPequeno]}
-                            placeholder="0:0"
-                            maxLength={3}
-                            keyboardType="numeric"
-                            onChangeText={(text) => {
-                              let textAux = '';
-                              if (text.length === 1) {
-                                textAux += text.charAt(0) + ":";
-                              } else if (text.length === 2 && text.charAt(1) !== ":") {
-                                textAux = text.charAt(0) + ":" + text.charAt(1);
-                                handleCadencia(i, textAux);
-                              } else if (text.length === 3 && text.charAt(1) === ':') {
-                                textAux = text;
-                                handleCadencia(i, textAux);
-                              }
-                              i.cadencia = textAux;
-                            }}
-                            onKeyPress={(e) => {
-                              if (e.nativeEvent.key === 'Backspace') {
-                                i.cadencia = ''; // Reset the entire cadencia to an empty string
-                                handleCadencia(i, i.cadencia);
-                              }
-                            }}
-                            value={i.cadencia ? i.cadencia : 0}
-                          />
-
-                        </View>
-                      </View>
-                    </View>)
-                    : i.tipo == 'alongamento' ?
+    
+    
+                    </Modal>
+                    {i.tipo == 'aerobico' ?
                       (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' && listaAux[index].exercicio && listaAux[index] && !i.editando ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
                         <View style={[{ flexDirection: 'row', justifyContent: 'space-between' }]}>
-                          <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício alongamento:</Text>
+                          <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício aeróbico:</Text>
                           <View style={[{ flexDirection: 'row', width: '30%', justifyContent: 'space-around' }]}>
                             <TouchableOpacity onPress={() => handleMoveUp(index)}>
                               <AntDesign name="upcircle" size={24} color="182128" />
@@ -597,6 +435,7 @@ export default ({ route, navigation }) => {
                           </View>
                         </View>
                         <View style={{ width: '100%' }}>
+    
                           {listaAux.length > 0 && typeof listaAux[index] === 'object' && listaAux[index].exercicio ? (
                             <View style={style.inputTexto}>
                               <Text>{listaAux[index].exercicio}</Text>
@@ -607,18 +446,15 @@ export default ({ route, navigation }) => {
                                 style.inputTexto,
                                 { backgroundColor: '#0066FF', borderRadius: 30 },
                               ]}
-                              onPress={() => {
-                                console.log('chegou aqui')
-
+                              onPress={() =>
                                 navigation.navigate('Seleção do Exercício', {
                                   navigation: navigation,
                                   receberExercicio: receberExercicio,
                                   aluno: aluno,
-                                  tipo: 'alongamento',
+                                  tipo: 'aerobicos',
                                   index: index
-
+    
                                 })
-                              }
                               }
                             >
                               <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>
@@ -626,64 +462,257 @@ export default ({ route, navigation }) => {
                               </Text>
                             </TouchableOpacity>
                           )}
+    
                         </View>
-
+    
                         <View style={style.areaPreenchimentoParametros}>
-                          <View style={[style.areaParametroPequeno]}>
-                            <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
-                            <TextInput style={[style.inputTextoPequeno]}
-                              value={typeof listaFinal[index] !== 'undefined' ? i.series : 0}
-                              placeholder="Sér." keyboardType="numeric" o
-                              onChangeText={(text) => { handleSeries(i, text) }}
+                          <View style={[style.areaParametroMedio]}>
+                            <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Velocidade:</Text>
+                            <TextInput keyboardType="numeric" style={[style.inputTextoPequeno]} placeholder="Vel. (km)"
+                              onChangeText={(text) => handleVelocidade(i, text)}
+                              value={typeof listaFinal[index] !== 'undefined' ? i.velocidade : 0}
                             />
                           </View>
-                          <View style={[style.areaParametroPequeno]}>
+                          <View style={[style.areaParametroMedio]}>
                             <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Duração:</Text>
-                            <TextInput style={[style.inputTextoPequeno]} placeholder="Dur. (seg)" keyboardType="numeric"
-                              onChangeText={(text) => { handleReps(i, text) }}
-                              value={typeof listaFinal[index] !== 'undefined' ? i.repeticoes : 0}
-
+                            <TextInput keyboardType="numeric" style={[style.inputTextoPequeno]} placeholder="Durac. (min)"
+                              onChangeText={(text) => { handleDuracao(i, text) }}
+                              value={typeof listaFinal[index] !== 'undefined' ? i.duracao : 0}
+    
                             />
                           </View>
-                          <View style={[style.areaParametroPequeno]}>
-                            <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
-                            <TextInput style={[style.inputTextoPequeno]} placeholder="Desc. (seg)" keyboardType="numeric"
-                              onChangeText={(text) => { handleDescanso(i, text) }}
-                              value={typeof listaFinal[index] !== 'undefined' ? i.descanso : 0}
-
+                        </View>
+    
+                        <View style={style.areaPreenchimentoParametros}>
+                          <View style={[style.areaParametroMedio]}>
+                            <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
+                            <TextInput style={[style.inputTextoPequeno]} keyboardType="numeric" placeholder="Sér."
+                              onChangeText={(text) => {
+                                handleSeries(i, text)
+                              }}
+                              value={typeof listaFinal[index] !== 'undefined' ? i.series : 0}
+    
                             />
+                          </View>
+                          <View style={[style.areaParametroMedio]}>
+                            <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
+                            <TextInput
+                              value={typeof listaFinal[index] !== 'undefined' ? i.descanso : 0}
+    
+                              keyboardType="numeric" style={[style.inputTextoPequeno]} placeholder="Desc. (seg)" onChangeText={(text) => { handleDescanso(i, text) }} />
                           </View>
                         </View>
                       </View>) :
-                      (<View style={[style.quadrado, estilo.corLightMais1, estilo.sombra]}>
-                        <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
-                        <View style={{ width: '100%' }}>
-                          <TextInput style={[style.inputTexto]} placeholder="Novo exercício" editable={false} />
-                        </View>
-                      </View>)
-                }
-                <View style={style.botoesCrud}>
-                  <TouchableOpacity style={[estilo.botao, estilo.corSuccess, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => adicionarExercicioNaFicha(i, listaAux[index], index, i.tipo)}>
-                    <AntDesign name="edit" size={16} color="white" />
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>SALVAR</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={[estilo.botao, estilo.corDanger, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => deleteExercicio(index)}>
-                    <AntDesign name="delete" size={16} color="white" />
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>EXCLUIR</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={[estilo.botao, estilo.corPrimaria, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => editarExercicio(i, listaAux[index], index, i.tipo)}>
-                    <AntDesign name="edit" size={16} color="white" />
-                    <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>EDITAR</Text>
-                  </TouchableOpacity>
-                </View>
+                      /* */
+    
+                      i.tipo == 'força' ?
+    
+                        (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' && listaAux[index].exercicio && listaAux[index] && !i.editando ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
+                          <View style={[{ flexDirection: 'row', justifyContent: 'space-between' }]}>
+                            <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício força:</Text>
+                            <View style={[{ flexDirection: 'row', width: '30%', justifyContent: 'space-around' }]}>
+                              <TouchableOpacity onPress={() => handleMoveUp(index)}>
+                                <AntDesign name="upcircle" size={24} color="182128" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => handleMoveDown(index)}>
+                                <AntDesign name="downcircle" size={24} color="182128" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                          <View style={{ width: '100%' }}>
+                            {listaAux.length > 0 && typeof listaAux[index] === 'object' && listaAux[index].exercicio ? (
+                              <View style={style.inputTexto}>
+                                <Text>{listaAux[index].exercicio}</Text>
+                              </View>
+                            ) : (
+    
+                              <TouchableOpacity
+                                style={[
+                                  style.inputTexto,
+                                  { backgroundColor: '#0066FF', borderRadius: 30 },
+                                ]}
+                                onPress={() =>
+                                  navigation.navigate('Seleção do Exercício', {
+                                    navigation: navigation,
+                                    receberExercicio: receberExercicio,
+                                    aluno: aluno,
+                                    tipo: 'força',
+                                    index: index
+                                  })
+                                }
+                              >
+                                <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>
+                                  Selecione o exercício
+                                </Text>
+                              </TouchableOpacity>
+                            )}
+                          </View>
+    
+                          <View style={style.areaPreenchimentoParametros}>
+                            <View style={[style.areaParametroMedio]}>
+                              <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
+                              <TextInput style={[style.inputTextoPequeno]}
+                                value={typeof listaFinal[index] !== 'undefined' ? i.series : 0}
+                                placeholder="Sér." keyboardType="numeric"
+                                onChangeText={(text) => { handleSeries(i, text) }}
+                              />
+                            </View>
+                            <View style={[style.areaParametroMedio]}>
+                              <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Repetições:</Text>
+                              <TextInput style={[style.inputTextoPequeno]} placeholder="Reps." keyboardType="numeric"
+                                onChangeText={(text) => { handleReps(i, text) }}
+                                value={typeof listaFinal[index] !== 'undefined' ? i.repeticoes : 0}
+    
+                              />
+                            </View>
+                          </View>
+                          <View style={style.areaPreenchimentoParametros}>
+                            <View style={[style.areaParametroMedio]}>
+                              <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
+                              <TextInput style={[style.inputTextoPequeno]} placeholder="Desc. (seg)" keyboardType="numeric"
+                                onChangeText={(text) => { handleDescanso(i, text) }}
+                                value={typeof listaFinal[index] !== 'undefined' ? i.descanso : 0}
+                              />
+                            </View>
+                            <View style={[style.areaParametroMedio]}>
+                              <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Cadência:</Text>
+                              <TextInput
+                                style={[style.inputTextoPequeno]}
+                                placeholder="0:0"
+                                maxLength={3}
+                                keyboardType="numeric"
+                                onChangeText={(text) => {
+                                  let textAux = '';
+                                  if (text.length === 1) {
+                                    textAux += text.charAt(0) + ":";
+                                  } else if (text.length === 2 && text.charAt(1) !== ":") {
+                                    textAux = text.charAt(0) + ":" + text.charAt(1);
+                                    handleCadencia(i, textAux);
+                                  } else if (text.length === 3 && text.charAt(1) === ':') {
+                                    textAux = text;
+                                    handleCadencia(i, textAux);
+                                  }
+                                  i.cadencia = textAux;
+                                }}
+                                onKeyPress={(e) => {
+                                  if (e.nativeEvent.key === 'Backspace') {
+                                    i.cadencia = ''; // Reset the entire cadencia to an empty string
+                                    handleCadencia(i, i.cadencia);
+                                  }
+                                }}
+                                value={i.cadencia ? i.cadencia : 0}
+                              />
+    
+                            </View>
+                          </View>
+                        </View>)
+                        : i.tipo == 'alongamento' ?
+                          (<View style={[style.quadrado, typeof listaFinal[index] !== 'undefined' && listaAux[index].exercicio && listaAux[index] && !i.editando ? estilo.corSuccess : estilo.corLightMais1, estilo.sombra]}>
+                            <View style={[{ flexDirection: 'row', justifyContent: 'space-between' }]}>
+                              <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício alongamento:</Text>
+                              <View style={[{ flexDirection: 'row', width: '30%', justifyContent: 'space-around' }]}>
+                                <TouchableOpacity onPress={() => handleMoveUp(index)}>
+                                  <AntDesign name="upcircle" size={24} color="182128" />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleMoveDown(index)}>
+                                  <AntDesign name="downcircle" size={24} color="182128" />
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                            <View style={{ width: '100%' }}>
+                              {listaAux.length > 0 && typeof listaAux[index] === 'object' && listaAux[index].exercicio ? (
+                                <View style={style.inputTexto}>
+                                  <Text>{listaAux[index].exercicio}</Text>
+                                </View>
+                              ) : (
+                                <TouchableOpacity
+                                  style={[
+                                    style.inputTexto,
+                                    { backgroundColor: '#0066FF', borderRadius: 30 },
+                                  ]}
+                                  onPress={() => {
+                                    console.log('chegou aqui')
+    
+                                    navigation.navigate('Seleção do Exercício', {
+                                      navigation: navigation,
+                                      receberExercicio: receberExercicio,
+                                      aluno: aluno,
+                                      tipo: 'alongamento',
+                                      index: index
+    
+                                    })
+                                  }
+                                  }
+                                >
+                                  <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>
+                                    Selecione o exercício
+                                  </Text>
+                                </TouchableOpacity>
+                              )}
+                            </View>
+    
+                            <View style={style.areaPreenchimentoParametros}>
+                              <View style={[style.areaParametroPequeno]}>
+                                <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Séries:</Text>
+                                <TextInput style={[style.inputTextoPequeno]}
+                                  value={typeof listaFinal[index] !== 'undefined' ? i.series : 0}
+                                  placeholder="Sér." keyboardType="numeric" o
+                                  onChangeText={(text) => { handleSeries(i, text) }}
+                                />
+                              </View>
+                              <View style={[style.areaParametroPequeno]}>
+                                <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Duração:</Text>
+                                <TextInput style={[style.inputTextoPequeno]} placeholder="Dur. (seg)" keyboardType="numeric"
+                                  onChangeText={(text) => { handleReps(i, text) }}
+                                  value={typeof listaFinal[index] !== 'undefined' ? i.repeticoes : 0}
+    
+                                />
+                              </View>
+                              <View style={[style.areaParametroPequeno]}>
+                                <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}>Descanso:</Text>
+                                <TextInput style={[style.inputTextoPequeno]} placeholder="Desc. (seg)" keyboardType="numeric"
+                                  onChangeText={(text) => { handleDescanso(i, text) }}
+                                  value={typeof listaFinal[index] !== 'undefined' ? i.descanso : 0}
+    
+                                />
+                              </View>
+                            </View>
+                          </View>) :
+                          (<View style={[style.quadrado, estilo.corLightMais1, estilo.sombra]}>
+                            <Text style={[estilo.textoCorSecundaria, estilo.textoP16px]}> Exercício:</Text>
+                            <View style={{ width: '100%' }}>
+                              <TextInput style={[style.inputTexto]} placeholder="Novo exercício" editable={false} />
+                            </View>
+                          </View>)
+                    }
+                    <View style={style.botoesCrud}>
+                      <TouchableOpacity style={[estilo.botao, estilo.corSuccess, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => adicionarExercicioNaFicha(i, listaAux[index], index, i.tipo)}>
+                        <AntDesign name="edit" size={16} color="white" />
+                        <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>SALVAR</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={[estilo.botao, estilo.corDanger, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => deleteExercicio(index)}>
+                        <AntDesign name="delete" size={16} color="white" />
+                        <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>EXCLUIR</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={[estilo.botao, estilo.corPrimaria, { width: '30%', marginTop: '5%', flexDirection: 'row', justifyContent: 'center' }]} onPress={() => editarExercicio(i, listaAux[index], index, i.tipo)}>
+                        <AntDesign name="edit" size={16} color="white" />
+                        <Text style={[estilo.textoSmall12px, estilo.textoCorLight, style.Montserrat, { marginHorizontal: '10%' }]}>EDITAR</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  ) : null
+                )}
+                <TouchableOpacity
+                  style={[estilo.corLightMenos1, style.botao, { borderColor: '#0066FF', borderWidth: 4 }]}
+                  onPress={() => addExercicio(ficha)}
+                >
+                  <Entypo name="add-to-list" size={30} color={'#0066FF'} />
+                  <Text style={[estilo.tituloH619px, estilo.textoCorPrimaria]}>ADICIONAR EXERCÍCIO</Text>
+                </TouchableOpacity>
               </View>
             ))
           }
 
-          <TouchableOpacity style={[estilo.corLightMenos1, style.botao, { borderColor: '#0066FF', borderWidth: 4 }]} onPress={addExercicio}>
-            <Entypo name="add-to-list" size={30} color={'#0066FF'} />
-            <Text style={[estilo.tituloH619px, estilo.textoCorPrimaria]}>ADICIONAR EXERCÍCIO</Text>
-          </TouchableOpacity>
 
           <TouchableOpacity style={[style.botao, listaFinal.length === 0 ? estilo.corDisabled : estilo.corPrimaria, { marginVertical: '5%' }]} disabled={listaFinal.length === 0} onPress={() => handleValidacao()}>
             <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>FINALIZAR FICHA</Text>

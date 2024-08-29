@@ -27,31 +27,43 @@ export default function Routes() {
   const [alunos, setAlunos] = useState([])
   const [carregandoAlunos, setCarregandoAlunos] = useState(true)
   const [conexao, setConexao] = useState(true);
+  const [numChaveAs, setNumChaveAs] = useState(-1)
 
+  const recuperarChavesAS = async () => {
+    const keys = await AsyncStorage.getAllKeys();
+    const numberOfKeys = keys.length;
+    console.log('numberOfKeys', numberOfKeys)
+    setNumChaveAs(numberOfKeys)
+  }
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      setConexao(state.type === 'wifi' || state.type === 'cellular')
-      const keys = AsyncStorage.getAllKeys();
-      const numberOfKeys = keys.length;
-      console.log(numberOfKeys)
+    recuperarChavesAS()
+    if(numChaveAs != -1){
       if (conexao !== '') {
         if (conexao) {
-          if(numberOfKeys < 1){
+          if(numChaveAs < 4){
+            console.log("Verifiquei com net")
             fetchAlunosWifi()
             verificaDocumentos()
           } else { 
             console.log("Verifiquei sem net")
             fetchAlunosSemNet()
             verificaDocumentos()
-
+  
           }
         } else {
           fetchAlunosSemNet()
-
+  
         }
       } else {
         console.log("Aaa")
       }
+    }
+    
+  },[numChaveAs])
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state  => {
+      setConexao(state.type === 'wifi' || state.type === 'cellular')
+      
     })
     return () => {
       unsubscribe()
@@ -163,6 +175,7 @@ export default function Routes() {
       }));
   
       setAlunos(newArrayAlunos);
+      console.log('newArrayAlunos', newArrayAlunos)
       setCarregando(false);
     } catch (error) {
       console.error('Erro ao buscar alunos:', error);

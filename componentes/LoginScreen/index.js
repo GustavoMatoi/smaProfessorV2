@@ -137,46 +137,57 @@ export default ({ navigation }) => {
     useEffect(() => {
         fetchProfessorData()
     }, [])
+
+    const [totalLeituras, setTotalLeituras] = useState(0)
+
     const fetchProfessorData = async () => {
         const firebaseBD = getFirestore();
       
         try {
-          const professoresQuery = query(
-            collectionGroup(firebaseBD, 'Professores'),
-            where('email', '==', email) 
-          );
-      
-          const querySnapshot = await getDocs(professoresQuery);
-          querySnapshot.forEach((doc) => {
-            const professorData = doc.data();
-            console.log('Professor encontrado:', professorData);
-      
-            setProfessorData(professorData);
-            professorLogado.setNome(professorData.nome);
-            professorLogado.setEmail(professorData.email);
-            professorLogado.setSenha(professorData.senha);
-            professorLogado.setDataNascimento(professorData.dataNascimento);
-            professorLogado.setSexo(professorData.sexo);
-            professorLogado.setProfissao(professorData.profissao);
-            professorLogado.setCpf(professorData.cpf);
-            professorLogado.setTelefone(professorData.telefone);
-            enderecoProfessor.setBairro(professorData.endereco.bairro);
-            enderecoProfessor.setCep(professorData.endereco.cep);
-            enderecoProfessor.setCidade(professorData.endereco.cidade);
-            enderecoProfessor.setEstado(professorData.endereco.estado);
-            enderecoProfessor.setRua(professorData.endereco.rua);
-            enderecoProfessor.setNumero(professorData.endereco.numero);
-            professorLogado.setAcademia(professorData.academia);
-      
-            const professorString = JSON.stringify(professorData);
-            AsyncStorage.setItem('professorLocal', professorString);
-          });
-        } catch (error) {
-          console.log('Erro ao buscar os dados do professor:', error);
-        } finally {
-          saveValueFunction();
+            const professoresQuery = query(
+              collectionGroup(firebaseBD, 'Professores'),
+              where('email', '==', email)
+            );
+        
+            const querySnapshot = await getDocs(professoresQuery);
+            let leituraContador = 0; // Contador local para acumular o total de leituras
+        
+            querySnapshot.forEach((doc) => {
+              const professorData = doc.data();
+              console.log('Professor encontrado:', professorData);
+        
+              setProfessorData(professorData);
+              professorLogado.setNome(professorData.nome);
+              professorLogado.setEmail(professorData.email);
+              professorLogado.setSenha(professorData.senha);
+              professorLogado.setDataNascimento(professorData.dataNascimento);
+              professorLogado.setSexo(professorData.sexo);
+              professorLogado.setProfissao(professorData.profissao);
+              professorLogado.setCpf(professorData.cpf);
+              professorLogado.setTelefone(professorData.telefone);
+              enderecoProfessor.setBairro(professorData.endereco.bairro);
+              enderecoProfessor.setCep(professorData.endereco.cep);
+              enderecoProfessor.setCidade(professorData.endereco.cidade);
+              enderecoProfessor.setEstado(professorData.endereco.estado);
+              enderecoProfessor.setRua(professorData.endereco.rua);
+              enderecoProfessor.setNumero(professorData.endereco.numero);
+              professorLogado.setAcademia(professorData.academia);
+        
+              const professorString = JSON.stringify(professorData);
+              AsyncStorage.setItem('professorLocal', professorString);
+        
+              leituraContador += 1; 
+            });
+        
+            setTotalLeituras(leituraContador);
+            console.log('Total de leituras:', leituraContador);
+        
+          } catch (error) {
+            console.log('Erro ao buscar os dados do professor:', error);
+          } finally {
+            saveValueFunction();
+          }
         }
-      }
     const handleCadastro = () => {
         navigation.navigate('Cadastro')
     }
