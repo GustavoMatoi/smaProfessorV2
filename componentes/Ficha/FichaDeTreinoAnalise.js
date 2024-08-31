@@ -21,16 +21,16 @@ export default ({ posicaoDoArray = 0, aluno }) => {
     if (typeof posicaoDoArray === undefined) {
       posicao = 0
     }
-    if('fichas' in aluno){
+    if ('fichas' in aluno) {
       console.log(posicao)
       setExercicios(aluno.fichas[posicao].exercicios)
       setFichaValida(true)
       setVerificando(false)
-      exercicios.map((item) => console.log(item.Nome))      
-      }
+      exercicios.map((item) => console.log(item.Nome))
+    }
   }, [])
 
-//  exercicios.map((item) => console.log(item))
+  //  exercicios.map((item) => console.log(item))
 
 
   //console.log('exercicios ', exercicios)
@@ -39,53 +39,58 @@ export default ({ posicaoDoArray = 0, aluno }) => {
   //console.log('posicaoArrayFichas ' , posicaoArrayFichas)
   //console.log('aluno.nome ', aluno.nome)
   //console.log('aluno.fichas[posicaoArrayFichas].exercicios ', aluno.fichas[posicaoArrayFichas].exercicios)
-  exercicios.map((item) => console.log(item.Nome))      
+  exercicios.map((item) => console.log(item.Nome))
+  const fichasUnicas = [...new Set(exercicios.map(item => item.ficha))];
 
   return (
     <ScrollView style={style.container}>
-      {
-      
-      fichaValida && !verificando ?  (
-          exercicios.map((item, index) => (
-            <View key={index} style={{ width: '100%' }}>
-              {item.tipo === 'força' ? (
-                <ExerciciosForça
-                  nomeDoExercicio={item.Nome.exercicio}
-                  series={item.series}
-                  repeticoes={item.repeticoes}
-                  descanso={item.descanso}
-                  cadencia={item.cadencia}
-                  imagem={item.Nome.imagem}
-
-                />
-              ) : item.tipo === 'aerobico' ? (
-                <ExerciciosCardio
-                  nomeDoExercicio={item.Nome.exercicio}
-                  velocidadeDoExercicio={item.velocidade}
-                  duracaoDoExercicio={item.duracao}
-                  seriesDoExercicio={item.series}
-                  descansoDoExercicio={item.descanso}
-                />
-              ) : item.tipo === 'alongamento' ? (
-                <ExerciciosAlongamento
-                  nomeDoExercicio={item.Nome}
-                  series={item.series}
-                  descanso={item.descanso}
-                  repeticoes={item.repeticoes}
-                  imagem={item.imagem}
-                />
-              ) : null}
-            </View>
-          ))
-        ) : (
-          <Text style={[{ marginHorizontal: 15, textAlign: 'justify' }, estilo.textoP16px, estilo.textoCorSecundaria]}>
-            A última ficha ainda não foi lançada. Solicite ao professor responsável para lançá-la e tente novamente mais tarde.
-          </Text>
-        )  }
-    </ScrollView>
+    {fichaValida && !verificando ? (
+      fichasUnicas.map((ficha) => (
+        <View key={ficha}>
+          <Text>Ficha {ficha}</Text>
+          {exercicios.map((item, index) => (
+            item.ficha === ficha && (
+              <View key={index} style={{ width: '100%' }}>
+                {item.tipo === 'força' ? (
+                  <ExerciciosForça
+                    nomeDoExercicio={item.Nome.exercicio}
+                    series={item.series}
+                    repeticoes={item.repeticoes}
+                    descanso={item.descanso}
+                    cadencia={item.cadencia}
+                    imagem={item.Nome.imagem}
+                  />
+                ) : item.tipo === 'aerobico' ? (
+                  <ExerciciosCardio
+                    nomeDoExercicio={item.Nome.exercicio}
+                    velocidadeDoExercicio={item.velocidade}
+                    duracaoDoExercicio={item.duracao}
+                    seriesDoExercicio={item.series}
+                    descansoDoExercicio={item.descanso}
+                  />
+                ) : item.tipo === 'alongamento' ? (
+                  <ExerciciosAlongamento
+                    nomeDoExercicio={item.Nome}
+                    series={item.series}
+                    descanso={item.descanso}
+                    repeticoes={item.repeticoes}
+                    imagem={item.imagem}
+                  />
+                ) : null}
+              </View>
+            )
+          ))}
+        </View>
+      ))
+    ) : (
+      <Text style={[{ marginHorizontal: 15, textAlign: 'justify' }, estilo.textoP16px, estilo.textoCorSecundaria]}>
+        A última ficha ainda não foi lançada. Solicite ao professor responsável para lançá-la e tente novamente mais tarde.
+      </Text>
+    )}
+  </ScrollView>
+  
   );
-}
-
+}  
 const style = StyleSheet.create({
   container: {
     width: '100%',

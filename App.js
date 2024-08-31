@@ -62,6 +62,7 @@ import TransferirAluno from './componentes/SelecaoAluno/PerfilDoAluno/Transferir
 import InativarAluno from './componentes/SelecaoAluno/PerfilDoAluno/InativarAluno.js';
 import EditarTurmas from './componentes/SelecaoAluno/EditarTurmas/index.js';
 import DadosTurma from './componentes/SelecaoAluno/EditarTurmas/DadosTurma.js';
+import EditarAvaliacao from './componentes/TelaAnaliseDoProgramaDeTreino/EditarAvaliacao';
 
 const Stack = createNativeStackNavigator();
 
@@ -84,7 +85,7 @@ export default function App() {
         <Stack.Screen name="Perfil Aluno" component={PerfilDoAluno}/>
         <Stack.Screen name="PARQ" component={Parq}/>
         <Stack.Screen name="Anamnese" component={Anamnese}/>
-        <Stack.Screen name="Montar treino" component={MontarTreino}/>
+        <Stack.Screen name="Montar treino" component={MontarTreino}  options={{headerShown: false}}/>
         <Stack.Screen name="Cadastro" component={CadastroScreen}/>
         <Stack.Screen name="Perfil" component={PerfilProfessor}/>
         <Stack.Screen name="Editar foto" component={EditarFoto}/>
@@ -126,6 +127,7 @@ export default function App() {
         <Stack.Screen name="Inativar aluno" component={InativarAluno}/>
         <Stack.Screen name="Editar Turmas" component={EditarTurmas}/>
         <Stack.Screen name="Dados Turma" component={DadosTurma}/>
+        <Stack.Screen name="Editar avaliação" component={EditarAvaliacao}/>
 
       </Stack.Navigator>
     </NavigationContainer> 

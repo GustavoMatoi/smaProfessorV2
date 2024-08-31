@@ -14,6 +14,7 @@ import ExerciciosAlongamento from '../../Ficha/ExerciciosAlongamento'
 export default ({ navigation, route }) => {
     const { exercicios, aluno, objetivo } = route.params
 
+    console.log(exercicios)
     const [conexao, setConexao] = useState(true);
 
     useEffect(() => {
@@ -82,9 +83,9 @@ export default ({ navigation, route }) => {
     console.log('aluno.professorResponsavel', aluno.professorResponsavel)
     console.log(aluno.email)
     let horario = data.getHours()
-    horario < 10 ? horario = `0${horario}`: null
+    horario < 10 ? horario = `0${horario}` : null
     let minutos = data.getMinutes()
-    minutos < 10 ? minutos = `0${minutos}`: null
+    minutos < 10 ? minutos = `0${minutos}` : null
 
     const salvarFicha = async () => {
         if (dataFim !== '') {
@@ -100,7 +101,8 @@ export default ({ navigation, route }) => {
                         series: exercicio.series,
                         tipo: exercicio.tipo,
                         cadencia: exercicio.cadencia,
-                        image: exercicio.imagem
+                        image: exercicio.imagem,
+                        ficha: exercicio.ficha
                     };
                 } else if (exercicio.tipo === 'aerobico') {
                     return {
@@ -109,7 +111,8 @@ export default ({ navigation, route }) => {
                         descanso: exercicio.descanso,
                         series: exercicio.series,
                         duracao: exercicio.duracao,
-                        tipo: exercicio.tipo
+                        tipo: exercicio.tipo,
+                        ficha: exercicio.ficha
                     };
                 } else {
                     return {
@@ -118,7 +121,8 @@ export default ({ navigation, route }) => {
                         repeticoes: exercicio.repeticoes,
                         series: exercicio.series,
                         tipo: exercicio.tipo,
-                        imagem: exercicio.imagem
+                        imagem: exercicio.imagem,
+                        ficha: exercicio.ficha
                     }
                 }
             });
@@ -184,6 +188,7 @@ export default ({ navigation, route }) => {
                     data: serverTimestamp(),
                     objetivoDoTreino: objetivo,
                     responsavel: professorLogado.getNome(),
+
                 }
 
                 const avaliacaoString = JSON.stringify(avaliacaoData)
@@ -218,6 +223,9 @@ export default ({ navigation, route }) => {
         key: item.nomeDoExercicio,
         ...item,
     }));
+
+    const fichasUnicas = [...new Set(exercicios.map(item => item.ficha))];
+
     return (
         <SafeAreaView style={[style.container, estilo.centralizado, estilo.corLightMenos1]}>
             {!conexao ?
@@ -236,39 +244,55 @@ export default ({ navigation, route }) => {
                 <Text style={[estilo.textoP16px, estilo.textoCorSecundaria]}>Responsável: {professorLogado.getNome()}</Text>
                 <Text style={[estilo.textoP16px, estilo.textoCorSecundaria]}>Aluno: {aluno.nome}</Text>
             </View>
-            <FlatList
-                data={transformedData}
-                style={{ width: '100%', marginVertical: 10 }}
-                renderItem={({ item }) => (
-                    item.tipo === 'força' ? (
-                        <ExerciciosForça
-                            nomeDoExercicio={item.nomeExercicio.exercicio}
-                            series={item.series}
-                            repeticoes={item.repeticoes}
-                            descanso={item.descanso}
-                            cadencia={item.cadencia}
-                            imagem={item.imagem ? item.imagem : ''}
-                        />
-                    ) : item.tipo === 'aerobico' ? (
-                        <ExerciciosCardio
-                            nomeDoExercicio={item.nomeExercicio.exercicio}
-                            seriesDoExercicio={item.series}
-                            velocidadeDoExercicio={item.velocidade}
-                            descansoDoExercicio={item.descanso}
-                            duracaoDoExercicio={item.duracao}
-                        />
-                    ) : (
-                        <ExerciciosAlongamento
-                            nomeDoExercicio={item.nomeExercicio}
-                            series={item.series}
-                            repeticoes={item.repeticoes}
-                            descanso={item.descanso}
-                            imagem={item.imagem ? item.imagem : ''}
-                        />
-                    )
-                )}
-                keyExtractor={item => item.key}
-            />
+            {fichasUnicas.map(ficha => (
+                <View key={ficha} style={{ width: '100%', marginVertical: 10 }}>
+                    <Text style={[estilo.tituloH619px, estilo.textoCorSecundaria]}>Ficha {ficha}</Text>
+                    {exercicios.map(item => {
+                        console.log('item', item);
+                        console.log('ficha', ficha);
+
+                        if (item.ficha === ficha) {
+                            if (item.tipo === 'força') {
+                                return (
+                                    <ExerciciosForça
+                                        key={item.index}
+                                        nomeDoExercicio={item.nomeExercicio.exercicio}
+                                        series={item.series}
+                                        repeticoes={item.repeticoes}
+                                        descanso={item.descanso}
+                                        cadencia={item.cadencia}
+                                        imagem={item.imagem ? item.imagem : ''}
+                                    />
+                                );
+                            } else if (item.tipo === 'aerobico') {
+                                return (
+                                    <ExerciciosCardio
+                                        key={item.index}
+                                        nomeDoExercicio={item.nomeExercicio.exercicio}
+                                        seriesDoExercicio={item.series}
+                                        velocidadeDoExercicio={item.velocidade}
+                                        descansoDoExercicio={item.descanso}
+                                        duracaoDoExercicio={item.duracao}
+                                    />
+                                );
+                            } else if (item.tipo === 'alongamento') {
+                                return (
+                                    <ExerciciosAlongamento
+                                        key={item.index}
+                                        nomeDoExercicio={item.nomeExercicio}
+                                        series={item.series}
+                                        repeticoes={item.repeticoes}
+                                        descanso={item.descanso}
+                                        imagem={item.imagem ? item.imagem : ''}
+                                    />
+                                );
+                            }
+                        }
+
+                        return null; // Retorna null se não houver correspondência de ficha
+                    })}
+                </View>
+            ))}
 
 
             <View style={[{ marginVertical: 10 }]}>

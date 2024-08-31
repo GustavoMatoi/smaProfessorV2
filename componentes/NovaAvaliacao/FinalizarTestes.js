@@ -128,7 +128,9 @@ export default ({ navigation, route }) => {
         quadrilMedida1: novaAvalicao.getQuadrilMedida1(),
         quadrilMedida2: novaAvalicao.getQuadrilMedida2(),
         quadrilMedida3: novaAvalicao.getQuadrilMedida3(),
-        pressaoArterial: pressaoArterial
+        pressaoArterial: pressaoArterial,
+        professorResponsavel: professorLogado.getNome(),
+        emailProfessorResponsavel: professorLogado.getEmail()
     }
     console.log(avaliacao)
     console.log("FCdR: ", avaliacao.FrequenciaCardiacaDeRepouso)
@@ -192,6 +194,8 @@ export default ({ navigation, route }) => {
                 quadrilMedida2: novaAvalicao.getQuadrilMedida2(),
                 quadrilMedida3: novaAvalicao.getQuadrilMedida3(),
                 pressaoArterial: pressaoArterial,
+                professorResponsavel: professorLogado.getNome(),
+                emailProfessorResponsavel: professorLogado.getEmail()
             }).then(() => {
                 console.log("Documento criado com sucesso")
                 setDoc(doc(firebaseBD, "Academias", professorLogado.getAcademia(), 'Alunos', `${aluno.email}`, 'Notificações', `Notificação${ano}|${mes}|${dia}`), {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Text, View, StyleSheet, SafeAreaView, ScrollView, Alert } from 'react-native'
+import { Text, View, StyleSheet, SafeAreaView, ScrollView, Alert, TouchableOpacity } from 'react-native'
 import estilo from "../estilo"
 import TabelaResultados from "../AnaliseDoProgramaDeTreino/SelecaoAlunoAnaliseProgramaDeTreino/TabelaResultados"
 import FichaDeTreinoAnalise from "../Ficha/FichaDeTreinoAnalise";
@@ -8,6 +8,7 @@ import Spinner from "react-native-loading-spinner-overlay";
 import ModalSemConexao from "../ModalSemConexao";
 import { Firestore, collection, doc, getDocs, getFirestore, updateDoc } from "firebase/firestore";
 import { professorLogado } from "../LoginScreen";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 
 const getPressaoArterial = (pressaoSistolica, pressaoDiastolica) => {
@@ -52,26 +53,36 @@ export default function TelaAnaliseDoProgramaDeTreino({ route, navigation }) {
 
     console.log('avaliacaoAnterior ', avaliacaoAnterior)
     console.log('avaliacaoAnterior ', posicaoDoArray)
-    useEffect(() => {
-        const unsubscribe = NetInfo.addEventListener(state => {
-            setConexao(state.type === 'wifi' || state.type === 'cellular')
-        })
-
-        return () => {
-            unsubscribe()
-        }
-    }, [])
-    const [conexao, setConexao] = useState(true)
-
-    console.log(aluno)
+    console.log("aluno", aluno)
     // const alunoFilhas = [...aluno.fichas]
+
+    const editarAvaliacao = () =>{
+        console.log(avaliacao.emailProfessorResponsavel )
+        if(avaliacao.emailProfessorResponsavel !== professorLogado.getEmail()){
+            Alert.alert("Permissão negada.", "Apenas o professor que lançou essa ficha poderá editá-la.")
+        } else {
+            console.log(avaliacao)
+            const pa = getPressaoArterial(avaliacao.PressaoDiastolica, avaliacao.PressaoSistolica)
+            navigation.navigate('Editar avaliação', {props: avaliacao, aluno: aluno});
+        }
+    }
 
     if (posicaoDoArray == 0) {
         return (
             <SafeAreaView style={[estilo.corLightMenos1, style.container]}>
 
                 <ScrollView>
+
+
+                    <Text style={[estilo.textoP16px, estilo.textoCorSecundaria]}>Profesor responsável pela avaliação: {avaliacao.professorResponsavel || 'Lançada em versões anteriores.'}</Text>
+                    <Text style={[estilo.textoP16px, estilo.textoCorSecundaria]}>Data da avaliação: {avaliacao.dia}/{avaliacao.mes}/{avaliacao.ano}</Text>
+
+                    <TouchableOpacity onPress={() => editarAvaliacao()} style={[estilo.botao, avaliacao.emailProfessorResponsavel === professorLogado.getEmail() ? estilo.corPrimaria : estilo.corDisabled, { justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row' }]}>
+                        <AntDesign name="edit" size={24} color="white" />
+                        <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>Editar avaliação</Text>
+                    </TouchableOpacity>
                     <Text style={[estilo.textoCorSecundaria, estilo.tituloH427px, estilo.centralizado, { marginVertical: '5%' }]}>Resultados obtidos</Text>
+
 
                     <TabelaResultados
                         massaCorporal={avaliacao.massaCorporal}
@@ -144,14 +155,21 @@ export default function TelaAnaliseDoProgramaDeTreino({ route, navigation }) {
                     </TabelaResultados>
 
                     <Text style={[estilo.textoCorSecundaria, estilo.tituloH427px, estilo.centralizado, { marginVertical: '5%' }]}>Programa de Treino</Text>
-                    {<FichaDeTreinoAnalise posicaoDoArray={posicaoDoArray} aluno={aluno} ></FichaDeTreinoAnalise>}
+                    {aluno.fichas.length > 0 ? <FichaDeTreinoAnalise posicaoDoArray={posicaoDoArray} aluno={aluno} ></FichaDeTreinoAnalise> : null}
                 </ScrollView>
             </SafeAreaView>
         )
     } else {
         return (
             <SafeAreaView style={[estilo.corLightMenos1, style.container]}>
+
                 <ScrollView>
+                    <Text style={[estilo.textoP16px, estilo.textoCorSecundaria]}>Profesor responsável pela avaliação: {avaliacao.professorResponsavel || 'Lançada em versões anteriores.'}</Text>
+                    <Text style={[estilo.textoP16px, estilo.textoCorSecundaria]}>Data da avaliação: {avaliacao.dia}/{avaliacao.mes}/{avaliacao.ano}</Text>
+                    <TouchableOpacity  onPress={() => editarAvaliacao()} style={[estilo.botao, estilo.corPrimaria, { justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row' }]}>
+                        <AntDesign name="edit" size={24} color="white" />
+                        <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>Editar avaliação</Text>
+                    </TouchableOpacity>
                     <Text style={[estilo.textoCorSecundaria, estilo.tituloH427px, estilo.centralizado, { marginVertical: '5%' }]}>Resultados obtidos</Text>
                     <TabelaResultados
                         massaCorporal={avaliacao.massaCorporal}
