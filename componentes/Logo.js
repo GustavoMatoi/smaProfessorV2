@@ -11,7 +11,7 @@ export default props => {
                 </View>
                 <View style={[Estilo.corPrimariaMais1, style.logoProfessor]}>
                 <Text style={[Estilo.tituloH333px, Estilo.textoCorLight]}>PROFESSOR</Text>
-                <Text style={[Estilo.tituloH619px, Estilo.textoCorLight]}>Versão 2.1.1</Text>
+                <Text style={[Estilo.tituloH619px, Estilo.textoCorLight]}>Versão 2.3.1</Text>
                 </View>
             </View>
         )
