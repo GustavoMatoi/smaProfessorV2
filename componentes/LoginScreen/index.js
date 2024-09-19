@@ -267,7 +267,7 @@ export default ({ navigation }) => {
                                     <Text style={[Estilo.tituloH619px, Estilo.textoCorLight, { textAlign: 'center' }]}>Digite seu email abaixo. Enviaremos um email para recuperação de senha.</Text>
                                     <FontAwesome5 name="user-lock" size={90} color="#0066FF" />
                                     <TextInput
-                                        placeholder="Senha"
+                                        placeholder="Email@exemplo.com"
                                         value={emailRecuperacao}
                                         style={[style.inputText, Estilo.corLight]}
                                         onChangeText={(text) => setEmailRecuperacao(text)}

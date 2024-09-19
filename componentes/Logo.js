@@ -10,9 +10,9 @@ export default props => {
                     <Text style={[Estilo.tituloH148px, Estilo.textoCorPrimariaMenos1]}>App</Text>
                 </View>
                 <View style={[Estilo.corPrimariaMais1, style.logoProfessor]}>
-                <Text style={[Estilo.tituloH333px, Estilo.textoCorLight]}>PROFESSOR</Text>
-                <Text style={[Estilo.tituloH619px, Estilo.textoCorLight]}>Versão 2.3.1</Text>
+                    <Text style={[Estilo.tituloH333px, Estilo.textoCorLight]}>PROFESSOR</Text>
                 </View>
+                <Text style={[Estilo.textoP16px, Estilo.textoCorDark, style.version ]}>Versao 2.3.1</Text>
             </View>
         )
     } else {
@@ -54,5 +54,9 @@ const style = StyleSheet.create({
         heigh: 40,
         marginLeft: 'auto',
         marginRight: 'auto'
+    },
+    version: {
+        textAlign: 'center', 
+        marginTop: 20,
     },
 }   )
