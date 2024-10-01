@@ -13,13 +13,13 @@ import SelecaoAluno from '../SelecaoAluno';
 import Logo from '../Logo';
 import Parq from '../Parq';
 import PerfilProfessor from '../PerfilProfessor';
-import Notificacoes from '../Notificacoes';
 import { professorLogado } from "../LoginScreen";
 import { enderecoProfessor } from "../LoginScreen";
 import NetInfo from "@react-native-community/netinfo"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from "moment";
-
+import { Octicons } from '@expo/vector-icons';
+import Versoes from '../Versao'
 const Tab = createBottomTabNavigator()
 
 export default function Routes() {
@@ -71,34 +71,28 @@ export default function Routes() {
   }, [conexao])
 
   const fetchAlunosSemNet = async () => {
-    const newArrayAlunos = []
+    const newArrayAlunos = [];
     try {
-      const keys = await AsyncStorage.getAllKeys()
+      const keys = await AsyncStorage.getAllKeys();
       for (const key of keys) {
-
         if (key.includes('Aluno')) {
-          const itemDoAS = await AsyncStorage.getItem(key)
-          const stringItem = JSON.parse(itemDoAS)
-          newArrayAlunos.push(stringItem)
-
+          const itemDoAS = await AsyncStorage.getItem(key);
+          const stringItem = JSON.parse(itemDoAS);
+          newArrayAlunos.push(stringItem);
         }
-
       }
-      setAlunos(newArrayAlunos)
-      setCarregando(false)
-
+      setAlunos(newArrayAlunos);
+      setCarregando(false);
     } catch (error) {
-      console.log("Erro na leitura do AS")
+      console.log("Erro na leitura do AsyncStorage:", error);
+      Alert.alert("Erro", `Erro ao carregar dados offline: ${error.message}`);
     }
-
-
-  }
+  };
 
 
   const fetchAlunosWifi = async () => {
     try {
       const newArrayAlunos = [];
-  
       const alunoRef = collection(
         firebaseBD,
         'Academias',
@@ -106,10 +100,10 @@ export default function Routes() {
         'Alunos'
       );
       const alunoSnapshot = await getDocs(alunoRef);
-  
+    
       for (const alunoDoc of alunoSnapshot.docs) {
         const alunoData = alunoDoc.data();
-  
+    
         const avaliacoesRef = collection(
           firebaseBD,
           'Academias',
@@ -120,7 +114,7 @@ export default function Routes() {
         );
         const avaliacoesSnapshot = await getDocs(avaliacoesRef);
         alunoData.avaliacoes = avaliacoesSnapshot.docs.map(avaliacaoDoc => avaliacaoDoc.data());
-  
+    
         const fichasRef = collection(
           firebaseBD,
           'Academias',
@@ -133,7 +127,7 @@ export default function Routes() {
         alunoData.fichas = await Promise.all(
           fichasSnapshot.docs.map(async fichaDoc => {
             const fichaData = fichaDoc.data();
-  
+    
             const exerciciosRef = collection(
               firebaseBD,
               'Academias',
@@ -146,20 +140,20 @@ export default function Routes() {
             );
             const exerciciosSnapshot = await getDocs(exerciciosRef);
             fichaData.exercicios = exerciciosSnapshot.docs.map(exDoc => exDoc.data());
-  
+    
             return fichaData;
           })
         );
-  
+    
         newArrayAlunos.push(alunoData);
       }
-  
+    
       const dataAtual = moment();
       newArrayAlunos.forEach(item => {
         if (item.fichas && item.fichas.length > 0) {
           const ultimaFicha = item.fichas[item.fichas.length - 1];
           const dataFimFicha = moment(ultimaFicha.dataFim, 'DD/MM/YY');
-  
+    
           if (dataAtual.diff(dataFimFicha, 'days') === 7) {
             item.fichaVencendo = true;
             Alert.alert(
@@ -173,12 +167,13 @@ export default function Routes() {
         const itemString = JSON.stringify(item);
         await AsyncStorage.setItem(`Aluno ${item.email}`, itemString);
       }));
-  
+    
       setAlunos(newArrayAlunos);
-      console.log('newArrayAlunos', newArrayAlunos)
+      console.log('newArrayAlunos', newArrayAlunos);
       setCarregando(false);
     } catch (error) {
       console.error('Erro ao buscar alunos:', error);
+      Alert.alert("Erro", `Erro ao carregar dados online: ${error.message}`);
     }
   };
   
@@ -247,6 +242,8 @@ export default function Routes() {
         }
       } catch (error) {
         console.error('Erro ao obter dados do AsyncStorage:', error);
+        Alert.alert("Erro", `Erro ao sincronizar dados: ${error.message}`);
+
       }
 
     }
@@ -299,11 +296,11 @@ export default function Routes() {
           tabBarIcon: ({ size, color }) => (<AntDesign name="user" size={size} color={color} />)
         }} />
       <Tab.Screen
-        name="Notificações"
-        component={Notificacoes}
+        name="Versao"
+        component={Versoes}
         initialParams={{ alunos }}
         options={{
-          tabBarIcon: ({ size, color }) => (<Ionicons name="notifications-outline" size={size} color={color} />)
+          tabBarIcon: ({ size, color }) => (<Octicons name="versions" size={size} color={color} />)
 
         }} />
 

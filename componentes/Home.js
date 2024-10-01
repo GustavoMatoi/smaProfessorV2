@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Text, TouchableOpacity, Button, View, SafeAreaView, StyleSheet, Alert } from 'react-native'
+import { Text, TouchableOpacity, Button, View, SafeAreaView, StyleSheet, Alert,ScrollView } from 'react-native'
 import estilo from "./estilo"
 import Logo from "./Logo"
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -105,6 +105,7 @@ verificaDocumentos()
 
   return (
     <SafeAreaView style={[estilo.corLightMenos1, style.container]}>
+      <ScrollView contentContainerStyle={style.scroll}>
       <SafeAreaView>
 
         <View style={style.areaLogo}>
@@ -171,7 +172,7 @@ verificaDocumentos()
           </View>
         </View>
       </SafeAreaView >
-
+      </ScrollView>
     </SafeAreaView>
 
   )
@@ -182,6 +183,10 @@ const style = StyleSheet.create({
   container: {
     height: '100%'
   },
+  scroll: {
+    flexGrow: 1,
+    height: '30%'
+  },
   areaLogo: {
     paddingTop: '5%',
     height: '10%',
@@ -191,12 +196,12 @@ const style = StyleSheet.create({
     height: '5%',
   },
   areaBotoes: {
-    height: '25%',
+    height: '26%',
     marginTop: '3%',
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   areaNavigation: {
     height: '7%',

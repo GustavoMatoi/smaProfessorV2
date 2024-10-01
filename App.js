@@ -8,6 +8,7 @@ import ListaAlunos from './componentes/SelecaoAluno/ListaAlunos';
 import PerfilDoAluno from './componentes/SelecaoAluno/PerfilDoAluno';
 import Caixinha from './componentes/SelecaoAluno/PerfilDoAluno/Caixinha';
 import Parq from './componentes/Parq';
+import Versao from './componentes/Versao';
 import Anamnese from './componentes/Anamnese';
 import DadosCorporais from './componentes/NovaAvaliacao/DadosCorporais';
 import SentarAlcancar from './componentes/NovaAvaliacao/Testes/Tabelas/SentarAlcancar';
@@ -29,7 +30,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import PerfilProfessor from './componentes/PerfilProfessor';
 import EditarFoto from './componentes/PerfilProfessor/EditarFoto';
-import Notificacoes from './componentes/Notificacoes';
+
 import CadastroScreen from './componentes/CadastroScreen/index.js';
 import ModalSemConexao from './componentes/ModalSemConexao';
 import SelecaoAlunoAvaliacao from './componentes/MontarTreino/SelecaoAlunoAvaliacao';
@@ -84,6 +85,7 @@ export default function App() {
         <Stack.Screen name="Principal" component={Routes} options={{ headerShown: false }} />
         <Stack.Screen name="Perfil Aluno" component={PerfilDoAluno}/>
         <Stack.Screen name="PARQ" component={Parq}/>
+        <Stack.Screen name="Versoes" component={Versao} options={{headerShown: false}} />
         <Stack.Screen name="Anamnese" component={Anamnese}/>
         <Stack.Screen name="Montar treino" component={MontarTreino}  options={{headerShown: false}}/>
         <Stack.Screen name="Cadastro" component={CadastroScreen}/>

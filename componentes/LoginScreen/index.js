@@ -210,7 +210,7 @@ export default ({ navigation }) => {
 
     return (
         <SafeAreaView style={[Estilo.corLightMenos1]}>
-             <ScrollView style={styles.scrollView}>
+             <ScrollView>
             <View style={style.container}>
                 <View style={style.areaLogo}>
                     <Logo tamanho="grande"></Logo>
