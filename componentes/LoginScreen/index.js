@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Text, SafeAreaView, StyleSheet, View, Dimensions, TouchableOpacity, TextInput, Touchable, Alert } from 'react-native'
+import { Text, SafeAreaView, StyleSheet, View, Dimensions, TouchableOpacity, TextInput, Touchable, Alert, ScrollView } from 'react-native'
 import Estilo from "../estilo"
 import Logo from '../Logo'
 import { useFonts } from 'expo-font';
@@ -210,6 +210,7 @@ export default ({ navigation }) => {
 
     return (
         <SafeAreaView style={[Estilo.corLightMenos1]}>
+             <ScrollView style={styles.scrollView}>
             <View style={style.container}>
                 <View style={style.areaLogo}>
                     <Logo tamanho="grande"></Logo>
@@ -287,7 +288,7 @@ export default ({ navigation }) => {
                     </View>
                 </View>
             </View>
-
+            </ScrollView>
         </SafeAreaView>
     )
 }
