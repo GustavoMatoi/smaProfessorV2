@@ -102,16 +102,11 @@ export default ({ navigation, route }) => {
 
 verificaDocumentos()
 
-
   return (
     <SafeAreaView style={[estilo.corLightMenos1, style.container]}>
-      <ScrollView contentContainerStyle={style.scroll}>
-      <SafeAreaView>
-
-        <View style={style.areaLogo}>
+      <ScrollView>
+        <>
           <Logo />
-
-        </View>
         <View style={style.areaFrase}>
           <Text style={[estilo.textoCorSecundaria, estilo.tituloH427px, estilo.centralizado]}>Boas vindas { professorLogado.getNome() || 'Professor'}!</Text>
         </View>
@@ -171,7 +166,7 @@ verificaDocumentos()
             </TouchableOpacity>
           </View>
         </View>
-      </SafeAreaView >
+        </>
       </ScrollView>
     </SafeAreaView>
 
@@ -181,11 +176,8 @@ verificaDocumentos()
 
 const style = StyleSheet.create({
   container: {
-    height: '100%'
-  },
-  scroll: {
-    flexGrow: 1,
-    height: '30%'
+    flex: 1, 
+    marginVertical: '5%',
   },
   areaLogo: {
     paddingTop: '5%',
@@ -202,6 +194,13 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
+    flexWrap: 'wrap',
+    flex: 1,
+  },
+  textoAlinhado: {
+    marginLeft: '5%',
+    marginTop: '15%',
+    textDecorationLine: 'underline',
   },
   areaNavigation: {
     height: '7%',

@@ -123,8 +123,8 @@ const style = StyleSheet.create({
   },
   botao: {
     flexDirection: 'row',
-    alignItems: 'center', // Alinha os itens verticalmente
-    justifyContent: 'space-around', // Alinha os itens horizontalmente
+    alignItems: 'center', 
+    justifyContent: 'space-around', 
 
   }
 
