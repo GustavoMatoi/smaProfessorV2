@@ -12,7 +12,7 @@ export default props => {
                 <View style={[Estilo.corPrimariaMais1, style.logoProfessor]}>
                     <Text style={[Estilo.tituloH333px, Estilo.textoCorLight]}>PROFESSOR</Text>
                 </View>
-                <Text style={[Estilo.textoP16px, Estilo.textoCorDark, style.version ]}>Versao 2.3.1</Text>
+                <Text style={[Estilo.textoP16px, Estilo.textoCorDark, style.version ]}>Versao 2.4.0</Text>
             </View>
         )
     } else {

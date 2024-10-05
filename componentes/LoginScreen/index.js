@@ -122,12 +122,17 @@ export default ({ navigation }) => {
                     Alert.alert("Não foi possível realizar login.", "O coordenador da academia que você está vinculato te marcou como excluído.")
                 } else {
                     if (emailProf && senhaProf) {
-                        if (conexao) {
-                            await firebase.auth().signInWithEmailAndPassword(emailProf, senhaProf);
+                        
+                        if (!dadosProfessor.status || dadosProfessor.status === "Pendente" || dadosProfessor.status === false) {
+                            alert("Seu cadastro está pendente. Aguarde a aprovação do coordenador.");
+                        } else {
+                            if (conexao) {
+                                await firebase.auth().signInWithEmailAndPassword(emailProf, senhaProf);
+                            }
+                            navigation.navigate('Principal', { professor: dadosProfessor }); }                        
                         }
-                        navigation.navigate('Principal', { professor: dadosProfessor });
                     }
-                }
+
                 } catch (error) {
                     console.error('Erro ao obter dados do AsyncStorage ou fazer login:', error);
                 }
@@ -150,7 +155,7 @@ export default ({ navigation }) => {
             );
         
             const querySnapshot = await getDocs(professoresQuery);
-            let leituraContador = 0; // Contador local para acumular o total de leituras
+            let leituraContador = 0; 
         
             querySnapshot.forEach((doc) => {
               const professorData = doc.data();
@@ -210,8 +215,8 @@ export default ({ navigation }) => {
 
     return (
         <SafeAreaView style={[Estilo.corLightMenos1]}>
-             <ScrollView>
-            <View style={style.container}>
+             <ScrollView style={style.container}>
+            <View >
                 <View style={style.areaLogo}>
                     <Logo tamanho="grande"></Logo>
                 </View>
@@ -281,8 +286,6 @@ export default ({ navigation }) => {
                                         <Text style={[Estilo.textoCorLight, Estilo.tituloH619px]}>CANCELAR</Text>
                                     </TouchableOpacity>
                                 </View>
-
-
                             </Modal>
                         </Text>
                     </View>

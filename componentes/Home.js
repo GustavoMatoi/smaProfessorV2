@@ -106,7 +106,9 @@ verificaDocumentos()
     <SafeAreaView style={[estilo.corLightMenos1, style.container]}>
       <ScrollView>
         <>
+        <View style={style.areaLogo}>
           <Logo />
+        </View>
         <View style={style.areaFrase}>
           <Text style={[estilo.textoCorSecundaria, estilo.tituloH427px, estilo.centralizado]}>Boas vindas { professorLogado.getNome() || 'Professor'}!</Text>
         </View>
@@ -176,8 +178,7 @@ verificaDocumentos()
 
 const style = StyleSheet.create({
   container: {
-    flex: 1, 
-    marginVertical: '5%',
+    flex: 1
   },
   areaLogo: {
     paddingTop: '5%',
@@ -196,6 +197,11 @@ const style = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     flex: 1,
+  },
+  areaLogo: {
+    paddingTop: '5%',
+    height: '10%',
+    marginBottom: '5%'
   },
   textoAlinhado: {
     marginLeft: '5%',
@@ -217,7 +223,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    height: '85%',
+    height: '95%',
     borderRadius: 15,
     padding: 5
   },

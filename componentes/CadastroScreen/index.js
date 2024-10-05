@@ -206,8 +206,9 @@ export default ({navigation}) => {
           },
           email: novoProfessor.getEmail(),
           senha: novoProfessor.getSenha(),
+          status: "Pendente",
         }).then(() => {
-          alert("Novo usuário criado com sucesso!");
+          alert("Novo usuário criado com sucesso! Aguarde a aprovação do coordenador para realizar login.");
     
           setDoc(doc(firebaseBD, "Academias", `${novoProfessor.getAcademia()}`, "Professores", `${novoProfessor.getEmail()}`, "Notificações", `Notificação${ano}|${mes}|${dia}`), {
             data: `${dia}/${mes}/${ano}`,
