@@ -8,7 +8,7 @@ import { collection, doc, getDoc, getDocs, getFirestore } from "firebase/firesto
 import Globais from "../../classes/Globais";
 
 export default ({ route }) => {
-    const variavelGlobal = new Globais('2.3.1'); 
+    const variavelGlobal = new Globais('2.4.0'); 
     const [atVersao, setAtVersao] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [conexao, setConexao] = useState(true);
