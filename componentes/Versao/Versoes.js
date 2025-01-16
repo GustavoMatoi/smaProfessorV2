@@ -20,7 +20,7 @@ export default ({ versao }) => {
             {/* Primeiro modal */}
             <TouchableOpacity style={style.container} onPress={() => setModalVisible1(true)}>
                 <Text style={[style.alinhamentoTitulo, estilo.textoP16px, estilo.textoCorSecundaria, style.montserrat]}>
-                    Versão: {versao}
+                    Versão: 2.3.1
                 </Text>
                 <Text style={[style.detalhesTexto, estilo.textoP12px, estilo.textoCorSecundaria, style.montserrat]}>
                     Clique para mais detalhes
@@ -75,6 +75,38 @@ export default ({ versao }) => {
                         <ScrollView style={style.scrollView}>
                             <Text style={[style.modalText, style.montserrat]}>
                                 - Permissao para professor ter acesso a academia após cadastro
+                            </Text>
+                        </ScrollView>
+                        <TouchableOpacity style={style.closeButton} onPress={() => setModalVisible2(false)}>
+                            <Text style={[style.closeButtonText, style.montserrat]}>Fechar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+            {/* Segundo modal */}
+            <TouchableOpacity style={style.container} onPress={() => setModalVisible2(true)}>
+                <Text style={[style.alinhamentoTitulo, estilo.textoP16px, estilo.textoCorSecundaria, style.montserrat]}>
+                    Versão: 2.4.1
+                </Text>
+                <Text style={[style.detalhesTexto, estilo.textoP12px, estilo.textoCorSecundaria, style.montserrat]}>
+                    Clique para mais detalhes
+                </Text>
+            </TouchableOpacity>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible2}
+                onRequestClose={() => setModalVisible2(false)}
+            >
+                <View style={style.modalContainer}>
+                    <View style={style.modalContent}>
+                        <Text style={[style.modalTitle, style.montserrat]}>Detalhes da Versão 2.4.1</Text>
+                        <ScrollView style={style.scrollView}>
+                            <Text style={[style.modalText, style.montserrat]}>
+                                 Correção na edição de turmas 
+                                 Correção de bug para acessar alunos
+                                 Correção no scroll da nova ficha
                             </Text>
                         </ScrollView>
                         <TouchableOpacity style={style.closeButton} onPress={() => setModalVisible2(false)}>

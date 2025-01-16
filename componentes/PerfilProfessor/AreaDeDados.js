@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react'
-import {Text, View, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView} from 'react-native'
-import estilo from '../estilo'
-import {useFonts} from "expo-font"
-import { getAuth, signOut } from "firebase/auth";
-import { professorLogado, enderecoProfessor } from '../LoginScreen'
+import React, { useState } from 'react';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import estilo from '../estilo';
+import { useFonts } from "expo-font";
+import { getAuth, deleteUser, signOut } from "firebase/auth";
+import { getFirestore, collectionGroup, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { professorLogado, enderecoProfessor } from '../LoginScreen';
 
 export default ({navigation, conexao}) => {
     const [fontsLoaded] = useFonts({
@@ -12,6 +13,42 @@ export default ({navigation, conexao}) => {
 
         
     })
+    const handleDeleteAccount = async () => {
+        try {
+            const auth = getAuth();
+            const user = auth.currentUser;
+
+            if (!user) {
+                Alert.alert("Erro", "Nenhum usuário autenticado.");
+                return;
+            }
+
+            const firebaseBD = getFirestore();
+
+            const professoresQuery = query(
+                collectionGroup(firebaseBD, 'Professores'),
+                where('email', '==', professorLogado.getEmail())
+            );
+
+            const querySnapshot = await getDocs(professoresQuery);
+            querySnapshot.forEach(async (docSnapshot) => {
+                const professorRef = doc(firebaseBD, docSnapshot.ref.path);
+                await deleteDoc(professorRef);
+                console.log("Documento do professor excluído:", professorRef.path);
+            });
+
+            await deleteUser(user);
+
+            await AsyncStorage.clear();
+
+            Alert.alert("Conta Excluída", "Sua conta foi excluída com sucesso.");
+            navigation.navigate('Login');
+        } catch (error) {
+            console.error("Erro ao excluir a conta:", error.message);
+            Alert.alert("Erro", "Não foi possível excluir a conta. Tente novamente mais tarde.");
+        }
+    };
+
     const handleLogout = () => {
         const auth = getAuth()
         signOut(auth)
@@ -48,8 +85,21 @@ export default ({navigation, conexao}) => {
             <TouchableOpacity style={[estilo.botao, conexao? estilo.corPrimaria : estilo.corDisabled, estilo.sombra, {marginTop: '5%'}]} disabled={!conexao} onPress={()=>navigation.navigate('Editar foto')}>
                 <Text style={[estilo.textoCorLight, estilo.tituloH619px]} >ALTERAR FOTO</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[estilo.botao, estilo.corPrimaria, estilo.sombra, {marginTop: '5%'}]} onPress={()=>handleLogout()}>
-                <Text style={[estilo.textoCorLight, estilo.tituloH619px]} >SAIR</Text>
+            <TouchableOpacity style={[estilo.botao, estilo.corDanger, estilo.sombra, {marginTop: '5%'}]} onPress={() =>
+                      Alert.alert(
+                        "Confirmação",
+                        "Tem certeza de que deseja excluir sua conta? Seus dados serão apagados permanentemente!!",
+                        [
+                          { text: "Cancelar", style: "cancel" },
+                          {
+                            text: "Excluir",
+                            style: "destructive",
+                            onPress: handleDeleteAccount,
+                          },
+                        ]
+                      )
+                    }>
+                <Text style={[estilo.textoCorLight, estilo.tituloH619px]} >Excluir Conta</Text>
             </TouchableOpacity>
         </View>
         </ScrollView>

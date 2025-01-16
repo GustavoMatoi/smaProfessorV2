@@ -448,6 +448,7 @@ export default ({ navigation, route }) => {
               select={'Exercícios uniarticulares'}
             />
           </View>
+          
           <Text style={[estilo.textoCorSecundaria, estilo.tituloH619px]}>Combinar exercícios:</Text>
           <TouchableOpacity style={[estilo.botao, estilo.corPrimaria]} onPress={() => { handleSelecaoExercicio('Personalizado', 0, 'Força') }}>
             <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>COMBINAR</Text>

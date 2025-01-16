@@ -31,17 +31,17 @@ export default ({ navigation, route }) => {
             const bd = getFirestore()
             const turmasRef = collection(bd, 'Academias', professorLogado.getAcademia(), 'Turmas')
             const turmasSnapshot = await getDocs(turmasRef)
-            const arrayTurmasAux = []
-            turmasSnapshot.docs.map((item) => {
-                arrayTurmasAux.push(item.data())
-            })
+            const arrayTurmasAux = turmasSnapshot.docs.map((item) => ({
+                nome: item.data().nome,
+                horario: item.data().horario,
+                vagas: item.data().vagas,
+                id: item.id
+            }));
             setTurmas(arrayTurmasAux)
-        }
-
-
-
-        recuperarTurmas()
-    }, [])
+        };
+    
+        recuperarTurmas(); 
+    }, []);
 
 
 

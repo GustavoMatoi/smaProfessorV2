@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View, SafeAreaView, FlatList, TouchableOpacity, StyleSheet, TextInput, Alert } from 'react-native'
+import { Text, View, SafeAreaView, FlatList, TouchableOpacity, StyleSheet, TextInput, Alert,ScrollView} from 'react-native'
 import ExerciciosForça from '../../Ficha/ExerciciosForça'
 import estilo from '../../estilo'
 import { professorLogado } from '../../LoginScreen'
@@ -228,6 +228,8 @@ export default ({ navigation, route }) => {
 
     return (
         <SafeAreaView style={[style.container, estilo.centralizado, estilo.corLightMenos1]}>
+            <ScrollView>
+                <>
             {!conexao ?
                 <TouchableOpacity onPress={() => {
                     Alert.alert(
@@ -309,6 +311,8 @@ export default ({ navigation, route }) => {
                     <Text style={[estilo.tituloH619px, estilo.textoCorLight]}>CONFIRMAR</Text>
                 </TouchableOpacity>
             </View>
+                </>
+            </ScrollView>
         </SafeAreaView>
     )
 }

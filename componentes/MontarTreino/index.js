@@ -343,7 +343,6 @@ export default ({ route, navigation }) => {
 
   const handleMoveUp = (index) => {
     if (index > 0) {
-      // Swap the items in the array to move the current item up
       const updatedListAux = [...listaAux];
       const updatedListFinal = [...listaFinal];
       const updatedListDeExercicios = [...listaDeExercicios];

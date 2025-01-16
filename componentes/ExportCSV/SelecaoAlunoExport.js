@@ -1,81 +1,122 @@
-import React, { useState, useEffect } from "react"
-import { Text,View, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView } from "react-native"
+import React, { useState } from "react";
+import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 import estilo from "../estilo";
-import { firebase, firebaseBD } from '../configuracoes/firebaseconfig/config'
-import { collection, getDocs } from "firebase/firestore";
-import { professorLogado } from "../LoginScreen";
-import Spinner from 'react-native-loading-spinner-overlay';
-
 
 export default ({ navigation, route }) => {
-  const { alunos } = route.params
-  const turmas = alunos.map((aluno) => aluno.turma)
+  const { alunos } = route.params;
 
-  console.log(turmas)
-  const turmasFiltradas = new Set(turmas)
-  let turmasSemRepeticoes = Array.from(turmasFiltradas);
+  const [turmasVisiveis, setTurmasVisiveis] = useState({});
+
+  const alunosAtivos = alunos.filter((aluno) => !aluno.inativo);
+  const alunosSemTurma = alunosAtivos.filter((aluno) => aluno.turma === "");
+
+  const alunosAtivosPorTurma = alunosAtivos.reduce((acc, aluno) => {
+    acc[aluno.turma] = acc[aluno.turma] || [];
+    acc[aluno.turma].push(aluno);
+    return acc;
+  }, {});
+
+  const toggleVisibilidadeTurma = (turma) => {
+    setTurmasVisiveis((prev) => ({
+      ...prev,
+      [turma]: !prev[turma],
+    }));
+  };
 
   return (
-    <ScrollView
-      style={style.container}>
+    <ScrollView style={style.container}>
+      <Text style={[estilo.textoCorDanger, estilo.textoP16px, style.textoAlinhado]}>
+        Selecione o aluno para continuar.
+      </Text>
 
-      <Text
-        style={[estilo.textoCorDanger, estilo.textoP16px, style.textoAlinhado]}
-        numberOfLines={2}
-      >Selecione o aluno para continuar.</Text>
-      {
-        turmasSemRepeticoes.map((turma) => {
-          return (
-            <View>
-              <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, { margin: 10 }]}>{turma}</Text>
-              {alunos.map((aluno) => (
-                turma === aluno.turma && !aluno.inativo ?
-                  <>
-                    <TouchableOpacity
-                      key={aluno.cpf}
-                      style={[estilo.botao, estilo.corPrimaria, style.botao]}
-                      onPress={() => navigation.navigate('Exportar CSV', { aluno: aluno, navigation: navigation })}
-                    >
-                      <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>
-                        {aluno.nome}
-                      </Text>
-                    </TouchableOpacity>
-                  </>
-                  : null
+      {alunosSemTurma.length > 0 && (
+        <View>
+          <TouchableOpacity
+            style={[estilo.botao, estilo.corLightMenos1, { marginVertical: 5 }]}
+            onPress={() => toggleVisibilidadeTurma("Sem Turma")}
+          >
+            <Text style={[estilo.textoP16px, estilo.textoCorSecundaria]}>
+              Alunos sem turma
+            </Text>
+            <AntDesign
+              name={turmasVisiveis["Sem Turma"] ? "up" : "down"}
+              size={16}
+              color="#000"
+            />
+          </TouchableOpacity>
+
+          {turmasVisiveis["Sem Turma"] &&
+            alunosSemTurma.map((aluno) => (
+              <TouchableOpacity
+                key={aluno.cpf}
+                style={[estilo.botao, estilo.corPrimaria, style.botao]}
+                onPress={() =>
+                  navigation.navigate("Exportar CSV", { aluno: aluno })
+                }
+              >
+                <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>
+                  {aluno.nome}
+                </Text>
+              </TouchableOpacity>
+            ))}
+        </View>
+      )}
+
+      {Object.entries(alunosAtivosPorTurma)
+        .filter(([turma]) => turma)
+        .map(([turma, alunosDaTurma]) => (
+          <View key={turma}>
+            <TouchableOpacity
+              style={[estilo.botao, estilo.corLightMenos1, { marginVertical: 5 }]}
+              onPress={() => toggleVisibilidadeTurma(turma)}
+            >
+              <Text style={[estilo.textoP16px, estilo.textoCorSecundaria]}>
+                {turma}
+              </Text>
+              <AntDesign
+                name={turmasVisiveis[turma] ? "up" : "down"}
+                size={16}
+                color="#000"
+              />
+            </TouchableOpacity>
+
+            {turmasVisiveis[turma] &&
+              alunosDaTurma.map((aluno) => (
+                <TouchableOpacity
+                  key={aluno.cpf}
+                  style={[
+                    estilo.botao,
+                    aluno.fichaVencendo ? estilo.corWarning : estilo.corPrimaria,
+                    style.botao,
+                  ]}
+                  onPress={() =>
+                    navigation.navigate("Exportar CSV", { aluno: aluno })
+                  }
+                >
+                  <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>
+                    {aluno.nome}
+                  </Text>
+                </TouchableOpacity>
               ))}
-            </View>
-          )
-
-        })
-      }
+          </View>
+        ))}
     </ScrollView>
-  )
-}
+  );
+};
 
 const style = StyleSheet.create({
   container: {
-    marginVertical: '5%'
-  },
-  tituloAlinhado: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    marginTop: '5%'
+    marginVertical: "5%",
   },
   textoAlinhado: {
-    marginLeft: '5%',
-    marginTop: '15%',
-    textDecorationLine: 'underline',
-  },
-  foto: {
-    width: 50,
-    height: 50,
-    borderRadius: 25
+    marginLeft: "5%",
+    marginTop: "15%",
+    textDecorationLine: "underline",
   },
   botao: {
-    flexDirection: 'row',
-    alignItems: 'center', // Alinha os itens verticalmente
-    justifyContent: 'space-around', // Alinha os itens horizontalmente
-
-  }
-
-})
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
+});

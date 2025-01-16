@@ -17,7 +17,8 @@ export default ({ navigation, route }) => {
   const [loading, setLoading] = useState(true)
   const { alunos } = route.params
   const [conexao, setConexao] = useState(true);
-
+  const [turmasVisiveis, setTurmasVisiveis] = useState({});
+  console.log(alunos)
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       setConexao(state.type === 'wifi' || state.type === 'cellular')
@@ -27,6 +28,26 @@ export default ({ navigation, route }) => {
       unsubscribe()
     }
   }, [])
+  const alunosAtivos = alunos.filter((aluno) => !aluno.inativo);
+  const alunosInativos = alunos.filter((aluno) => aluno.inativo);
+
+  const alunosSemTurma = alunosAtivos.filter(
+    (aluno) => aluno.turma === ""
+  );  
+
+  const alunosAtivosPorTurma = alunosAtivos.reduce((acc, aluno) => {
+    acc[aluno.turma] = acc[aluno.turma] || [];
+    acc[aluno.turma].push(aluno);
+    return acc;
+  }, {});
+
+  const toggleVisibilidadeTurma = (turma) => {
+    setTurmasVisiveis((prev) => ({
+      ...prev,
+      [turma]: !prev[turma],
+    }));
+  };
+
   const turmas = alunos.map((aluno) => aluno.turma)
 
   console.log(turmas)
@@ -54,35 +75,84 @@ export default ({ navigation, route }) => {
       </Text>
 
       <Text style={[estilo.textoP16px, {margin: 20}]}>Alunos cujo botão esteja com a cor <Text style={[{color: '#F2D64E'}]}>Amarela</Text> são alunos que a ficha de treino está prestes a vencer.</Text>
+      {alunosSemTurma.length > 0 && (
+        <View>
+          <TouchableOpacity
+            style={[estilo.botao, estilo.corLightMenos1, { marginVertical: 5 }]}
+            onPress={() => toggleVisibilidadeTurma("Sem Turma")}
+          >
+            <Text style={[estilo.textoP16px, estilo.textoCorSecundaria]}>
+              Alunos sem turma
+            </Text>
+            <AntDesign
+              name={turmasVisiveis["Sem Turma"] ? "up" : "down"}
+              size={16}
+              color="#000"
+            />
+          </TouchableOpacity>
 
-
-      {
-            turmasSemRepeticoes.map((turma) => {
-              return (
-                <View>
-                      <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, {margin: 10}]}>{turma}</Text>
-                {alunos.map((aluno) => (
-                  turma === aluno.turma && !aluno.inativo?
-                    <>
-                      <TouchableOpacity
-                        key={aluno.cpf}
-                        style={[estilo.botao, aluno.fichaVencendo? estilo.corWarning :estilo.corPrimaria, style.botao]}
-                        onPress={() => navigation.navigate('Dados corporais', { aluno: aluno })}
-                        >
-                        <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>
-                          {aluno.nome}
-                        </Text>
-                      </TouchableOpacity>
-                    </>
-                    : null
-                ))}
-                </View>
-              )
-
-            })
-          }
-
-
+          {turmasVisiveis["Sem Turma"] &&
+            alunosSemTurma.map((aluno) => (
+              <TouchableOpacity
+                key={aluno.cpf}
+                style={[estilo.botao, estilo.corPrimaria, style.botao]}
+                onPress={() =>
+                  navigation.navigate("Dados corporais", { aluno: aluno })
+                }
+              >
+                <Text style={[estilo.textoCorLightMais1, estilo.tituloH619px]}>
+                  {aluno.nome}
+                </Text>
+              </TouchableOpacity>
+            ))}
+        </View>
+      )}{Object.entries(alunosAtivosPorTurma)
+        .filter(([turma]) => turma)
+        .map(([turma, alunosDaTurma]) => (
+          <View key={turma}>
+            <TouchableOpacity
+              style={[
+                estilo.botao,
+                estilo.corLightMenos1,
+                { marginVertical: 5 },
+              ]}
+              onPress={() => toggleVisibilidadeTurma(turma)}
+            >
+              <Text
+                style={[estilo.textoP16px, estilo.textoCorSecundaria]}
+              >
+                {turma}
+              </Text>
+              <AntDesign
+                name={turmasVisiveis[turma] ? "up" : "down"}
+                size={16}
+                color="#000"
+              />
+            </TouchableOpacity>
+      {turmasVisiveis[turma] &&
+              alunosDaTurma.map((aluno) => (
+                <TouchableOpacity
+                  key={aluno.cpf}
+                  style={[
+                    estilo.botao,
+                    aluno.fichaVencendo
+                      ? estilo.corWarning
+                      : estilo.corPrimaria,
+                    style.botao,
+                  ]}
+                  onPress={() =>
+                    navigation.navigate("Dados corporais", { aluno: aluno })
+                  }
+                >
+                  <Text
+                    style={[estilo.textoCorLightMais1, estilo.tituloH619px]}
+                  >
+                    {aluno.nome}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+          </View>
+        ))}
     </ScrollView>
   )
 }

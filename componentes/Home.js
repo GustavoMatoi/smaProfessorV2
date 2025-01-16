@@ -9,9 +9,10 @@ import { Foundation } from '@expo/vector-icons';
 import NetInfo from "@react-native-community/netinfo"
 import { professorLogado } from "./LoginScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, setDoc,query, orderBy } from "firebase/firestore";
+import { getAuth, signOut } from "firebase/auth";
 import moment from "moment";
-
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 
 export default ({ navigation, route }) => {
   const {alunos} = route.params
@@ -101,11 +102,48 @@ export default ({ navigation, route }) => {
 };
 
 verificaDocumentos()
+const handleLogout = async () => {
+  const auth = getAuth();
+  try {
+    await signOut(auth);
+    console.log("Usuário deslogado com sucesso!");
+    alert("Desconectado com sucesso!");
+
+    clearAsyncStorage = async() => {
+      AsyncStorage.clear();}
+
+    professorLogado.setEmail('');
+    professorLogado.setSenha('');
+
+    navigation.navigate('Login');
+  } catch (error) {
+    console.error("Erro ao deslogar: ", error.message);
+  }
+};
 
   return (
     <SafeAreaView style={[estilo.corLightMenos1, style.container]}>
       <ScrollView>
         <>
+        <TouchableOpacity
+        style={style.logoutButton}
+        onPress={() =>
+          Alert.alert(
+            "Confirmação",
+            "Tem certeza de que deseja sair?",
+            [
+              { text: "Cancelar", style: "cancel" },
+              {
+                text: "Sair",
+                style: "destructive",
+                onPress: handleLogout,
+              },
+            ]
+          )
+        }
+      >
+        <SimpleLineIcons name="logout" size={24} color="#FF6262" />
+      </TouchableOpacity>
         <View style={style.areaLogo}>
           <Logo />
         </View>
@@ -234,6 +272,18 @@ const style = StyleSheet.create({
   textoBotao: {
     textAlign: 'center',
     fontWeight: 'bold'
+  },logoutButton: {
+    position: 'absolute',
+    top: 40,
+    right: 25,
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 30,
+    elevation: 3,
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   }
 
 })

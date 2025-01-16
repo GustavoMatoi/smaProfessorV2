@@ -25,7 +25,7 @@ import TabelaDeResultados from './componentes/NovaAvaliacao/Testes/Tabelas/Tabel
 import FinalizarTestes from './componentes/NovaAvaliacao/FinalizarTestes';
 import AvisoAvaliacaoFinalizada from './componentes/NovaAvaliacao/AvisoAvaliacaoFinalizada';
 import MontarTreino from './componentes/MontarTreino';
-import Routes from './componentes/Routes/estilo';
+import Routes from './componentes/Routes/route';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import PerfilProfessor from './componentes/PerfilProfessor';

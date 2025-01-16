@@ -4,7 +4,7 @@ import Estilo from "../estilo"
 import Logo from '../Logo'
 import { useFonts } from 'expo-font';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { collection, setDoc, doc, getDocs, getFirestore, where, query, addDoc, querySnapshot, QueryStartAtConstraint, collectionGroup } from "firebase/firestore";
+import { collection, setDoc, doc, getDoc,getDocs, getFirestore, where, query, addDoc, querySnapshot, QueryStartAtConstraint, collectionGroup } from "firebase/firestore";
 import { firebase, firebaseBD } from '../configuracoes/firebaseconfig/config'
 import NetInfo from '@react-native-community/netinfo';
 import ModalSemConexao from '../ModalSemConexao'
@@ -26,6 +26,7 @@ export default ({ navigation }) => {
     const [conexao, setConexao] = useState(true)
     const [emailRecuperacao, setEmailRecuperacao] = useState('')
     const [professorData, setProfessorData] = useState()
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
@@ -36,24 +37,67 @@ export default ({ navigation }) => {
             unsubscribe()
         }
     }, [])
-
     useEffect(() => {
-        const fetchData = async () => {
+        const verificarAcademia = async () => {
             try {
-                const keys = await AsyncStorage.getAllKeys();
+                // Recupera os dados do professor armazenados localmente
+                const professorLocal = await AsyncStorage.getItem('professorLocal');
+                const professorData = professorLocal ? JSON.parse(professorLocal) : null;
+    
+                if (professorData && professorData.academia) {
+                    // Recupera todas as chaves armazenadas no AsyncStorage
+                    const keys = await AsyncStorage.getAllKeys();
+    
+                    // Filtra apenas as chaves dos alunos (identificados por e-mail)
+                    const alunoKeys = keys.filter((key) => key.includes('@')); // Supondo que os e-mails sejam as chaves dos alunos
+                    console.log('Chaves dos alunos:', alunoKeys);
+    
+                    // Obtém os dados dos alunos correspondentes às chaves
+                    const alunos = await Promise.all(
+                        alunoKeys.map(async (key) => {
+                            const alunoData = await AsyncStorage.getItem(key);
+                            return alunoData ? JSON.parse(alunoData) : null;
+                        })
+                    );
+                    const alunosIncompativeis = alunos.some(
+                        (aluno) => aluno && aluno.academia !== professorData.academia
+                    );
+    
+                    if (alunosIncompativeis) {
+                        console.log('Alunos com academias incompatíveis encontrados no async storage.');
+                        await AsyncStorage.clear(); 
+                        Alert.alert(
+                            "Academia incompatível",
+                            "Há alunos que pertencem a academias diferentes da academia do professor local."
+                        );
+                    } else {
+                        console.log('Todos os alunos pertencem à mesma academia que o professor.');
+                        try {
+                            const keys = await AsyncStorage.getAllKeys();
+                            console.log('chaves',keys)
+                            for (const key of keys) {
+                                const value = await AsyncStorage.getItem(key);
+                                console.log(`Chave: ${key}, Valor: ${value}`);
+                            }
+                        } catch (error) {
+                            console.error('Erro ao obter dados do AsyncStorage:', error);
+                        }
+                    }
 
-                for (const key of keys) {
-                    const value = await AsyncStorage.getItem(key);
-                    console.log(`Chave: ${key}, Valor: ${value}`);
+                    alunos.forEach((aluno, index) => {
+                        if (aluno) {
+                            console.log(`Aluno ${index + 1}:`, aluno);
+                        }
+                    });
                 }
             } catch (error) {
-                console.error('Erro ao obter dados do AsyncStorage:', error);
+                console.error('Erro ao verificar academias:', error);
             }
         };
-
-        fetchData();
-        getValueFunction()
-    }, [])
+    
+        verificarAcademia();
+        getValueFunction();
+    }, []);
 
     const checkWifiConnection = () => {
         NetInfo.fetch().then((state) => {
@@ -69,18 +113,66 @@ export default ({ navigation }) => {
     useEffect(() => {
         checkWifiConnection();
     }, []);
+    useEffect(() => {
+        const fetchAndCheckFirebaseVersion = async () => {
+            try {
+                const db = getFirestore();
+                const firebaseRef = doc(db, "Versao", "versao");
 
+                const docSnapshot = await getDoc(firebaseRef);
+                if (docSnapshot.exists()) {
+                    const docData = docSnapshot.data();
+                    const firebaseVersion = docData.firebase; 
+                    console.log('Versão do Firebase no Firestore:', firebaseVersion);
+
+                    const storedVersion = await AsyncStorage.getItem('firebase');
+    
+                    if (storedVersion !== String(firebaseVersion)) {
+                        console.log(`Mudança detectada: ${storedVersion} => ${firebaseVersion}`);
+
+                        await AsyncStorage.clear();
+                        await AsyncStorage.setItem('firebase', String(firebaseVersion));
+    
+                        Alert.alert('Aviso', 'Os dados locais foram atualizados devido à mudança de banco de dados.');
+                    } else {
+                        console.log('Versão do banco de dados não mudou.');
+                    }
+                } else {
+                    console.error('Erro: Documento "versao" não encontrado na coleção "Versao".');
+                }
+            } catch (error) {
+                console.error('Erro ao verificar a versão do banco de dados:', error);
+            }
+        };
+    
+        fetchAndCheckFirebaseVersion();
+        getValueFunction();
+    }, []);
+    
     const saveValueFunction = async () => {
         try {
-            if (email) {
-                await AsyncStorage.setItem('email', email);
-                setEmail('');
+            const db = getFirestore();
+            const firebaseRef = doc(db, "Versao", "versao");
+            const docSnapshot = await getDoc(firebaseRef);
+    
+            if (docSnapshot.exists()) {
+                const docData = docSnapshot.data();
+                const firebaseVersion = docData.firebase; 
+                if (email) {
+                    await AsyncStorage.setItem('email', email);
+                    setEmail(''); 
+                }
+    
+                if (password) {
+                    await AsyncStorage.setItem('senha', password);
+                    setPassword(''); 
+                }
+                await AsyncStorage.setItem('firebase', String(firebaseVersion));
+                console.log('Versão do Firebase salva:', firebaseVersion);
+            } else {
+                console.error('Erro: Documento "versao" não encontrado na coleção "Versao".');
             }
 
-            if (password) {
-                await AsyncStorage.setItem('senha', password);
-                setPassword('');
-            }
             await getValueFunction();
         } catch (error) {
             console.error('Erro ao salvar dados no AsyncStorage:', error);
@@ -90,7 +182,7 @@ export default ({ navigation }) => {
     const getValueFunction = async () => {
         const professorLocalTeste = await AsyncStorage.getItem('professorLocal')
         const profOjb = JSON.parse(professorLocalTeste)
-
+        console.log('ProfessorLocal', professorLocalTeste)
         if (profOjb !== null) {
             try {
                 const storedEmail = await AsyncStorage.getItem('professorLocal');
@@ -144,55 +236,83 @@ export default ({ navigation }) => {
     }, [])
 
     const [totalLeituras, setTotalLeituras] = useState(0)
-
     const fetchProfessorData = async () => {
         const firebaseBD = getFirestore();
-      
-        try {
+    
+        try {   
             const professoresQuery = query(
-              collectionGroup(firebaseBD, 'Professores'),
-              where('email', '==', email)
+                collectionGroup(firebaseBD, 'Professores'),
+                where('email', '==', email)
             );
-        
+            
             const querySnapshot = await getDocs(professoresQuery);
             let leituraContador = 0; 
-        
-            querySnapshot.forEach((doc) => {
-              const professorData = doc.data();
-              console.log('Professor encontrado:', professorData);
-        
-              setProfessorData(professorData);
-              professorLogado.setNome(professorData.nome);
-              professorLogado.setEmail(professorData.email);
-              professorLogado.setSenha(professorData.senha);
-              professorLogado.setDataNascimento(professorData.dataNascimento);
-              professorLogado.setSexo(professorData.sexo);
-              professorLogado.setProfissao(professorData.profissao);
-              professorLogado.setCpf(professorData.cpf);
-              professorLogado.setTelefone(professorData.telefone);
-              enderecoProfessor.setBairro(professorData.endereco.bairro);
-              enderecoProfessor.setCep(professorData.endereco.cep);
-              enderecoProfessor.setCidade(professorData.endereco.cidade);
-              enderecoProfessor.setEstado(professorData.endereco.estado);
-              enderecoProfessor.setRua(professorData.endereco.rua);
-              enderecoProfessor.setNumero(professorData.endereco.numero);
-              professorLogado.setAcademia(professorData.academia);
-        
-              const professorString = JSON.stringify(professorData);
-              AsyncStorage.setItem('professorLocal', professorString);
-        
-              leituraContador += 1; 
+            let loginValido = false;
+    
+            querySnapshot.forEach(async (doc) => {
+                const professorData = doc.data();
+                console.log('Professor encontrado:', professorData);
+    
+                if (professorData.senha === password) {
+                    loginValido = true;
+
+                    const savedProfessor = await AsyncStorage.getItem('professorLocal');
+                    const savedData = savedProfessor ? JSON.parse(savedProfessor) : null;
+                    console.log("dados salvos",savedData)
+                    if (savedData && savedData.academia !== professorData.academia) {
+                        console.log('Academia incompatível. Limpando dados locais.');
+                        await AsyncStorage.clear(); 
+                        Alert.alert(
+                            "Academia incompatível",
+                            "Os dados locais foram apagados porque a academia vinculada não corresponde."
+                        );
+                    } else {
+                        professorLogado.setNome(professorData.nome);
+                        professorLogado.setEmail(professorData.email);
+                        professorLogado.setSenha(professorData.senha);
+                        professorLogado.setDataNascimento(professorData.dataNascimento);
+                        professorLogado.setSexo(professorData.sexo);
+                        professorLogado.setProfissao(professorData.profissao);
+                        professorLogado.setCpf(professorData.cpf);
+                        professorLogado.setTelefone(professorData.telefone);
+                        enderecoProfessor.setBairro(professorData.endereco.bairro);
+                        enderecoProfessor.setCep(professorData.endereco.cep);
+                        enderecoProfessor.setCidade(professorData.endereco.cidade);
+                        enderecoProfessor.setEstado(professorData.endereco.estado);
+                        enderecoProfessor.setRua(professorData.endereco.rua);
+                        enderecoProfessor.setNumero(professorData.endereco.numero);
+                        professorLogado.setAcademia(professorData.academia);
+    
+                        const professorString = JSON.stringify(professorData);
+                        await AsyncStorage.setItem('professorLocal', professorString);
+                    }
+                }
+                leituraContador += 1; 
             });
-        
+    
+            if (!loginValido) {
+                Alert.alert(
+                    "Erro de Login",
+                    "E-mail ou senha inválidos. Por favor, tente novamente."
+                );
+            } else {
+                console.log('Login válido!');
+                navigation.navigate('Principal', { professor: professorLogado });
+            }
             setTotalLeituras(leituraContador);
             console.log('Total de leituras:', leituraContador);
-        
-          } catch (error) {
+    
+        } catch (error) {
             console.log('Erro ao buscar os dados do professor:', error);
-          } finally {
+            Alert.alert(
+                "Erro",
+                "Ocorreu um erro ao tentar realizar o login. Tente novamente mais tarde."
+            );
+        } finally {
             saveValueFunction();
-          }
         }
+    };
+    
     const handleCadastro = () => {
         navigation.navigate('Cadastro')
     }
@@ -230,14 +350,25 @@ export default ({ navigation }) => {
                     >
                     </TextInput>
                     <Text style={[Estilo.tituloH619px]}> Senha: </Text>
+                    <View style={style.passwordContainer}>
                     <TextInput
                         placeholder="Senha"
-                        secureTextEntry={true}
+                        secureTextEntry={!showPassword}
                         value={password}
-                        style={[style.inputText, Estilo.corLight]}
+                        style={[style.inputText, Estilo.corLight, style.passwordInput]}
                         onChangeText={(text) => setPassword(text)}
-                    >
-                    </TextInput>
+                    />
+                    <TouchableOpacity
+                        onPress={() => setShowPassword(!showPassword)}
+                        style={style.showPasswordButton}>
+                        <FontAwesome5
+                        name={showPassword ? 'eye-slash' : 'eye'}
+                        size={20}
+                        color="#0066FF"
+                        style={[{}]}
+                        />
+                    </TouchableOpacity>
+                    </View>
 
                     <TouchableOpacity onPress={() => fetchProfessorData()}
                         style={[Estilo.corPrimaria, style.botao, Estilo.sombra, Estilo.botao]}>
@@ -297,21 +428,18 @@ export default ({ navigation }) => {
 }
 
 const style = StyleSheet.create({
-    //Geral
     container: {
         marginBottom: '5%',
         height: '100%'
     },
-    //Logo
     areaLogo: {
         marginTop: '5%'
     },
-    //Area de login
     areaLogin: {
         marginTop: '30%',
         marginLeft: 'auto',
         marginRight: 'auto',
-        width: '90%',
+        width: '80%',
     },
 
     textoLink: {
@@ -335,10 +463,23 @@ const style = StyleSheet.create({
         height: 50,
         borderRadius: 10,
         marginVertical: 15,
-        elevation: 10
+        elevation: 10,
     },
     ultimoLink: {
         top: 10
+    },
+    passwordContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 0,
+        paddingHorizontal: 0,
+        paddingBottom: 20,
+    },
+      showPasswordButton: {
+        position: 'absolute',
+        right: 10,
+        top: '50%',
+        transform: [{ translateY: -10 }], 
+        zIndex: 1,
     }
-
 })

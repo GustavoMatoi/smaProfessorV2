@@ -28,7 +28,7 @@ export default function Routes() {
   const [carregandoAlunos, setCarregandoAlunos] = useState(true)
   const [conexao, setConexao] = useState(true);
   const [numChaveAs, setNumChaveAs] = useState(-1)
-
+  console.log("isso tudo",alunos.length)
   const recuperarChavesAS = async () => {
     const keys = await AsyncStorage.getAllKeys();
     const numberOfKeys = keys.length;
@@ -40,17 +40,20 @@ export default function Routes() {
     if(numChaveAs != -1){
       if (conexao !== '') {
         if (conexao) {
-          if(numChaveAs < 4){
+          if(numChaveAs <= 4){
             console.log("Verifiquei com net")
+            
             fetchAlunosWifi()
             verificaDocumentos()
           } else { 
             console.log("Verifiquei sem net")
+            console.log('vey')
             fetchAlunosSemNet()
             verificaDocumentos()
   
           }
         } else {
+          console.log('vey2')
           fetchAlunosSemNet()
   
         }
@@ -88,7 +91,7 @@ export default function Routes() {
       Alert.alert("Erro", `Erro ao carregar dados offline: ${error.message}`);
     }
   };
-
+  console.log("essa mesmo?",professorLogado.getAcademia())
 
   const fetchAlunosWifi = async () => {
     try {
@@ -114,7 +117,7 @@ export default function Routes() {
         );
         const avaliacoesSnapshot = await getDocs(avaliacoesRef);
         alunoData.avaliacoes = avaliacoesSnapshot.docs.map(avaliacaoDoc => avaliacaoDoc.data());
-    
+        console.log("cu");
         const fichasRef = collection(
           firebaseBD,
           'Academias',
@@ -146,6 +149,7 @@ export default function Routes() {
         );
     
         newArrayAlunos.push(alunoData);
+        console.log("tamanho", newArrayAlunos.length)
       }
     
       const dataAtual = moment();
@@ -169,6 +173,7 @@ export default function Routes() {
       }));
     
       setAlunos(newArrayAlunos);
+
       console.log('newArrayAlunos', newArrayAlunos);
       setCarregando(false);
     } catch (error) {

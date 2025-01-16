@@ -19,6 +19,7 @@ export default ({ navigation, route }) => {
     const [vagasUpdate, setVagasUpdate] = useState(turma.vagas || '')
     const [conexao, setConexao] = useState(true);
     const [horarioUpdate, setHorarioUpdate] = useState(turma.horario || '')
+    const [turmas, setTurmas] = useState([]);
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
             setConexao(state.type === 'wifi' || state.type === 'cellular')
@@ -28,12 +29,13 @@ export default ({ navigation, route }) => {
             unsubscribe()
         }
     }, [])
+    
 
     const updateTurma = async () => {
         try {
             if(turma != 'nova'){
                 const db = getFirestore();
-                const academiaDocRef = doc(db, "Academias", professorLogado.getAcademia(), "Turmas", turma.turma);
+                const academiaDocRef = doc(db, "Academias", professorLogado.getAcademia(), "Turmas", turma.id);
             
                 // Update the Turma document
                 await updateDoc(academiaDocRef, {
@@ -47,24 +49,20 @@ export default ({ navigation, route }) => {
                 const alunosSnapshot = await getDocs(alunosRef);
             
                 const updatePromises = alunosSnapshot.docs.map(async (item) => {
-                  const email = item.data();
-                  console.log(email.email);
-                  console.log(nomeUpdate);
-            
-                  const alunoDocRef = doc(db, "Academias", professorLogado.getAcademia(), 'Alunos', email.email);
-                  console.log('email.turma', email.turma)
-                  console.log('turma.nome', turma.nome)
-                  if(email.turma === turma.nome){
-                      await updateDoc(alunoDocRef, {
-                          turma: nomeUpdate
-                        });
-                  }
-            
-                  console.log(email.turma);
+                    const alunoData = item.data();
+                    const alunoDocRef = doc(db, "Academias", professorLogado.getAcademia(), 'Alunos', alunoData.email);
+                    console.log(email.email);
+                    console.log(nomeUpdate);
+                    // Atualiza a turma se for a mesma que está sendo editada
+                    if (alunoData.turma === turma.id) {
+                        await updateDoc(alunoDocRef, { nome: nomeUpdate });
+                    }
+                    console.log(email.turma);
                 });
             
                 // Wait for all updates to complete before proceeding
-                await Promise.all(updatePromises);
+                await Promise.all([updatePromises]).then((values) => {
+                    console.log(values)});
             
                 Alert.alert("Turma atualizada com sucesso!", "A turma foi atualizada com sucesso.");
                 navigation.goBack();
@@ -96,7 +94,7 @@ export default ({ navigation, route }) => {
       const deleteTurma = async () => {
         try {
           const db = getFirestore();
-          const academiaDocRef = doc(db, "Academias", professorLogado.getAcademia(), "Turmas", turma.turma);
+          const academiaDocRef = doc(db, "Academias", professorLogado.getAcademia(), "Turmas", turma.id);
       
           // Update the Turma document
           await updateDoc(academiaDocRef, {
@@ -117,7 +115,7 @@ export default ({ navigation, route }) => {
             const alunoDocRef = doc(db, "Academias", professorLogado.getAcademia(), 'Alunos', email.email);
             console.log('email.turma', email.turma)
             console.log('turma.nome', turma.nome)
-            if(email.turma === turma.nome){
+            if(email.turma === turma.id){
                 await updateDoc(alunoDocRef, {
                     turma: ''
                   });

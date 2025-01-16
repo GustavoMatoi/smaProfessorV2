@@ -6,8 +6,12 @@ import NetInfo from '@react-native-community/netinfo';
 import { AntDesign } from '@expo/vector-icons';
 import { collection, doc, getDoc, getDocs, getFirestore } from "firebase/firestore";
 import Globais from "../../classes/Globais";
+import { getAuth, signOut } from "firebase/auth";
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
+import { professorLogado } from "../LoginScreen";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default ({ route }) => {
+export default ({ navigation,route }) => {
     const variavelGlobal = new Globais('2.4.0'); 
     const [atVersao, setAtVersao] = useState("");
     const [isLoading, setIsLoading] = useState(true);
@@ -37,8 +41,26 @@ export default ({ route }) => {
         getVersoes();
     }, []);
     
-
     
+    const handleLogout = async () => {
+        const auth = getAuth();
+        try {
+        await signOut(auth);
+        console.log("Usuário deslogado com sucesso!");
+        alert("Desconectado com sucesso!");
+    
+        await AsyncStorage.removeItem('email');
+        await AsyncStorage.removeItem('senha');
+        await AsyncStorage.removeItem('professorLocal');
+    
+        professorLogado.setEmail('');
+        professorLogado.setSenha('');
+    
+        navigation.navigate('Login');
+        } catch (error) {
+        console.error("Erro ao deslogar: ", error.message);
+        }
+    };
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
             setConexao(state.type === 'wifi' || state.type === 'cellular');
@@ -54,7 +76,18 @@ export default ({ route }) => {
         <ScrollView>
             <SafeAreaView style={estilo.corLightMenos1}>
                 <Text style={[estilo.tituloH427px, estilo.textoCorSecundaria, style.Titulo, style.alinhamentoTexto]}>Versões</Text>
-                
+                <TouchableOpacity
+                    style={style.logoutButton}
+                    onPress={() =>
+                    Alert.alert("Confirmação","Tem certeza de que deseja sair?",[
+                        { text: "Cancelar", style: "cancel" },
+                        {
+                            text: "Sair",
+                            style: "destructive",
+                            onPress: handleLogout,
+                        },])}>
+                    <SimpleLineIcons name="logout" size={24} color="#FF6262" />
+                </TouchableOpacity>
             </SafeAreaView>
             {conexao ? (
                     (variavelGlobal.versao === atVersao) ? (
@@ -95,5 +128,10 @@ const style = StyleSheet.create({
     Titulo:{
         marginTop: 25,
         marginBotton: 20
-    }
+    },logoutButton: {
+        position: 'absolute',
+        top: 25,
+        right: 25,
+        padding: 10,
+      }
 });

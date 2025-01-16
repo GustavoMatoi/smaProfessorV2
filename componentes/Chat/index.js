@@ -29,6 +29,7 @@ export default ({ navigation }) => {
     }
 
   }, [])
+  
   const [carregandoAlunos, setCarregandoAlunos] = useState(true)
   useEffect(() => {
     const fetchProfessores = async () => {
@@ -67,7 +68,7 @@ export default ({ navigation }) => {
             }
           }
         }
-        setProfessores(newArrayProfessores);
+        setProfessores(newArrayProfessores.sort((a, b) => a.professor.nome.localeCompare(b.professor.nome)));
       } catch (error) {
         console.log(error);
       }
@@ -111,7 +112,7 @@ export default ({ navigation }) => {
             }
           }
         }
-        setAlunos(newArrayAlunos);
+        setAlunos(newArrayAlunos.sort((a, b) => a.aluno.nome.localeCompare(b.aluno.nome)));
       } catch (error) {
         console.log(error);
       } finally {
