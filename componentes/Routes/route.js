@@ -14,6 +14,7 @@ import Logo from '../Logo';
 import Parq from '../Parq';
 import PerfilProfessor from '../PerfilProfessor';
 import { professorLogado } from "../LoginScreen";
+import { dadosverif } from "../LoginScreen";
 import { enderecoProfessor } from "../LoginScreen";
 import NetInfo from "@react-native-community/netinfo"
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,7 +23,8 @@ import { Octicons } from '@expo/vector-icons';
 import Versoes from '../Versao'
 const Tab = createBottomTabNavigator()
 
-export default function Routes() {
+export default function Routes({ route }) {
+  const { dadosverif } = route.params;
   const [carregando, setCarregando] = useState(true)
   const [alunos, setAlunos] = useState([])
   const [carregandoAlunos, setCarregandoAlunos] = useState(true)
@@ -40,22 +42,28 @@ export default function Routes() {
     if(numChaveAs != -1){
       if (conexao !== '') {
         if (conexao) {
-          if(numChaveAs <= 4){
-            console.log("Verifiquei com net")
-            
+          console.log("V OU F",dadosverif);
+          if (dadosverif == !false){
+            if(numChaveAs <= 5){
+              console.log("Verifiquei com net")
+              fetchAlunosWifi()
+              verificaDocumentos()
+            } else { 
+              console.log("Verifiquei sem net")
+              fetchAlunosSemNet()
+              verificaDocumentos()
+    
+            }
+          }else{
             fetchAlunosWifi()
             verificaDocumentos()
-          } else { 
-            console.log("Verifiquei sem net")
-            console.log('vey')
-            fetchAlunosSemNet()
-            verificaDocumentos()
-  
           }
         } else {
-          console.log('vey2')
-          fetchAlunosSemNet()
-  
+          if (dadosverif == false){
+              Alert.alert("Academia ou firebase alterados, nao foi possivel recuperar dados");
+          }else{
+            fetchAlunosSemNet()
+          }
         }
       } else {
         console.log("Aaa")
@@ -74,6 +82,7 @@ export default function Routes() {
   }, [conexao])
 
   const fetchAlunosSemNet = async () => {
+    console.log("Chamando fetchAlunosSemNet...");
     const newArrayAlunos = [];
     try {
       const keys = await AsyncStorage.getAllKeys();
@@ -95,6 +104,7 @@ export default function Routes() {
 
   const fetchAlunosWifi = async () => {
     try {
+      console.log("Chamando fetchAlunosWifi...");
       const newArrayAlunos = [];
       const alunoRef = collection(
         firebaseBD,
@@ -117,7 +127,6 @@ export default function Routes() {
         );
         const avaliacoesSnapshot = await getDocs(avaliacoesRef);
         alunoData.avaliacoes = avaliacoesSnapshot.docs.map(avaliacaoDoc => avaliacaoDoc.data());
-        console.log("cu");
         const fichasRef = collection(
           firebaseBD,
           'Academias',
@@ -149,7 +158,6 @@ export default function Routes() {
         );
     
         newArrayAlunos.push(alunoData);
-        console.log("tamanho", newArrayAlunos.length)
       }
     
       const dataAtual = moment();
@@ -182,8 +190,6 @@ export default function Routes() {
     }
   };
   
-
-
 
   const verificaDocumentos = async () => {
 
@@ -267,7 +273,7 @@ export default function Routes() {
     )
   }
 
-
+  
 
   return (
     <Tab.Navigator screenOptions={{

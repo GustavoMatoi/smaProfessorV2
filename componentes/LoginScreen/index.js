@@ -15,7 +15,7 @@ import { Professor } from '../../classes/Professor';
 import { Endereco } from '../../classes/Endereco';
 let professorLogado = new Professor()
 let enderecoProfessor = new Endereco()
-
+const dadosverif = true;
 
 export { professorLogado, enderecoProfessor }
 
@@ -37,68 +37,99 @@ export default ({ navigation }) => {
             unsubscribe()
         }
     }, [])
-    useEffect(() => {
-        const verificarAcademia = async () => {
-            try {
-                // Recupera os dados do professor armazenados localmente
-                const professorLocal = await AsyncStorage.getItem('professorLocal');
-                const professorData = professorLocal ? JSON.parse(professorLocal) : null;
-    
-                if (professorData && professorData.academia) {
-                    // Recupera todas as chaves armazenadas no AsyncStorage
-                    const keys = await AsyncStorage.getAllKeys();
-    
-                    // Filtra apenas as chaves dos alunos (identificados por e-mail)
-                    const alunoKeys = keys.filter((key) => key.includes('@')); // Supondo que os e-mails sejam as chaves dos alunos
-                    console.log('Chaves dos alunos:', alunoKeys);
-    
-                    // Obtém os dados dos alunos correspondentes às chaves
-                    const alunos = await Promise.all(
-                        alunoKeys.map(async (key) => {
-                            const alunoData = await AsyncStorage.getItem(key);
-                            return alunoData ? JSON.parse(alunoData) : null;
-                        })
-                    );
-                    const alunosIncompativeis = alunos.some(
-                        (aluno) => aluno && aluno.academia !== professorData.academia
-                    );
-    
-                    if (alunosIncompativeis) {
-                        console.log('Alunos com academias incompatíveis encontrados no async storage.');
-                        await AsyncStorage.clear(); 
-                        Alert.alert(
-                            "Academia incompatível",
-                            "Há alunos que pertencem a academias diferentes da academia do professor local."
-                        );
-                    } else {
-                        console.log('Todos os alunos pertencem à mesma academia que o professor.');
-                        try {
-                            const keys = await AsyncStorage.getAllKeys();
-                            console.log('chaves',keys)
-                            for (const key of keys) {
-                                const value = await AsyncStorage.getItem(key);
-                                console.log(`Chave: ${key}, Valor: ${value}`);
-                            }
-                        } catch (error) {
-                            console.error('Erro ao obter dados do AsyncStorage:', error);
-                        }
-                    }
 
-                    alunos.forEach((aluno, index) => {
-                        if (aluno) {
-                            console.log(`Aluno ${index + 1}:`, aluno);
-                        }
-                    });
+    /*
+        const fetchAndCheckFirebaseAcademia = async () => {
+            try {
+                const db = getFirestore();
+                const firebaseRef = doc(db, "Versao", "versao");
+
+                const docSnapshot = await getDoc(firebaseRef);
+                if (docSnapshot.exists()) {
+                    const docData = docSnapshot.data();
+                    const firebaseVersion = docData.firebase; 
+                    console.log('Versão do Firebase no Firestore:', firebaseVersion);
+
+                    const storedVersion = await AsyncStorage.getItem('firebase');
+    
+                    if (storedVersion !== String(firebaseVersion)) {
+                        console.log(`Mudança detectada: ${storedVersion} => ${firebaseVersion}`);
+
+                        await AsyncStorage.clear();
+                        await AsyncStorage.setItem('firebase', String(firebaseVersion));
+    
+                        Alert.alert('Aviso', 'Os dados locais foram atualizados devido à mudança de banco de dados.');
+                    } else {
+                        console.log('Versão do banco de dados não mudou.');
+                    }
+                } else {
+                    console.error('Erro: Documento "versao" não encontrado na coleção "Versoes".');
                 }
             } catch (error) {
-                console.error('Erro ao verificar academias:', error);
+                console.error('Erro ao verificar a versão do banco de dados:', error);
+            }
+        };*/
+        const checkVersion = async () => {
+            try {
+                const db = getFirestore();
+                const firebaseRef = doc(db, "Versao", "versao");
+                const firebasedocSnapshot = await getDoc(firebaseRef);
+
+                const academiaDocRef = doc(db, "Academias", professorLogado.getAcademia());
+                const academiadocSnapshot = await getDoc(academiaDocRef);
+
+                if (firebasedocSnapshot.exists() && academiadocSnapshot.exists()) {
+                    const docData = firebasedocSnapshot.data();
+                    const firebaseVersion = docData.firebase; 
+                    const storedFirebaseVersion = await AsyncStorage.getItem('firebase');
+
+                    const acadedocData = academiadocSnapshot.data();
+                    const academialogada = acadedocData.nome;
+                    const storedAcademiaLocal = await AsyncStorage.getItem('academia'); 
+                    
+                    console.log('Academia guardada salva:', academialogada);
+                    console.log('Versão do Firebase salva:', firebaseVersion);
+
+                    if (storedAcademiaLocal && storedAcademiaLocal !== academialogada) {
+                        console.log(`Mudança de academia detectada: ${storedAcademiaLocal} => ${academialogada}`);
+                        await AsyncStorage.clear();
+                        await AsyncStorage.setItem('academia', String(academialogada));
+                        Alert.alert('Aviso', 'Sua academia foi atualizada.');
+                        dadosverif = false;
+                        
+                    }                                
+                    if (firebaseVersion && firebaseVersion !== storedFirebaseVersion) {
+                        console.log(`Mudança de firebase detectada: ${firebaseVersion} => ${storedFirebaseVersion}`);
+                        await AsyncStorage.clear();
+                        await AsyncStorage.setItem('firebase', String(storedFirebaseVersion));
+                        Alert.alert('Aviso', 'Sua versao do firebase foi atualizada.');
+                        dadosverif = false;
+                        
+                    }                                
+
+                    //await checkVersion(storedFirebaseVersion, firebaseVersion, "firebase");
+                    //await checkVersion(storedAcademiaLocal, academialogada, "academia");
+                    await AsyncStorage.setItem('firebase', String(firebaseVersion));
+                    await AsyncStorage.setItem('academia', String(academialogada));
+                } else {
+                    console.error('Erro: Documento "versao" não encontrado na coleção "Versao" ou academia nao encontrada em Academias.');
+                }
+            } catch (error) {
+                console.error(`Erro ao verificar a versão de ${description}:`, error);
             }
         };
-    
-        verificarAcademia();
-        getValueFunction();
-    }, []);
+        /*
+        const academiaDocRef = doc(db, "Academias", professorLogado.getAcademia());
+        const academiadocSnapshot = await getDoc(academiaDocRef);
 
+        if (firebasedocSnapshot.exists() && academiadocSnapshot.exists()) {
+            const acadedocData = academiadocSnapshot.data();
+            const academiaguardada = acadedocData.nome; 
+            await AsyncStorage.setItem('academia', String(academiaguardada));
+            
+            console.log('Academia guardada salva:', academiaguardada);
+            console.log('Versão do Firebase salva:', firebaseVersion);
+            */
     const checkWifiConnection = () => {
         NetInfo.fetch().then((state) => {
             if (state.type === 'wifi' || state.type === 'cellular') {
@@ -151,26 +182,14 @@ export default ({ navigation }) => {
     
     const saveValueFunction = async () => {
         try {
-            const db = getFirestore();
-            const firebaseRef = doc(db, "Versao", "versao");
-            const docSnapshot = await getDoc(firebaseRef);
-    
-            if (docSnapshot.exists()) {
-                const docData = docSnapshot.data();
-                const firebaseVersion = docData.firebase; 
-                if (email) {
-                    await AsyncStorage.setItem('email', email);
-                    setEmail(''); 
-                }
-    
-                if (password) {
-                    await AsyncStorage.setItem('senha', password);
-                    setPassword(''); 
-                }
-                await AsyncStorage.setItem('firebase', String(firebaseVersion));
-                console.log('Versão do Firebase salva:', firebaseVersion);
-            } else {
-                console.error('Erro: Documento "versao" não encontrado na coleção "Versao".');
+            if (email) {
+                await AsyncStorage.setItem('email', email);
+                setEmail(''); 
+            }
+
+            if (password) {
+                await AsyncStorage.setItem('senha', password);
+                setPassword(''); 
             }
 
             await getValueFunction();
@@ -178,6 +197,7 @@ export default ({ navigation }) => {
             console.error('Erro ao salvar dados no AsyncStorage:', error);
         }
     };
+    
 
     const getValueFunction = async () => {
         const professorLocalTeste = await AsyncStorage.getItem('professorLocal')
@@ -221,7 +241,11 @@ export default ({ navigation }) => {
                             if (conexao) {
                                 await firebase.auth().signInWithEmailAndPassword(emailProf, senhaProf);
                             }
-                            navigation.navigate('Principal', { professor: dadosProfessor }); }                        
+                        
+                            checkVersion();
+                            navigation.navigate('Principal', { professor: dadosProfessor , dadosverif}); 
+                        
+                        }                        
                         }
                     }
 
@@ -249,43 +273,31 @@ export default ({ navigation }) => {
             let leituraContador = 0; 
             let loginValido = false;
     
-            querySnapshot.forEach(async (doc) => {
+            querySnapshot.forEach((doc) => {
                 const professorData = doc.data();
                 console.log('Professor encontrado:', professorData);
     
                 if (professorData.senha === password) {
                     loginValido = true;
+                    setProfessorData(professorData);
+                    professorLogado.setNome(professorData.nome);
+                    professorLogado.setEmail(professorData.email);
+                    professorLogado.setSenha(professorData.senha);
+                    professorLogado.setDataNascimento(professorData.dataNascimento);
+                    professorLogado.setSexo(professorData.sexo);
+                    professorLogado.setProfissao(professorData.profissao);
+                    professorLogado.setCpf(professorData.cpf);
+                    professorLogado.setTelefone(professorData.telefone);
+                    enderecoProfessor.setBairro(professorData.endereco.bairro);
+                    enderecoProfessor.setCep(professorData.endereco.cep);
+                    enderecoProfessor.setCidade(professorData.endereco.cidade);
+                    enderecoProfessor.setEstado(professorData.endereco.estado);
+                    enderecoProfessor.setRua(professorData.endereco.rua);
+                    enderecoProfessor.setNumero(professorData.endereco.numero);
+                    professorLogado.setAcademia(professorData.academia);
 
-                    const savedProfessor = await AsyncStorage.getItem('professorLocal');
-                    const savedData = savedProfessor ? JSON.parse(savedProfessor) : null;
-                    console.log("dados salvos",savedData)
-                    if (savedData && savedData.academia !== professorData.academia) {
-                        console.log('Academia incompatível. Limpando dados locais.');
-                        await AsyncStorage.clear(); 
-                        Alert.alert(
-                            "Academia incompatível",
-                            "Os dados locais foram apagados porque a academia vinculada não corresponde."
-                        );
-                    } else {
-                        professorLogado.setNome(professorData.nome);
-                        professorLogado.setEmail(professorData.email);
-                        professorLogado.setSenha(professorData.senha);
-                        professorLogado.setDataNascimento(professorData.dataNascimento);
-                        professorLogado.setSexo(professorData.sexo);
-                        professorLogado.setProfissao(professorData.profissao);
-                        professorLogado.setCpf(professorData.cpf);
-                        professorLogado.setTelefone(professorData.telefone);
-                        enderecoProfessor.setBairro(professorData.endereco.bairro);
-                        enderecoProfessor.setCep(professorData.endereco.cep);
-                        enderecoProfessor.setCidade(professorData.endereco.cidade);
-                        enderecoProfessor.setEstado(professorData.endereco.estado);
-                        enderecoProfessor.setRua(professorData.endereco.rua);
-                        enderecoProfessor.setNumero(professorData.endereco.numero);
-                        professorLogado.setAcademia(professorData.academia);
-    
-                        const professorString = JSON.stringify(professorData);
-                        await AsyncStorage.setItem('professorLocal', professorString);
-                    }
+                    const professorString = JSON.stringify(professorData);
+                    AsyncStorage.setItem('professorLocal', professorString);
                 }
                 leituraContador += 1; 
             });
@@ -297,7 +309,8 @@ export default ({ navigation }) => {
                 );
             } else {
                 console.log('Login válido!');
-                navigation.navigate('Principal', { professor: professorLogado });
+                checkVersion();
+                navigation.navigate('Principal', { professor: professorLogado,verif: dadosverif });
             }
             setTotalLeituras(leituraContador);
             console.log('Total de leituras:', leituraContador);
@@ -311,8 +324,7 @@ export default ({ navigation }) => {
         } finally {
             saveValueFunction();
         }
-    };
-    
+    }
     const handleCadastro = () => {
         navigation.navigate('Cadastro')
     }
