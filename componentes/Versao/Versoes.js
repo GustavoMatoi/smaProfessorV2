@@ -11,12 +11,18 @@ export default ({ versao }) => {
     const [modalVisible1, setModalVisible1] = useState(false);
     const [modalVisible2, setModalVisible2] = useState(false);
 
+    const [modalVisible1, setModalVisible1] = useState(false);
+    const [modalVisible2, setModalVisible2] = useState(false);
+
     if (!fontsLoaded) {
+        return null;
         return null;
     }
 
     return (
         <SafeAreaView style={style.safeArea}>
+            {/* Primeiro modal */}
+            <TouchableOpacity style={style.container} onPress={() => setModalVisible1(true)}>
             {/* Primeiro modal */}
             <TouchableOpacity style={style.container} onPress={() => setModalVisible1(true)}>
                 <Text style={[style.alinhamentoTitulo, estilo.textoP16px, estilo.textoCorSecundaria, style.montserrat]}>
@@ -30,6 +36,8 @@ export default ({ versao }) => {
             <Modal
                 animationType="slide"
                 transparent={true}
+                visible={modalVisible1}
+                onRequestClose={() => setModalVisible1(false)}
                 visible={modalVisible1}
                 onRequestClose={() => setModalVisible1(false)}
             >
