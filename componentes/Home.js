@@ -182,7 +182,7 @@ const style = StyleSheet.create({
   },
   areaLogo: {
     paddingTop: '5%',
-    height: '10%',
+    height: '10%'
   },
   areaFrase: {
     marginVertical: '3%',
@@ -190,7 +190,7 @@ const style = StyleSheet.create({
   },
   areaBotoes: {
     height: '26%',
-    marginTop: '3%',
+    marginTop: '5%',
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -223,7 +223,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    height: '95%',
+    height: '100%',
     borderRadius: 15,
     padding: 5
   },
