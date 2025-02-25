@@ -95,15 +95,13 @@ export default ({ navigation, route }) => {
         try {
           const db = getFirestore();
           const academiaDocRef = doc(db, "Academias", professorLogado.getAcademia(), "Turmas", turma.id);
-      
-          // Update the Turma document
+
           await updateDoc(academiaDocRef, {
             nome: nomeUpdate,
             horario: horarioUpdate,
             vagas: vagasUpdate
           });
-      
-          // Update the turma field for each student in the Alunos collection
+
           const alunosRef = collection(db, "Academias", professorLogado.getAcademia(), 'Alunos');
           const alunosSnapshot = await getDocs(alunosRef);
       
@@ -123,8 +121,7 @@ export default ({ navigation, route }) => {
       
             console.log(email.turma);
           });
-      
-          // Wait for all updates to complete before proceeding
+
           await Promise.all(updatePromises);
  
           deleteDoc(academiaDocRef)

@@ -19,49 +19,84 @@ export default ({navigation, route}) => {
     useEffect (() => {
       const unsubscribe = NetInfo.addEventListener(state => {
         setConexao(state.type === 'wifi' || state.type === 'cellular')
-
       })
+      return () => unsubscribe()
+    }, [])
 
-      return () => {
-        unsubscribe()
-      }
-    })
     const getExercicios = async () => {
-      const user = firebase.auth().currentUser;
       const db = getFirestore();
-      const alunoRef = collection(db, "aluno");
-      const email = user.email;
-      const queryAluno = query(alunoRef, where("email", "==", email));
-      const diariosRef = collection(db, "Academias", professorLogado.getAcademia(), "Alunos", `${aluno.email}`, 'Diarios');
-
-      const querySnapshot = await getDocs(diariosRef);
+      
+      try {
+        // 1. Buscar a ficha mais recente
+        const fichasRef = collection(db, `Academias/${professorLogado.getAcademia()}/Alunos/${aluno.email}/FichaDeExercicios`);
+        const fichasSnapshot = await getDocs(fichasRef);
+        
+        // Encontrar a ficha mais recente
+        const fichas = fichasSnapshot.docs.sort((a, b) => 
+          b.id.localeCompare(a.id)
+        );
+        
+        if (fichas.length === 0) {
+          setCarregandoDados(false);
+          return;
+        }
     
-      const promises = [];
-      querySnapshot.forEach((doc) => {
-        const exerciciosRef = collection(doc.ref, "Exercicios");
-        const promise = getDocs(exerciciosRef).then((exerciciosSnapshot) => {
-          const exercicios = exerciciosSnapshot.docs.map((exercicioDoc) => {
-            console.log(exercicioDoc.data())
-            return {
-              nome: exercicioDoc.data().Nome.exercicio,
-              tipo: exercicioDoc.data().tipo
-            };
+        const fichaAtual = fichas[0];
+        
+        // 2. Buscar exercícios da ficha atual
+        const exerciciosFichaRef = collection(fichaAtual.ref, 'Exercicios');
+        const exerciciosFichaSnapshot = await getDocs(exerciciosFichaRef);
+        
+        // Mapear exercícios da ficha
+        const exerciciosDaFicha = exerciciosFichaSnapshot.docs.map(doc => ({
+          nome: doc.data().Nome?.exercicio || doc.id,
+          tipo: doc.data().tipo
+        }));
+    
+        // 3. Buscar diários
+        const diariosRef = collection(db, `Academias/${professorLogado.getAcademia()}/Alunos/${aluno.email}/Diarios`);
+        const diariosSnapshot = await getDocs(diariosRef);
+    
+        // 4. Coletar exercícios com PSE
+        const exerciciosComPSE = new Map();
+    
+        for (const diarioDoc of diariosSnapshot.docs) {
+          const exerciciosRef = collection(diarioDoc.ref, 'Exercicio');
+          const exerciciosSnapshot = await getDocs(exerciciosRef);
+          
+          exerciciosSnapshot.forEach(exercicioDoc => {
+            // Verificar se tem PSE
+            const hasPSE = Object.keys(exercicioDoc.data()).some(key => 
+              key.startsWith('PSEdoExercicioSerie') && 
+              typeof exercicioDoc.get(key)?.valor === 'number'
+            );
+    
+            // Encontrar correspondência na ficha
+            const exercicioFicha = exerciciosDaFicha.find(e => 
+              e.nome === exercicioDoc.id
+            );
+    
+            if (exercicioFicha && hasPSE) {
+              exerciciosComPSE.set(exercicioDoc.id, {
+                nome: exercicioDoc.id,
+                tipo: exercicioFicha.tipo
+              });
+            }
           });
-          return exercicios;
-        });
-        promises.push(promise);
-      });
+        }
     
-      const arraysNomeExercicio = await Promise.all(promises);
-      const newArrayNomeExercicio = arraysNomeExercicio.flat();
+        setArrayExercicio(Array.from(exerciciosComPSE.values()));
+        setCarregandoDados(false);
     
-      setArrayExercicio(newArrayNomeExercicio);
-      setCarregandoDados(false);
+      } catch (error) {
+        console.error('Erro ao carregar exercícios:', error);
+        setCarregandoDados(false);
+      }
     };
+
     useEffect(() => {
       getExercicios();
     }, []);
-  
     console.log(arrayNomeExercicio)
     return (
       <ScrollView style={[estilo.corLightMenos1, {height: '100%'} ]}>

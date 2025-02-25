@@ -4,96 +4,136 @@ import estilo from "../estilo"
 import ExerciciosAlongamento from "./ExerciciosAlongamento"
 import ExerciciosCardio from "./ExerciciosCardio"
 import ExerciciosForça from "./ExerciciosForça"
-import { collection, setDoc, doc, getDocs, getFirestore, where, query, addDoc } from "firebase/firestore";
-import { firebase, firebaseBD } from '../configuracoes/firebaseconfig/config'
-import { FichaDeExercicios } from "../../classes/FichaDeExercicios"
-import { ExercicioNaFicha } from "../../classes/ExercicioNaFicha"
-import { Exercicio } from "../../classes/Exercicio"
-import { professorLogado } from "../LoginScreen"
-export default ({ posicaoDoArray = 0, aluno }) => {
-  let posicao = posicaoDoArray
-  const [fichaValida, setFichaValida] = useState(false)
-  const [verificando, setVerificando] = useState(true)
-  const [exercicios, setExercicios] = useState([])
-  console.log('posicaoDoArray na ficha ', posicaoDoArray)
+import { professorLogado } from "../LoginScreen";
+import { collection, getDocs, getFirestore, where, query } from "firebase/firestore";
+import AntDesign from '@expo/vector-icons/AntDesign';
+
+export default ({ aluno, ficha }) => {
+  const [exercicios, setExercicios] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [fichaValida, setFichaValida] = useState(false);
+  const [verificando, setVerificando] = useState(true);
 
   useEffect(() => {
-    if (typeof posicaoDoArray === undefined) {
-      posicao = 0
-    }
-    if ('fichas' in aluno) {
-      console.log(posicao)
-      setExercicios(aluno.fichas[posicao].exercicios)
-      setFichaValida(true)
-      setVerificando(false)
-      exercicios.map((item) => console.log(item.Nome))
-    }
-  }, [])
+    const carregarExercicios = async () => {
+      try {
+        if (!ficha?.id) {
+          setCarregando(false);
+          return;
+        }
 
-  //  exercicios.map((item) => console.log(item))
+        const db = getFirestore();
+        const exerciciosRef = collection(
+          db,
+          'Academias',
+          professorLogado.getAcademia(), 
+          'Alunos',
+          aluno.email,
+          'FichaDeExercicios',
+          ficha.id,
+          'Exercicios'
+        );
 
+        const snapshot = await getDocs(exerciciosRef);
+        console.log("snapshot",snapshot);
+        const dadosExercicios = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        console.log("dadosExercicios",dadosExercicios);
+        
+        setFichaValida(dadosExercicios.length > 0);
+        setVerificando(false);
+        setExercicios(dadosExercicios);
+      } catch (error) {
+        console.error("Erro ao carregar exercícios:", error);
+      } finally {
+        setCarregando(false);
+      }
+    };
 
-  //console.log('exercicios ', exercicios)
+    carregarExercicios();
+  }, [ficha]);
 
-  //exercicios.map((item) => console.log(item.tipo))
-  //console.log('posicaoArrayFichas ' , posicaoArrayFichas)
-  //console.log('aluno.nome ', aluno.nome)
-  //console.log('aluno.fichas[posicaoArrayFichas].exercicios ', aluno.fichas[posicaoArrayFichas].exercicios)
-  exercicios.map((item) => console.log(item.Nome))
-  const fichasUnicas = [...new Set(exercicios.map(item => item.ficha))];
+  if (carregando) {
+    return <ActivityIndicator size="large" color={estilo.corPrimaria} />;
+  }
 
   return (
-    <ScrollView style={style.container}>
-    {fichaValida && !verificando ? (
-      fichasUnicas.map((ficha) => (
-        <View key={ficha}>
-          <Text>Ficha {ficha}</Text>
+    <ScrollView 
+      style={style.container}
+      contentContainerStyle={style.contentContainer}
+    >
+      {fichaValida && !verificando ? (
+        <View style={style.fichaContainer}>
+        <View style={style.header}>
+          <AntDesign name="filetext1" size={24} color={estilo.corPrimaria} />
+          <Text style={style.tituloFicha}>
+            Ficha de Treino - {ficha.objetivoDoTreino || 'Sem objetivo definido'}
+          </Text>
+        </View>
+
+        <Text style={style.detalhesFicha}>
+          {`Data de início: ${ficha.dataInicio}\nData de término: ${ficha.dataFim}`}
+        </Text>
           {exercicios.map((item, index) => (
-            item.ficha === ficha && (
-              <View key={index} style={{ width: '100%' }}>
-                {item.tipo === 'força' ? (
-                  <ExerciciosForça
-                    nomeDoExercicio={item.Nome.exercicio}
-                    series={item.series}
-                    repeticoes={item.repeticoes}
-                    descanso={item.descanso}
-                    cadencia={item.cadencia}
-                    imagem={item.Nome.imagem}
-                  />
-                ) : item.tipo === 'aerobico' ? (
-                  <ExerciciosCardio
-                    nomeDoExercicio={item.Nome.exercicio}
-                    velocidadeDoExercicio={item.velocidade}
-                    duracaoDoExercicio={item.duracao}
-                    seriesDoExercicio={item.series}
-                    descansoDoExercicio={item.descanso}
-                  />
-                ) : item.tipo === 'alongamento' ? (
-                  <ExerciciosAlongamento
-                    nomeDoExercicio={item.Nome}
-                    series={item.series}
-                    descanso={item.descanso}
-                    repeticoes={item.repeticoes}
-                    imagem={item.imagem}
-                  />
-                ) : null}
-              </View>
-            )
+            <View key={index} style={{ width: '100%' }}>
+              {item.tipo === 'força' ? (
+                <ExerciciosForça
+                  nomeDoExercicio={item.Nome.exercicio}
+                  series={item.series}
+                  repeticoes={item.repeticoes}
+                  descanso={item.descanso}
+                  cadencia={item.cadencia}
+                  imagem={item.Nome.imagem}
+                />
+              ) : item.tipo === 'aerobico' ? (
+                <ExerciciosCardio
+                  nomeDoExercicio={item.Nome.exercicio}
+                  velocidadeDoExercicio={item.velocidade}
+                  duracaoDoExercicio={item.duracao}
+                  seriesDoExercicio={item.series}
+                  descansoDoExercicio={item.descanso}
+                />
+              ) : item.tipo === 'alongamento' ? (
+                <ExerciciosAlongamento
+                  nomeDoExercicio={item.Nome.exercicio}
+                  series={item.series}
+                  descanso={item.descanso}
+                  repeticoes={item.repeticoes}
+                  imagem={item.Nome.imagem}
+                />
+              ) : null}
+            </View>
           ))}
         </View>
-      ))
-    ) : (
-      <Text style={[{ marginHorizontal: 15, textAlign: 'justify' }, estilo.textoP16px, estilo.textoCorSecundaria]}>
-        A última ficha ainda não foi lançada. Solicite ao professor responsável para lançá-la e tente novamente mais tarde.
-      </Text>
-    )}
-  </ScrollView>
-  
+      ) : (
+        <Text style={[{ marginHorizontal: 15, textAlign: 'justify' }, estilo.textoP16px, estilo.textoCorSecundaria]}>
+          A última ficha ainda não foi lançada. Solicite ao professor responsável para lançá-la e tente novamente mais tarde.
+        </Text>
+      )}
+    </ScrollView>
   );
-}  
+}
+
 const style = StyleSheet.create({
   container: {
     width: '100%',
-
-  }
-})
+    flex: 1,
+    backgroundColor: estilo.corLight
+  }, fichaContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 20,
+    elevation: 3
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: estilo.corLightMais1,
+    paddingBottom: 10
+  },
+});

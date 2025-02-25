@@ -13,7 +13,7 @@ export default ({navigation, conexao}) => {
 
         
     })
-    const handleDeleteAccount = async () => {
+   /* const handleDeleteAccount = async () => {
         try {
             const auth = getAuth();
             const user = auth.currentUser;
@@ -48,7 +48,7 @@ export default ({navigation, conexao}) => {
             Alert.alert("Erro", "Não foi possível excluir a conta. Tente novamente mais tarde.");
         }
     };
-
+*/
     const handleLogout = () => {
         const auth = getAuth()
         signOut(auth)
@@ -85,7 +85,7 @@ export default ({navigation, conexao}) => {
             <TouchableOpacity style={[estilo.botao, conexao? estilo.corPrimaria : estilo.corDisabled, estilo.sombra, {marginTop: '5%'}]} disabled={!conexao} onPress={()=>navigation.navigate('Editar foto')}>
                 <Text style={[estilo.textoCorLight, estilo.tituloH619px]} >ALTERAR FOTO</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[estilo.botao, estilo.corDanger, estilo.sombra, {marginTop: '5%'}]} onPress={() =>
+            {/*<TouchableOpacity style={[estilo.botao, estilo.corDanger, estilo.sombra, {marginTop: '5%'}]} onPress={() =>
                       Alert.alert(
                         "Confirmação",
                         "Tem certeza de que deseja excluir sua conta? Seus dados serão apagados permanentemente!!",
@@ -100,7 +100,7 @@ export default ({navigation, conexao}) => {
                       )
                     }>
                 <Text style={[estilo.textoCorLight, estilo.tituloH619px]} >Excluir Conta</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>*/}
         </View>
         </ScrollView>
 

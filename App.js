@@ -30,6 +30,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import PerfilProfessor from './componentes/PerfilProfessor';
 import EditarFoto from './componentes/PerfilProfessor/EditarFoto';
+import ExcluirFicha from './componentes/Avaliacoes/excluirficha';
 
 import CadastroScreen from './componentes/CadastroScreen/index.js';
 import ModalSemConexao from './componentes/ModalSemConexao';
@@ -92,6 +93,7 @@ export default function App() {
         <Stack.Screen name="Perfil" component={PerfilProfessor}/>
         <Stack.Screen name="Editar foto" component={EditarFoto}/>
         <Stack.Screen name="Avaliações" component={Avaliacoes}/>
+        <Stack.Screen name="Excluir Ficha" component={ExcluirFicha}/>
         <Stack.Screen name='Modal sem conexão' component={ModalSemConexao} options={{headerShown: false}}/>
         <Stack.Screen name="Seleção Aluno Montar Treino" component={SelecaoAlunoAvaliacao}/>
         <Stack.Screen name="Seleção Aluno Análise do Programa de Treino" component={SelecaoAlunoAnaliseProgramaDeTreino}/>

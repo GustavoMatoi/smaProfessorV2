@@ -66,7 +66,12 @@ export default ({ navigation, route }) => {
       <SafeAreaView style={[estilo.container]}>
         {conexao ?
           <View style={[styles.conteudo, estilo.centralizado]}>
-            <Text style={[{ fontSize: 20, marginBottom: '10%' }, estilo.textoCorSecundaria, styles.Montserrat]}>Selecione o exercício que deseja visualizar a evolução.</Text>
+            {arrayNomeExercicio.length > 0 ? (<Text style={[{ fontSize: 20, marginBottom: '10%' }, estilo.textoCorSecundaria, styles.Montserrat]}>Selecione o exercício que deseja visualizar a evolução.</Text>):(<View>
+                        <Text style={[estilo.centralizado, estilo.tituloH333px]}>Ops...</Text>
+                        <View style={[estilo.centralizado, {marginTop: '5%'}]}><Entypo name="emoji-sad" size={100} color="#182128" /></View>
+                        <Text style={[ estilo.textoCorSecundaria, estilo.textoP16px, {marginTop: '10%', textAlign: 'center', marginHorizontal: '5%'}, styles.Montserrat]}>
+                            O Aluno ainda não cadastrou nenhum detalhamento referente a esse exercício no diário. Caso possua converse com os desenvolvedores a respeito do problema.</Text>
+                    </View>)}
             {carregandoDados ? <Spinner
               visible={carregandoDados}
               textContent={'Carregando dados...'}
@@ -156,6 +161,18 @@ const styles = StyleSheet.create({
     width: '95%',
     height: 60,
     marginTop: '1%'
-
+  },
+  avisoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#f8d7da',
+    borderRadius: 10,
+    margin: 15,
+  },
+  textoAviso: {
+    marginLeft: 10,
+    textAlign: 'center'
   }
 });

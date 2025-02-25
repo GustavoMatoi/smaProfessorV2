@@ -79,6 +79,7 @@ export default ({ navigation }) => {
                 const academiadocSnapshot = await getDoc(academiaDocRef);
 
                 if (firebasedocSnapshot.exists() && academiadocSnapshot.exists()) {
+                    console.log('existe document?')
                     const docData = firebasedocSnapshot.data();
                     const firebaseVersion = docData.firebase; 
                     const storedFirebaseVersion = await AsyncStorage.getItem('firebase');
@@ -177,7 +178,6 @@ export default ({ navigation }) => {
         };
     
         fetchAndCheckFirebaseVersion();
-        getValueFunction();
     }, []);
     
     const saveValueFunction = async () => {
@@ -192,13 +192,13 @@ export default ({ navigation }) => {
                 setPassword(''); 
             }
 
-            await getValueFunction();
+            //await getValueFunction();
         } catch (error) {
             console.error('Erro ao salvar dados no AsyncStorage:', error);
         }
     };
     
-
+    /*
     const getValueFunction = async () => {
         const professorLocalTeste = await AsyncStorage.getItem('professorLocal')
         const profOjb = JSON.parse(professorLocalTeste)
@@ -224,61 +224,58 @@ export default ({ navigation }) => {
                 enderecoProfessor.setNumero(dadosProfessor.endereco.numero)
                 professorLogado.setAcademia(dadosProfessor.academia)
                 professorLogado.setDeletado(dadosProfessor.excluido)
-                const emailProf = dadosProfessor.email
-                setEmail(emailProf || '');
+                //const emailProf = dadosProfessor.email
+                //setEmail(emailProf || '');
 
-                const senhaProf = dadosProfessor.senha
-                setPassword(senhaProf || '');
+                //const senhaProf = dadosProfessor.senha
+                //setPassword(senhaProf || '');
+                
                 console.log("Dados professor excluido", dadosProfessor.excluido)
                 if(dadosProfessor.excluido === true){
                     Alert.alert("Não foi possível realizar login.", "O coordenador da academia que você está vinculato te marcou como excluído.")
                 } else {
-                    if (emailProf && senhaProf) {
-                        
+                    if (dadosProfessor.email && dadosProfessor.senha) { 
+                        checkVersion();
                         if (!dadosProfessor.status || dadosProfessor.status === "Pendente" || dadosProfessor.status === false) {
                             alert("Seu cadastro está pendente. Aguarde a aprovação do coordenador.");
                         } else {
                             if (conexao) {
-                                await firebase.auth().signInWithEmailAndPassword(emailProf, senhaProf);
+                                await firebase.auth().signInWithEmailAndPassword(dadosProfessor.email, dadosProfessor.senha);
                             }
-                        
-                            checkVersion();
                             navigation.navigate('Principal', { professor: dadosProfessor , dadosverif}); 
-                        
                         }                        
-                        }
                     }
-
-                } catch (error) {
-                    console.error('Erro ao obter dados do AsyncStorage ou fazer login:', error);
                 }
+            } catch (error) {
+                console.error('Erro ao obter dados do AsyncStorage ou fazer login:', error);
+            }
         }
-    };
-
-    useEffect(() => {
-        fetchProfessorData()
-    }, [])
+    };*/
 
     const [totalLeituras, setTotalLeituras] = useState(0)
     const fetchProfessorData = async () => {
         const firebaseBD = getFirestore();
-    
+        
         try {   
+            if (!conexao) {
+                Alert.alert("Sem conexão", "Você precisa estar online para fazer login");
+                return;
+            }
+    
             const professoresQuery = query(
                 collectionGroup(firebaseBD, 'Professores'),
                 where('email', '==', email)
             );
-            
+    
             const querySnapshot = await getDocs(professoresQuery);
-            let leituraContador = 0; 
             let loginValido = false;
     
             querySnapshot.forEach((doc) => {
                 const professorData = doc.data();
-                console.log('Professor encontrado:', professorData);
-    
+                
                 if (professorData.senha === password) {
                     loginValido = true;
+                    
                     setProfessorData(professorData);
                     professorLogado.setNome(professorData.nome);
                     professorLogado.setEmail(professorData.email);
@@ -288,6 +285,7 @@ export default ({ navigation }) => {
                     professorLogado.setProfissao(professorData.profissao);
                     professorLogado.setCpf(professorData.cpf);
                     professorLogado.setTelefone(professorData.telefone);
+                    professorLogado.setStatus(professorData.status);
                     enderecoProfessor.setBairro(professorData.endereco.bairro);
                     enderecoProfessor.setCep(professorData.endereco.cep);
                     enderecoProfessor.setCidade(professorData.endereco.cidade);
@@ -295,36 +293,38 @@ export default ({ navigation }) => {
                     enderecoProfessor.setRua(professorData.endereco.rua);
                     enderecoProfessor.setNumero(professorData.endereco.numero);
                     professorLogado.setAcademia(professorData.academia);
-
+    
                     const professorString = JSON.stringify(professorData);
                     AsyncStorage.setItem('professorLocal', professorString);
                 }
-                leituraContador += 1; 
             });
-    
-            if (!loginValido) {
-                Alert.alert(
-                    "Erro de Login",
-                    "E-mail ou senha inválidos. Por favor, tente novamente."
-                );
-            } else {
-                console.log('Login válido!');
-                checkVersion();
-                navigation.navigate('Principal', { professor: professorLogado,verif: dadosverif });
+            if (loginValido) {
+                if (professorLogado.status === "Pendente" || professorLogado.status === false) {
+                    alert("Seu cadastro está pendente... Aguarde a aprovação do coordenador");
+                } else {
+                    await firebase.auth().signInWithEmailAndPassword(email, password);
+                    await checkVersion();
+                    navigation.navigate('Principal', { professor: professorLogado, dadosverif });
+                }
             }
-            setTotalLeituras(leituraContador);
-            console.log('Total de leituras:', leituraContador);
-    
+            
         } catch (error) {
             console.log('Erro ao buscar os dados do professor:', error);
-            Alert.alert(
-                "Erro",
-                "Ocorreu um erro ao tentar realizar o login. Tente novamente mais tarde."
-            );
-        } finally {
+            
+            if (error.code === 'auth/wrong-password') {
+                Alert.alert("Senha incorreta", "Verifique a caixa das letras");
+            } else {
+                if (!professorLogado.status || professorLogado.status === "Pendente" || professorLogado.status === false) {
+                    alert("Seu cadastro está pendente. Aguarde a aprovação do coordenador.");
+                }else{
+                    Alert.alert("Erro de Login", "Ocorreu um erro ao tentar fazer login");
+                }
+                
+            }
+        }finally {
             saveValueFunction();
         }
-    }
+    };
     const handleCadastro = () => {
         navigation.navigate('Cadastro')
     }
@@ -369,6 +369,9 @@ export default ({ navigation }) => {
                         value={password}
                         style={[style.inputText, Estilo.corLight, style.passwordInput]}
                         onChangeText={(text) => setPassword(text)}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        
                     />
                     <TouchableOpacity
                         onPress={() => setShowPassword(!showPassword)}
@@ -382,10 +385,17 @@ export default ({ navigation }) => {
                     </TouchableOpacity>
                     </View>
 
-                    <TouchableOpacity onPress={() => fetchProfessorData()}
-                        style={[Estilo.corPrimaria, style.botao, Estilo.sombra, Estilo.botao]}>
-                        <Text
-                            style={[Estilo.tituloH523px, Estilo.textoCorLight]}>ENTRAR</Text>
+                    <TouchableOpacity 
+                    onPress={async () => {
+                        if (!email || !password) {
+                            Alert.alert("Campos obrigatórios", "Preencha email e senha!");
+                            return;
+                        }
+                        
+                        await fetchProfessorData();
+                    }}
+                    style={[Estilo.corPrimaria, style.botao, Estilo.sombra, Estilo.botao]}>
+                    <Text style={[Estilo.tituloH523px, Estilo.textoCorLight]}>ENTRAR</Text>
                     </TouchableOpacity>
                     <View style={[style.textoLink, style.ultimoLink]}>
                         <Text
@@ -476,6 +486,7 @@ const style = StyleSheet.create({
         borderRadius: 10,
         marginVertical: 15,
         elevation: 10,
+        textTransform: 'lowercase'
     },
     ultimoLink: {
         top: 10
@@ -486,6 +497,9 @@ const style = StyleSheet.create({
         marginVertical: 0,
         paddingHorizontal: 0,
         paddingBottom: 20,
+    },
+    passwordInput: {
+        textTransform: 'none', 
     },
       showPasswordButton: {
         position: 'absolute',

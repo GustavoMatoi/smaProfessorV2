@@ -3,6 +3,29 @@ import { Text, View, SafeAreaView, StyleSheet, TouchableOpacity, Modal, ScrollVi
 import estilo from '../estilo';
 import { useFonts } from 'expo-font';
 
+const VersionModal = ({ version, details, modalVisible, setModalVisible }) => (
+    <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+    >
+        <View style={style.modalContainer}>
+            <View style={style.modalContent}>
+                <Text style={[style.modalTitle, style.montserrat]}>Detalhes da Versão {version}</Text>
+                <ScrollView style={style.scrollView}>
+                    <Text style={[style.modalText, style.montserrat]}>
+                        {details}
+                    </Text>
+                </ScrollView>
+                <TouchableOpacity style={style.closeButton} onPress={() => setModalVisible(false)}>
+                    <Text style={[style.closeButtonText, style.montserrat]}>Fechar</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    </Modal>
+);
+
 export default ({ versao }) => {
     const [fontsLoaded] = useFonts({
         'Montserrat': require('../../assets/Montserrat-Light.ttf'),
@@ -10,122 +33,36 @@ export default ({ versao }) => {
 
     const [modalVisible1, setModalVisible1] = useState(false);
     const [modalVisible2, setModalVisible2] = useState(false);
-
-    const [modalVisible1, setModalVisible1] = useState(false);
-    const [modalVisible2, setModalVisible2] = useState(false);
+    const [modalVisible3, setModalVisible3] = useState(false);
 
     if (!fontsLoaded) {
-        return null;
         return null;
     }
 
     return (
         <SafeAreaView style={style.safeArea}>
-            {/* Primeiro modal */}
-            <TouchableOpacity style={style.container} onPress={() => setModalVisible1(true)}>
-            {/* Primeiro modal */}
+            {/* Versão 2.3.1 */}
             <TouchableOpacity style={style.container} onPress={() => setModalVisible1(true)}>
                 <Text style={[style.alinhamentoTitulo, estilo.textoP16px, estilo.textoCorSecundaria, style.montserrat]}>
-                    Versão: 2.3.1
+                    Versão: 1.0.0
                 </Text>
                 <Text style={[style.detalhesTexto, estilo.textoP12px, estilo.textoCorSecundaria, style.montserrat]}>
                     Clique para mais detalhes
                 </Text>
             </TouchableOpacity>
 
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible1}
-                onRequestClose={() => setModalVisible1(false)}
-                visible={modalVisible1}
-                onRequestClose={() => setModalVisible1(false)}
-            >
-                <View style={style.modalContainer}>
-                    <View style={style.modalContent}>
-                        <Text style={[style.modalTitle, style.montserrat]}>Detalhes da Versão {versao}</Text>
-                        <ScrollView style={style.scrollView}>
-                            <Text style={[style.modalText, style.montserrat]}>
-                                - Ficha ABC professor{"\n"}
-                                - Ficha ABC aluno{"\n"}
-                                - Corrigir erro na hora de olhar avaliações (reportado pelo José Ewerton){"\n"}
-                                - Tela de versões{"\n"}
-                                - Editar avaliação (apenas o prof que lançou){"\n"}
-                                - Adicionar Prof Responsável pela avaliação no BD{"\n"}
-                            </Text>
-                        </ScrollView>
-                        <TouchableOpacity style={style.closeButton} onPress={() => setModalVisible1(false)}>
-                            <Text style={[style.closeButtonText, style.montserrat]}>Fechar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
+            <VersionModal
+                version="1.0.0"
+                details="- Versão inicial do aplicativo."
+                modalVisible={modalVisible1}
+                setModalVisible={setModalVisible1}
+            />
 
-            {/* Segundo modal */}
-            <TouchableOpacity style={style.container} onPress={() => setModalVisible2(true)}>
-                <Text style={[style.alinhamentoTitulo, estilo.textoP16px, estilo.textoCorSecundaria, style.montserrat]}>
-                    Versão: 2.4.0
-                </Text>
-                <Text style={[style.detalhesTexto, estilo.textoP12px, estilo.textoCorSecundaria, style.montserrat]}>
-                    Clique para mais detalhes
-                </Text>
-            </TouchableOpacity>
-
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible2}
-                onRequestClose={() => setModalVisible2(false)}
-            >
-                <View style={style.modalContainer}>
-                    <View style={style.modalContent}>
-                        <Text style={[style.modalTitle, style.montserrat]}>Detalhes da Versão 2.4.0</Text>
-                        <ScrollView style={style.scrollView}>
-                            <Text style={[style.modalText, style.montserrat]}>
-                                - Permissao para professor ter acesso a academia após cadastro
-                            </Text>
-                        </ScrollView>
-                        <TouchableOpacity style={style.closeButton} onPress={() => setModalVisible2(false)}>
-                            <Text style={[style.closeButtonText, style.montserrat]}>Fechar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
-            {/* Segundo modal */}
-            <TouchableOpacity style={style.container} onPress={() => setModalVisible2(true)}>
-                <Text style={[style.alinhamentoTitulo, estilo.textoP16px, estilo.textoCorSecundaria, style.montserrat]}>
-                    Versão: 2.4.1
-                </Text>
-                <Text style={[style.detalhesTexto, estilo.textoP12px, estilo.textoCorSecundaria, style.montserrat]}>
-                    Clique para mais detalhes
-                </Text>
-            </TouchableOpacity>
-
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible2}
-                onRequestClose={() => setModalVisible2(false)}
-            >
-                <View style={style.modalContainer}>
-                    <View style={style.modalContent}>
-                        <Text style={[style.modalTitle, style.montserrat]}>Detalhes da Versão 2.4.1</Text>
-                        <ScrollView style={style.scrollView}>
-                            <Text style={[style.modalText, style.montserrat]}>
-                                 Correção na edição de turmas 
-                                 Correção de bug para acessar alunos
-                                 Correção no scroll da nova ficha
-                            </Text>
-                        </ScrollView>
-                        <TouchableOpacity style={style.closeButton} onPress={() => setModalVisible2(false)}>
-                            <Text style={[style.closeButtonText, style.montserrat]}>Fechar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
+           
         </SafeAreaView>
     );
 };
+
 const style = StyleSheet.create({
     safeArea: {
         flex: 1,

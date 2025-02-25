@@ -11,9 +11,9 @@ import { AntDesign } from '@expo/vector-icons';
 
 import NetInfo from "@react-native-community/netinfo"
 import ExerciciosAlongamento from '../../Ficha/ExerciciosAlongamento'
+const dadosverif = true;
 export default ({ navigation, route }) => {
     const { exercicios, aluno, objetivo } = route.params
-
     console.log(exercicios)
     const [conexao, setConexao] = useState(true);
 
@@ -174,10 +174,10 @@ export default ({ navigation, route }) => {
                 } finally {
                     if (conexao) {
                         Alert.alert("Ficha salva com sucesso!", "A ficha foi salva no banco de dados.")
-                        navigation.navigate("Principal")
+                        navigation.navigate("Principal", {dadosverif: true })
                     } else {
                         Alert.alert("Ficha salva com sucesso!", "A ficha foi salva localmente. Assim que o dispositivo possuir conexão com a intenet,a ficha será enviada para o Banco de Dados")
-                        navigation.navigate("Principal")
+                        navigation.navigate("Principal",{dadosverif: true})
                     }
 
                 }
@@ -215,7 +215,7 @@ export default ({ navigation, route }) => {
             Alert.alert("Campos não preenchidos.", "Informe o vencimento da ficha.")
         }
         Alert.alert("Ficha salva com sucesso!", "A ficha foi salva localmente. Assim que o dispositivo possuir conexão com a intenet,a ficha será enviada para o Banco de Dados")
-        navigation.navigate("Principal")
+        navigation.navigate("Principal",{dadosverif: true })
     };
 
     console.log(exercicios)

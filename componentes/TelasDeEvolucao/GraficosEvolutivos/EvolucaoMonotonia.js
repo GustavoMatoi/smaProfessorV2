@@ -13,6 +13,7 @@ import Spinner from "react-native-loading-spinner-overlay"
 import NetInfo from '@react-native-community/netinfo'
 import ModalSemConexao from "../../ModalSemConexao"
 import BotaoSelect from '../../BotaoSelect'
+import { Ionicons } from '@expo/vector-icons';
 
 export default ({route, navigation}) => {
     const {aluno} = route.params
@@ -308,7 +309,7 @@ const mapearMesParaNumero = (mes) => {
                             data={arrayFiltrado} />            
                     </VictoryChart>}
                     <View style={{marginLeft: '5%', marginBottom: '10%'}}>
-                    <Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.Montserrat]}>Selecione o parâmetro que deseja visualizar a evolução:</Text>
+                    {/*<Text style={[estilo.textoP16px, estilo.textoCorSecundaria, style.Montserrat]}>Selecione o parâmetro que deseja visualizar a evolução:</Text>
                     <RadioBotao
                             options={[ 'Semanal']}
                             selected={opcao}
@@ -319,7 +320,19 @@ const mapearMesParaNumero = (mes) => {
                     <View style={{marginTop: '5%' }}>
                       <Text style = {[estilo.textoP16px, estilo.textoCorSecundaria]}>Valores:</Text>
                     {arrayFiltrado.map((i, index) => <Text>Semana: {i.x} | Monotonia: {i.y.toFixed(3)}</Text>)}
-                    </View>
+                    </View>*/}
+                     <View style={style.explicacaoBox}>
+                    <Ionicons 
+                      name="information-circle-outline" 
+                      size={28} 
+                      color={estilo.corPrimaria} 
+                      style={style.infoIcon}
+                    />
+                    <Text style={[estilo.textoP16px, style.explicacaoText]}>
+                      <Text style={estilo.textoNegrito}>Obs:</Text> Para visualização melhor precisamos de 1 mes de treino
+                      {"\n\n"}
+                    </Text>
+                  </View>
                 </View>
                 
                     </View>
@@ -338,5 +351,34 @@ const style = StyleSheet.create({
     },
     Montserrat: {
         fontFamily: 'Montserrat'
+    },explicacaoContainer: {
+      marginHorizontal: 10,
+      marginTop: 15,
+      marginBottom: 25,
+    },
+    explicacaoBox: {
+      backgroundColor: '#F0F9FF',
+      borderRadius: 10,
+      padding: 0,
+      marginRight: 15,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      borderWidth: 1,
+      borderColor: '#B6E1FF',
+    },
+    infoIcon: {
+      marginRight: 10,
+      marginTop: 3,
+    },
+    explicacaoText: {
+      flex: 1,
+      color: '#2A2A2A',
+      lineHeight: 22,
+    },
+    psaText: {
+      marginTop: 15,
+      color: estilo.corLightMenos1,
+      textAlign: 'center',
+      fontStyle: 'italic',
     }
 })

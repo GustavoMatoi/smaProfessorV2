@@ -44,7 +44,7 @@ export default function Routes({ route }) {
         if (conexao) {
           console.log("V OU F",dadosverif);
           if (dadosverif == !false){
-            if(numChaveAs <= 5){
+            if(numChaveAs <= 6){
               console.log("Verifiquei com net")
               fetchAlunosWifi()
               verificaDocumentos()

@@ -12,7 +12,7 @@ import { professorLogado } from "../LoginScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default ({ navigation,route }) => {
-    const variavelGlobal = new Globais('2.4.0'); 
+    const variavelGlobal = new Globais('1.0.0'); 
     const [atVersao, setAtVersao] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [conexao, setConexao] = useState(true);

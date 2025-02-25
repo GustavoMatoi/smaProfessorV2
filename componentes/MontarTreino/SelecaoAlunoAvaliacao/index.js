@@ -1,40 +1,93 @@
 import React, { useState, useEffect } from "react"
 import { Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, ScrollView, View, Alert} from "react-native"
 import estilo from "../../estilo"
+import { collection, setDoc, doc, getDocs, getDoc,onSnapshot, getFirestore, where, query, addDoc, updateDoc } from "firebase/firestore";
 import NetInfo from "@react-native-community/netinfo"
 import { AntDesign } from '@expo/vector-icons';
+import { professorLogado } from "../../LoginScreen/index";
 
 
 export default ({ navigation, route }) => {
+  const [loading, setLoading] = useState(true)
   const { alunos } = route.params
-
+  const [alunosAtualizados, setAlunosAtualizados] = useState([]);
   const [conexao, setConexao] = useState(true);
   const [turmasVisiveis, setTurmasVisiveis] = useState({});
-
-  useEffect(() => {
-      const unsubscribe = NetInfo.addEventListener(state => {
-          setConexao(state.type === 'wifi' || state.type === 'cellular')
-      })
-
-      return () => {
-          unsubscribe()
-      }
-  }, [])
-
-  const alunosAtivos = alunos.filter((aluno) => !aluno.inativo);
-  const alunosInativos = alunos.filter((aluno) => aluno.inativo);
-
-  const alunosSemTurma = alunosAtivos.filter(
-    (aluno) => aluno.turma === ""
-  );  
-
-  const turmas = alunos.map((aluno) => aluno.turma)
-
+  const [turmasCadastradas, setTurmasCadastradas] = useState([]);
+  const [alunosSemTurmaValida, setAlunosSemTurmaValida] = useState([]);
+  const alunosAtivos = alunosAtualizados.filter((aluno) => !aluno.inativo);
   const alunosAtivosPorTurma = alunosAtivos.reduce((acc, aluno) => {
     acc[aluno.turma] = acc[aluno.turma] || [];
     acc[aluno.turma].push(aluno);
     return acc;
   }, {});
+  const alunosInativos = alunosAtualizados.filter((aluno) => aluno.inativo);
+  const alunosSemTurma = alunosAtivos.filter((aluno) => aluno.turma === "");
+  useEffect(() => {
+    const invalidStudents = alunosAtualizados.filter(
+      (aluno) => aluno.turma && !turmasCadastradas.includes(aluno.turma)
+    );
+    setAlunosSemTurmaValida(invalidStudents);
+  }, [alunosAtualizados, turmasCadastradas]);
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setConexao(state.type === 'wifi' || state.type === 'cellular')
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+
+  useEffect(() => {
+    const db = getFirestore();
+
+    const turmasRef = collection(db, 'Academias', professorLogado.getAcademia(), 'Turmas');
+    const unsubscribeTurmas = onSnapshot(turmasRef, (snapshot) => {
+      const newArrayTurmas = [];
+      snapshot.forEach(doc => {
+        const turmaData = doc.data();
+        if (turmaData.nome) newArrayTurmas.push(turmaData.nome);
+      });
+      setTurmasCadastradas(newArrayTurmas);
+    });
+
+    const alunosRef = collection(db, 'Academias', professorLogado.getAcademia(), 'Alunos');
+    const unsubscribeAlunos = onSnapshot(alunosRef, async (snapshot) => {
+      const alunosPromises = snapshot.docs.map(async (docAluno) => {
+        const alunoData = { id: docAluno.id, ...docAluno.data() };
+
+        const avaliacoesRef = collection(db, 'Academias', professorLogado.getAcademia(), 'Alunos', docAluno.id, 'Avaliacoes');
+        const snapshotAvaliacoes = await getDocs(avaliacoesRef);
+        const avaliacoes = snapshotAvaliacoes.docs.map(docAvaliacao => ({
+          id: docAvaliacao.id,
+          ...docAvaliacao.data()
+        }));
+  
+        return { ...alunoData, avaliacoes };
+      });
+  
+      const alunosData = await Promise.all(alunosPromises);
+      setAlunosAtualizados(alunosData);
+    });
+  
+    return () => {
+      unsubscribeTurmas();
+      unsubscribeAlunos();
+    };
+  }, []);
+
+  useEffect(() => {
+    const db = getFirestore();
+    
+    alunosAtualizados.forEach(aluno => {
+      if (aluno.turma && !turmasCadastradas.includes(aluno.turma)) {
+        const alunoRef = doc(db, 'Academias', professorLogado.getAcademia(), 'Alunos', aluno.id);
+        setDoc(alunoRef, { turma: "" }, { merge: true });
+      }
+    });
+  }, [turmasCadastradas, alunosAtualizados]);
 
   const toggleVisibilidadeTurma = (turma) => {
     setTurmasVisiveis((prev) => ({
@@ -42,11 +95,13 @@ export default ({ navigation, route }) => {
       [turma]: !prev[turma],
     }));
   };
+  
+
+  const turmas = alunos.map((aluno) => aluno.turma)
 
   console.log(turmas)
   const turmasFiltradas = new Set(turmas)
   let turmasSemRepeticoes = Array.from(turmasFiltradas);
-  console.log('turmasemrepet',turmasSemRepeticoes)
   return (
     <ScrollView style={style.container}>
       {!conexao ? (

@@ -6,10 +6,9 @@ import FichaDeTreinoAnalise from "../Ficha/FichaDeTreinoAnalise";
 import NetInfo from "@react-native-community/netinfo"
 import Spinner from "react-native-loading-spinner-overlay";
 import ModalSemConexao from "../ModalSemConexao";
-import { Firestore, collection, doc, getDocs, getFirestore, updateDoc } from "firebase/firestore";
+import { Firestore, collection, doc, getDocs, getFirestore, updateDoc, deleteDoc } from "firebase/firestore";
 import { professorLogado } from "../LoginScreen";
 import AntDesign from '@expo/vector-icons/AntDesign';
-
 
 const getPressaoArterial = (pressaoSistolica, pressaoDiastolica) => {
     if (pressaoSistolica, pressaoDiastolica != 0) {
@@ -50,23 +49,98 @@ function comparaValores(avaliacaoAtual, avaliacaoAnterior) {
 
 export default function TelaAnaliseDoProgramaDeTreino({ route, navigation }) {
     const { avaliacao, posicaoDoArray, aluno, avaliacaoAnterior } = route.params
+    const [fichas, setFichas] = useState([]);
+    const buscarFichas = async () => {
+        try {
+          const db = getFirestore();
+          const caminhoFichas = collection(
+            db, 
+            'Academias', 
+            professorLogado.getAcademia(), 
+            'Alunos', 
+            aluno.email, 
+            'FichaDeExercicios'
+          );
+    
+          const snapshot = await getDocs(caminhoFichas);
+          console.log("snapshot", snapshot.path);
+          const dadosFichas = snapshot.docs
+            .map(doc => ({ id: doc.id, ...doc.data() }))
+            .sort((a, b) => b.dataCriacao?.toMillis() - a.dataCriacao?.toMillis())
+          setFichas(dadosFichas);
 
+          console.log("fichasreais:",fichas.length)
+            console.log('Professor Academia:', professorLogado.getAcademia());
+            console.log('Aluno ID:', aluno.id);
+            console.log('Aluno Email:', aluno.email);
+            console.log('Fichas encontradas:', dadosFichas);
+            console.log('Posição:', posicaoDoArray);
+            console.log('Fichas disponíveis:', fichas.length);
+            console.log('Ficha na posição:', fichas[posicaoDoArray]);
+        } catch (error) {
+          console.error("Erro ao buscar fichas:", error);
+        }
+      };
+    
+      useEffect(() => {
+        if (aluno?.id) {
+            buscarFichas();
+        }
+      }, [aluno]);
     console.log('avaliacaoAnterior ', avaliacaoAnterior)
     console.log('avaliacaoAnterior ', posicaoDoArray)
     console.log("aluno", aluno)
-    // const alunoFilhas = [...aluno.fichas]
+    console.log("alunoid", aluno.id);
+    console.log("aavaliacao id", avaliacao.id);
+
+    
+    // const alunoFichas = [...aluno.fichas]
 
     const editarAvaliacao = () =>{
         console.log(avaliacao.emailProfessorResponsavel )
         if(avaliacao.emailProfessorResponsavel !== professorLogado.getEmail()){
-            Alert.alert("Permissão negada.", "Apenas o professor que lançou essa ficha poderá editá-la.")
+            Alert.alert("Permissão negada.", "Apenas o professor que lançou essa avaliação/ficha poderá editá-la.")
         } else {
-            console.log(avaliacao)
+            console.log("sei la", avaliacao)
             const pa = getPressaoArterial(avaliacao.PressaoDiastolica, avaliacao.PressaoSistolica)
             navigation.navigate('Editar avaliação', {props: avaliacao, aluno: aluno});
         }
     }
-
+    
+    const excluirAvaliacao = async () => {
+        console.log('email do aluno',aluno.email)
+        console.log('sla da avaliacao',avaliacao.ano)
+        if (avaliacao.emailProfessorResponsavel !== professorLogado.getEmail()) {
+            Alert.alert("Permissão negada.", "Apenas o professor que lançou essa avalição/ficha poderá excluir.");
+        } else {
+            
+            try {
+                const firebaseBD = getFirestore();
+                const doisPrimeirosNumerosHora = String(avaliacao.horario).padStart(2, '0').slice(0, 2);
+                const doisUltimosNumerosMinutos = String(avaliacao.horario).padStart(2, '0').slice(-2);
+                const avaliacaoRef = doc(
+                    firebaseBD,
+                    "Academias",
+                    professorLogado.getAcademia(),
+                    "Alunos",
+                    `${aluno.email}`,
+                    "Avaliações",
+                    `Avaliacao${avaliacao.ano}|${avaliacao.mes}|${avaliacao.dia}|${doisPrimeirosNumerosHora}|${doisUltimosNumerosMinutos}`
+                );
+    
+                console.log("Excluindo avaliação", avaliacaoRef);
+    
+                await deleteDoc(avaliacaoRef);
+    
+                Alert.alert("Avaliação excluída com sucesso.");
+                navigation.goBack();
+            } catch (error) {
+                console.error("Erro ao excluir avaliação: ", error);
+                Alert.alert("Erro", "Ocorreu um erro ao excluir a avaliação.");
+            }
+        }
+    };
+    
     if (posicaoDoArray == 0) {
         return (
             <SafeAreaView style={[estilo.corLightMenos1, style.container]}>
@@ -80,6 +154,10 @@ export default function TelaAnaliseDoProgramaDeTreino({ route, navigation }) {
                     <TouchableOpacity onPress={() => editarAvaliacao()} style={[estilo.botao, avaliacao.emailProfessorResponsavel === professorLogado.getEmail() ? estilo.corPrimaria : estilo.corDisabled, { justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row' }]}>
                         <AntDesign name="edit" size={24} color="white" />
                         <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>Editar avaliação</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => excluirAvaliacao()} style={[estilo.botao, avaliacao.emailProfessorResponsavel === professorLogado.getEmail() ? estilo.corPrimaria : estilo.corDisabled, { justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row' }]}>
+                        <AntDesign name="delete" size={24} color="white" />
+                        <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>Deletar avaliação</Text>
                     </TouchableOpacity>
                     <Text style={[estilo.textoCorSecundaria, estilo.tituloH427px, estilo.centralizado, { marginVertical: '5%' }]}>Resultados obtidos</Text>
 
@@ -155,7 +233,7 @@ export default function TelaAnaliseDoProgramaDeTreino({ route, navigation }) {
                     </TabelaResultados>
 
                     <Text style={[estilo.textoCorSecundaria, estilo.tituloH427px, estilo.centralizado, { marginVertical: '5%' }]}>Programa de Treino</Text>
-                    {aluno.fichas.length > 0 ? <FichaDeTreinoAnalise posicaoDoArray={posicaoDoArray} aluno={aluno} ></FichaDeTreinoAnalise> : null}
+                    {fichas?.length > 0 ? <FichaDeTreinoAnalise posicaoDoArray={posicaoDoArray} ficha={fichas[posicaoDoArray]} aluno={aluno}/> : null}
                 </ScrollView>
             </SafeAreaView>
         )
@@ -169,6 +247,10 @@ export default function TelaAnaliseDoProgramaDeTreino({ route, navigation }) {
                     <TouchableOpacity  onPress={() => editarAvaliacao()} style={[estilo.botao, estilo.corPrimaria, { justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row' }]}>
                         <AntDesign name="edit" size={24} color="white" />
                         <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>Editar avaliação</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity  onPress={() => excluirAvaliacao()} style={[estilo.botao, estilo.corDanger, { justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row' }]}>
+                        <AntDesign name="delete" size={24} color="white" /> 
+                        <Text style={[estilo.textoCorLight, estilo.tituloH619px]}>deletar avaliação</Text>
                     </TouchableOpacity>
                     <Text style={[estilo.textoCorSecundaria, estilo.tituloH427px, estilo.centralizado, { marginVertical: '5%' }]}>Resultados obtidos</Text>
                     <TabelaResultados
@@ -315,12 +397,16 @@ export default function TelaAnaliseDoProgramaDeTreino({ route, navigation }) {
 
                     </TabelaResultados>
                     <Text style={[estilo.textoCorSecundaria, estilo.tituloH427px, estilo.centralizado, { marginVertical: '5%' }]}>Programa de Treino</Text>
-                    {console.log('aluno.fichas ', aluno.fichas[posicaoDoArray])}
-                    {typeof aluno.fichas[posicaoDoArray] == 'undefined' ?
+                    {console.log('aluno.fichas ', fichas[posicaoDoArray])}
+                    {typeof fichas[posicaoDoArray] == 'undefined' ?
                         <Text style={[{ marginHorizontal: 15, textAlign: 'justify' }, estilo.textoP16px, estilo.textoCorSecundaria]}>
                             A última ficha ainda não foi lançada. Solicite ao professor responsável para lançá-la e tente novamente mais tarde.
                         </Text> :
-                        <FichaDeTreinoAnalise posicaoDoArray={posicaoDoArray} aluno={aluno}></FichaDeTreinoAnalise>
+                        <FichaDeTreinoAnalise 
+                        posicaoDoArray={posicaoDoArray} 
+                        ficha={fichas[posicaoDoArray]} // Passa a ficha específica
+                        aluno={aluno}
+                      />
                     }
 
                 </ScrollView>
